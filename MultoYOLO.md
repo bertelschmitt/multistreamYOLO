@@ -28,10 +28,10 @@ What if we want the actual name of the detected object, along with the time spen
 
 (Tangent: detect_image spends quite some time drawing boxes, which made the original author leave an exasperated comment: “My kingdom for a good redistributable image drawing library.” OpenCV has a snappy box draw routine, and it is generally faster than the Pillow library used in detect_image. To shave off a few cycles, OpenCV could be used. If all you are interested in are the coordinates, and the detected object, the image drawing could be (optionally) avoided altogether. Room for improvement ….)
 
-##Other than GPU factors
+## Other than GPU factors
 Each separate process creates its own YOLO object along with a completely separate model. This translates in a goo chunnk of systems memory. On my system, TOP reports the resident memory footprint of one YOLO process as 2.8 Gigabytes. 10 streams amount to 28 Gigabytes, and many machines don’t have that much. While the GPU and memory plays the biggest role, the CPU is not that much of a factor. An ageing 4core Intel 6700K, taxed with 9 processes run in parallel on a 1080 ti, would deliver around 4 fps per process, while the load average zoomed to 13. A beefy 32core monster, the Threadripper 3970x, also delivered 4 fps per each of the 9 processes, but with a load average of 3.8, it barely broke a sweat. 
-##Needless to say, but said anyway: 
+## Needless to say, but said anyway: 
 All the settings used in init_yolo are on a per-session basis. They can be completely different, or all the same from session to session. 
-##Infamous last words
+## Infamous last words
 Development was on Ubuntu 18.04, with Python3.7. No other systems were tested. 
 My programming skills are completely self-taught. I tried my hands on assembler and BASIC half a century ago, and I took up Python to keep me busy after retirement. My code definitely is in need of improvement, and it could be completely flawed. Have at it. 
