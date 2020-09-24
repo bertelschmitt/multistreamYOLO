@@ -17,7 +17,9 @@ Following init_yolo() down the dark rabbit-hole called of keras_yolo, and diggin
 **config.gpu_options.allow_growth** allows you to use the memory on your GPU more sensibly: Set to False, the session will grab all of the GPU’s available memory (or the assigned fraction thereof) whether it is needed, or not. Set to True, the session will claim only the memory it needs at initialization, and it will “grow” more memory if it needs it, as long as there is memory available. Run a single process with the allow_growth flag set to True. Watch GPU memory for a while. If it doesn’t grow, then that’s all the GPU memory the process will ever need, more will simply go to waste. Under Tensorflow 1.X, a single stream with per_process_gpu_memory_fraction set to 1, and with allow_growth enabled, claimed 8,107 MiB of the 11,178 MiB available on a 1080ti. With Tensorflow 2.3, the footprint grew to 8,575 MiB. I usually keep allow_growth set to true.
 
 With these options in place, multiple Python processes can claim their own YOLO instance and run in parallel. They can use the same model, or different ones. Of course, throughput per process will drop as you add more processes, after all, you are sharing GPU power. You can get around this problem by sending only every n-th frame to Yolo while displaying all. Depending on your use case, it probably won’t make much difference whether you try detecting an object twenty times, or four times a second.
-##Improvements 
+
+## Improvements 
+
 While we are at it, let’s implement a few improvements.
 
 With the **hush** flag set, most if not all the annoying notices cluttering your monitor during init_yolo will be silenced.
@@ -29,6 +31,34 @@ The strategically important routine is **detect_image()**. We feed it an image, 
 What if we want the actual name of the detected object, along with the time spent on the detection? **detect_image_extended()** will provide that additional info. **detect_image()** is kept for backward compatibility.
 
 (Tangent: detect_image spends quite some time drawing boxes, which made the original author leave an exasperated comment: “My kingdom for a good redistributable image drawing library.” OpenCV has a snappy box draw routine, and it is generally faster than the Pillow library used in detect_image. To shave off a few cycles, OpenCV could be used. If all you are interested in are the coordinates, and the detected object, the image drawing could be (optionally) avoided altogether. Room for improvement ….)
+
+
+## Your options
+
+Here are all options, old and new, that are built into the YOLO object. You don't have to use them all, there are defaults ...
+
+**model_path** : 	Path to the model
+
+**anchors_path** : 	Path to the anchors
+
+**classes_path** : 	Path to the classes
+
+**score** : 		Don't report an object if less confidence
+
+**model_image_size** : 	The image size used by the model
+
+**hush** : 		Flag to quiet YOOLO down
+
+**iou** : 		Intersection over union, avoid multiple bounding boxes for same object
+
+**run_on_gpu** : 	Which GPU to run on
+
+**gpu_memory_fraction** : How much GPU memory to claim
+
+**allow_growth** : 	Dynamic memory allocation, or not
+
+**ignore_labels** : 	List of obhjects to ignore
+
 
 ## Other than GPU factors
 Each separate process creates its own YOLO object along with a completely separate model. This translates in a goo chunnk of systems memory. On my system, TOP reports the resident memory footprint of one YOLO process as 2.8 Gigabytes. 10 streams amount to 28 Gigabytes, and many machines don’t have that much. While the GPU and memory plays the biggest role, the CPU is not that much of a factor. An ageing 4core Intel 6700K, taxed with 9 processes run in parallel on a 1080 ti, would deliver around 4 fps per process, while the load average zoomed to 13. A beefy 32core monster, the Threadripper 3970x, also delivered 4 fps per each of the 9 processes, but with a load average of 3.8, it barely broke a sweat. 
