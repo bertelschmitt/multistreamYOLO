@@ -1,6 +1,13 @@
 # TrainYourOwnYOLO: Building a Custom Object Detector from Scratch [![License: CC BY 4.0](https://img.shields.io/badge/License-CC%20BY%204.0-lightgrey.svg)](https://creativecommons.org/licenses/by/4.0/)
 
-This repo let's you train a custom image detector using the state-of-the-art [YOLOv3](https://pjreddie.com/darknet/yolo/) computer vision algorithm. For a short write up check out this [medium post](https://medium.com/@muehle/how-to-train-your-own-yolov3-detector-from-scratch-224d10e55de2). This repo works with TensorFlow 2.3 and Keras 2.4.
+This repo let's you train a custom image detector using the state-of-the-art [YOLOv3](https://pjreddie.com/darknet/yolo/) computer vision algorithm. For a short write up check out this [medium post](https://medium.com/@muehle/how-to-train-your-own-yolov3-detector-from-scratch-224d10e55de2). This repo works with TensorFlow 2.3 and Keras 2.4. 
+
+This repo also allows you to detect objects in multiple streams, with multiple GPUs, and with multiple models, all at the same time, and in parallel. The number of streams depends on the amount of memory available on the GPU.  A YOLO process demands around a gigabyte of memory, therefore, 11 streams can be squeezed into a Geforce 1080ti with 11 Gbytes. This is achieved with a modified YOLO object. A more in-depth ### description is here.
+
+This repo comes with a very early version of MultiDetect.py, an application that makes use of the multi-stream, multi-GPU YOLO object. MultiDetect.py allows you to manage multiple streams and GPUs, to display the output on one or many monitors, and to automatically record video and attendant data files. An in-depth description of  MultiDetect.py is here. 
+
+Both the modified YOLO process and MultiDetect.py are written in pure Python3.7. They integrate into TrainYourOwnYOLO, use the same models and workflows. 
+			
 
 ### Pipeline Overview
 
@@ -38,33 +45,25 @@ To speed up training, it is recommended to use a **GPU with CUDA** support. For 
 
 ### Installation
 
-#### Setting up Virtual Environment [Linux or Mac]
+
+#### Setting up Virtual Environment 
+
+Note: This repo so far has been developed and tested on Ubuntu (20.04, and 18.04) only. 
 
 Clone this repo with:
 ```
 git clone https://github.com/AntonMu/TrainYourOwnYOLO
 cd TrainYourOwnYOLO/
 ```
-Create Virtual **(Linux/Mac)** Environment:
+Create Virtual **(Linux)** Environment:
 ```
 python3 -m venv env
 source env/bin/activate
 ```
 Make sure that, from now on, you **run all commands from within your virtual environment**.
 
-#### Setting up Virtual Environment [Windows]
-Use the [Github Desktop GUI](https://desktop.github.com/) to clone this repo to your local machine. Navigate to the `TrainYourOwnYOLO` project folder and open a power shell window by pressing **Shift + Right Click** and selecting `Open PowerShell window here` in the drop-down menu.
 
-Create Virtual **(Windows)** Environment:
-
-```
-py -m venv env
-.\env\Scripts\activate
-```
-![PowerShell](/Utils/Screenshots/PowerShell.png)
-Make sure that, from now on, you **run all commands from within your virtual environment**.
-
-#### Install Required Packages [Windows, Mac or Linux]
+#### Install Required Packages
 Install required packages (from within your virtual environment) via:
 
 ```
