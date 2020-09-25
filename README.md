@@ -4,7 +4,7 @@ This repo let's you train a custom image detector using the state-of-the-art [YO
 
 This repo also allows you to detect objects in multiple streams, with multiple GPUs, and with multiple models, all at the same time, and in parallel. The number of streams depends on the amount of memory available on the GPU.  A YOLO process demands around a gigabyte of memory, therefore, 11 streams can be squeezed into a Geforce 1080ti with 11 Gbytes. This is achieved with a modified YOLO object. A more [**in-depth description is here.**](https://github.com/bertelschmitt/multistreamYOLO/blob/master/MultiYOLO.md)
 
-This repo comes with a very early version of MultiDetect.py, an application that makes use of the multi-stream, multi-GPU YOLO object. MultiDetect.py allows you to manage multiple streams and GPUs, to display the output on one or many monitors, and to automatically record video and attendant data files. An in-depth description of  MultiDetect.py is here. 
+This repo comes with a very early version of MultiDetect.py, an application that makes use of the multi-stream, multi-GPU YOLO object. MultiDetect.py allows you to manage multiple streams and GPUs, to display the output on one or many monitors, and to automatically record video and attendant data files. An [**in-depth description of  MultiDetect.py is here**](https://github.com/bertelschmitt/multistreamYOLO/blob/master/MultiDetect.md). 
 
 Both the modified YOLO process and MultiDetect.py are written in pure Python3.7. They integrate into TrainYourOwnYOLO, use the same models and workflows. 
 			
