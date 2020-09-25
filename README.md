@@ -2,7 +2,7 @@
 
 This repo let's you train a custom image detector using the state-of-the-art [YOLOv3](https://pjreddie.com/darknet/yolo/) computer vision algorithm. For a short write up check out this [medium post](https://medium.com/@muehle/how-to-train-your-own-yolov3-detector-from-scratch-224d10e55de2). This repo works with TensorFlow 2.3 and Keras 2.4. 
 
-This repo also allows you to detect objects in multiple streams, with multiple GPUs, and with multiple models, all at the same time, and in parallel. The number of streams depends on the amount of memory available on the GPU.  A YOLO process demands around a gigabyte of memory, therefore, 11 streams can be squeezed into a Geforce 1080ti with 11 Gbytes. This is achieved with a modified YOLO object. A more in-depth ### description is here.
+This repo also allows you to detect objects in multiple streams, with multiple GPUs, and with multiple models, all at the same time, and in parallel. The number of streams depends on the amount of memory available on the GPU.  A YOLO process demands around a gigabyte of memory, therefore, 11 streams can be squeezed into a Geforce 1080ti with 11 Gbytes. This is achieved with a modified YOLO object. A more [**in-depth description is here.**](https://github.com/bertelschmitt/multistreamYOLO/blob/master/MultiYOLO.md)
 
 This repo comes with a very early version of MultiDetect.py, an application that makes use of the multi-stream, multi-GPU YOLO object. MultiDetect.py allows you to manage multiple streams and GPUs, to display the output on one or many monitors, and to automatically record video and attendant data files. An in-depth description of  MultiDetect.py is here. 
 
