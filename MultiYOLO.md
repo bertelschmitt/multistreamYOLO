@@ -11,7 +11,7 @@ There is a gpu_num flag in init_yolo, but it won’t let you assign a GPU. It pu
 **18 streams with 2 GPUs with room to spare**
 
 ## The solution.
-Following init_yolo() down the dark rabbit-hole called of keras_yolo, and digging around its scant documentation, if developed an idea of what happens when you initialize the session. Left alone, the session indeed grabs all of the memory of the most powerful GPU in the machine, whether you need it, or not. However, there are other options Yolo currently does not use. 
+Following init_yolo() down the dark rabbit-hole of keras_yolo, and digging around its scant documentation, I developed an idea of what happens when you initialize the session. Left alone, the session indeed grabs all of the memory of the most powerful GPU in the machine, whether you need it, or not. However, there are other options Yolo currently does not use. 
 
 **config.gpu_options.per_process_gpu_memory_fraction** is the most important option of all. It allows to allocate just a fraction of the GPU memory. Set it to 0.5, and only half of the GPU memory will be used. (Close, but not quite, as we will see below.) The remainder of the memory will be available for subsequent sessions.
 
