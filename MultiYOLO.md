@@ -40,6 +40,8 @@ What if we want the actual name of the detected object, along with the time spen
 
 Here are all options, old and new, that are built into the YOLO object. You don't have to use them all, there are defaults ...
 
+**Familiar settings:**
+
 **model_path** : 	Path to the model
 
 **anchors_path** : 	Path to the anchors
@@ -49,6 +51,8 @@ Here are all options, old and new, that are built into the YOLO object. You don'
 **score** : 		Don't report an object if less confidence
 
 **model_image_size** : 	The image size used by the model
+
+**New settings:**
 
 **hush** : 		Flag to quiet YOOLO down
 
