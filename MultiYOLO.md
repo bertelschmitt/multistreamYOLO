@@ -7,6 +7,9 @@ With this tweak to the popular TrainYourOwnYOLO, and with a halfway powerful GPU
 What kept you from processing two or more streams at once is the fact that when you initialize the YOLO object, it allocates all available GPU memory for that instance. If there are more CUDA-enabled GPUs in the machine, the most powerful appears to be grabbed, and all others will be ignored. Try initializing a second Yolo instance, and you will get an “Unexpected CUDA error: out of memory,” never mind that there could be a second, complete idle GPU in your machine. 
 There is a gpu_num flag in init_yolo, but it won’t let you assign a GPU. It purports to use multiple GPUs for inference. My tests showed that in the best case, that flag will get you a couple of fps more, in the worst case, yolo will slow down. I could not find anything in the code that allowed for separate YOLO instances, whether it’s on the same, or on multiple GPUs in one machine. 
 
+![2windows](/Utils/Screenshots/catwide.jpg)
+**18 streams with 2 GPUs with room to spare**
+
 ## The solution.
 Following init_yolo() down the dark rabbit-hole called of keras_yolo, and digging around its scant documentation, if developed an idea of what happens when you initialize the session. Left alone, the session indeed grabs all of the memory of the most powerful GPU in the machine, whether you need it, or not. However, there are other options Yolo currently does not use. 
 
