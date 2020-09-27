@@ -71,15 +71,26 @@ The Master Window is a rudimentary status and control window. It is driven by th
 
 The window will list the GPU(s) usable by YOLO via Tensorflow and CUDA. Note: The GPU number is as reported by Tensorflow, it sometimes is different from what Nvidia-smi says. 
 
-To help you in adjusting the proper frame rates, the master window will give you running stats per process. Let it run for a little while, the numbers are running averages and need a little time to settle. Current frames and seconds are displayed as reported by the streams. Keep in mind that IP cams often report bogus data. **IFPS** is the incoming frame rate, again as reported. It depends on what the videosource claims it is. A --- denotes a missing, or bogus frame rate. **YFPS** is the frame rate the respective YOLO stream currently can handle. **OFPS** is the outgoing frame rate. **N** tells you that every nth frame is being processed. **EFPS** is the effective frame rate of what is sent to YOLO, i.e. IFPS divided by n.
+To help you in adjusting the proper frame rates, the master window will give you running stats per process. Let it run for a little while, the numbers are running averages and need a little time to settle. Current frames and seconds are displayed as reported by the streams. Keep in mind that IP cams often report bogus data. **IFPS** is the incoming frame rate, again as reported. It depends on what the videosource claims it is. 
+
+**The strategy to determine incoming fps is as follows:**
+
+If the stream exposes **PROP_FPS**, and if the PROP_FPS reported look somewhat believable ( 0 < PROP_FPS < 200 – adjust the code for a super high speed camera), we take that number. The incoming FPS are updated continuously to reflect any changes during the run.
+If the above fails, we will try **PROP_POS_FRAMES / PROP_POS_MSEC * 1000** , and if the result passes the sanity check as above, we will take it.  The incoming FPS are updated continuously, HOWEVER, as the total of frames since start is divided by the total of seconds since start, the fps will be a cumulative average.
+If all else fails, we will measure the incoming fps in a **timing loop**. We do this only once after the stream starts.
+
+A --- denotes a missing, or bogus frame rate. **YFPS** is the frame rate the respective YOLO stream currently can handle. **OFPS** is the outgoing frame rate. **N** tells you that every nth frame is being processed. **EFPS** is the effective frame rate of what is sent to YOLO, i.e. IFPS divided by n.
 
 Let’s say you process two streams, and you see a YFPS of 14, a common number for a 1080ti. To avoid video drift, the number of frames (EFPS) sent to YOLO should not exceed its YFPS, actually, it should be a little lower to allow for overhead. Be aware that YFPS is the average round-trip speed of your video sent through YOLO. The calling video_process needs time also, as a matter of fact, a lot of time is spent in waiting for the next video frame. (If you want to investigate this a bit further, set **profile:** to true. With the help of cProfile, a timing profile of the video_process() will be built for 3000 frames, and shown for each process, so you can see where all the time is spent.)
 
 If EFPS > YFPS, either lower the frame rate at the source, or adjust the do_only_every settings. Say you incoming frame rate is 16, and do_only_every_initial is set to 4. This will result in an EFPS of 4, a number that will be easily handled. These settings become important as you add multiple streams to one GPU. You will see the per-process YFPS go down, because the power of the GPU is shared by multiple processes. If OFPS sinks below IFPS, you will experience frame drift in short order. Reduce the incoming frame rate, and/or adjust the do_only_every settings.
 
+When redcording video, outgoing OFPS should be the same as incoming IFPS. If the incoming stream isa webstream, or prodcued by a webcam, the outgoing FPS cannot exceed icoming FPS. If the sopurce is a file, the file can be consumed rapidly, and the outgoing rate can be much higher the the rated fps. If the incoming source is a file, MultiDetect.py will adjust **cv2.waitkey** to approximate the proper outgoing rate. It may take 30 seconds or so until an equilibrium is reached. 
+ 
 As a default, the rolling YFPS average is calculated for the last 32 frames. You can adjust this number with the rolling_average_n setting in MultiDetect.conf
 
 The master window also will show the total of frames and seconds of each video stream and any differences between the streams and stream #1. This is based on what the video streams report via cv2.videocapture. These properties can be very unreliable, especially between IP cameras of different brands. As long as the actual video streams are halfway in sync, do not be alarmed if you see the frame and second differences pile up.
+
 
 **Buttons:**  **“Quit”** will quit. **“Restart”** will restart  MultiDetect.py. **“Record,”** if green, will cause as video_processes to record their video stream. If red, the button will stop recording. The **“Redraw”** button will cause the video_processes to move their output windows into the coordinates specified in their Process_ block. **Aduio** will turn on/off audible chimes.
  
