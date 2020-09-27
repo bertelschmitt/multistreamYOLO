@@ -9,6 +9,7 @@ This repo comes with a very early version of MultiDetect.py, an application that
 Both the modified YOLO process and MultiDetect.py are written in pure Python3.7. They integrate into TrainYourOwnYOLO, use the same models and workflows. 
 
 ![4windows](/Utils/Screenshots/4stream.gif)
+
 **You can create as many independet YOLO video streams as your GPU can stomach**
 			
 
