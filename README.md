@@ -7,6 +7,9 @@ This repo also allows you to detect objects in multiple streams, with multiple G
 This repo comes with a very early version of MultiDetect.py, an application that makes use of the multi-stream, multi-GPU YOLO object. MultiDetect.py allows you to manage multiple streams and GPUs, to display the output on one or many monitors, and to automatically record video and attendant data files. An [**in-depth description of  MultiDetect.py is here**](https://github.com/bertelschmitt/multistreamYOLO/blob/master/MultiDetect.md). 
 
 Both the modified YOLO process and MultiDetect.py are written in pure Python3.7. They integrate into TrainYourOwnYOLO, use the same models and workflows. 
+
+![18windows](/Utils/Screenshots/catwide.jpg)
+**You can create as many independet YOLO video streams as your GPU can stomach**
 			
 
 ### Pipeline Overview
