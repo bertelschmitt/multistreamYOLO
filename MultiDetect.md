@@ -23,7 +23,7 @@ For instance, a ‘startrecording’ command, sent to 0, i.e. all processes, wou
 New commands can be implemented in code. 
 
 ## Configuration and initialization
-**DO NOT CHANGE OPTIONS IN CODE** – it would break the logic. MultiDetect.py is configured with an extensive configuration file, MultiDetect.conf. If you run MultiDetect.py without the MultiDetect.conf file, it will try starting with limited defaults 
+**DO NOT CHANGE OPTIONS IN CODE** – it would break the logic. MultiDetect.py is configured with an extensive configuration file, **MultiDetect.conf**. If you run MultiDetect.py without the MultiDetect.conf file, it will try starting with limited defaults 
 
 The MultiDetect.conf file has the following sections:
 
