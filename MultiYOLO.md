@@ -71,7 +71,7 @@ Here are all options, old and new, that are built into the YOLO object. You don'
 Each separate process creates its own YOLO object along with a completely separate model. This can translate into a healthy chunk of systems memory. On my system, TOP reports the resident memory footprint of one YOLO process as 2.8 Gigabytes. 10 streams amount to 28 Gigabytes, and many machines don’t have that much. While the GPU and memory play the leading role, the CPU is not that much of a factor. An aging 4core Intel 6700K, taxed with 9 processes run in parallel on a 1080 ti, would deliver around 4 fps per process, while the load average zoomed to 13. A beefy 32core monster, the Threadripper 3970x, also delivered 4 fps per each of the 9 processes, but with a load average of 3.8, it barely broke a sweat. 
 
 ## Needless to say, but said anyway: 
-All the settings used in init_yolo are on a per-session basis. They can be completely different, or all the same from session to session. 
+All the settings used in init_yolo are on a per-session basis. From session to session, settings can be completely different, or mostly all the same. 
 
 ## Infamous last words
 Development was on Ubuntu 18.04, with Python3.7. No other systems were tested. 
