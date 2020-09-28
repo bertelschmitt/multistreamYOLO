@@ -10,22 +10,22 @@ Both the modified YOLO process and MultiDetect.py are written in pure Python3.7.
 
 ![4windows](/Utils/Screenshots/4stream.gif)
 
-**You can create as many independet YOLO video streams as your GPU can stomach**
-			
+**You can create as many independent YOLO video streams as your GPU can stomach**
+            
 
 ### Pipeline Overview
 
 To build and test your YOLO object detection algorithm follow the below steps:
 
  1. [Image Annotation](/1_Image_Annotation/)
-	 - Install Microsoft's Visual Object Tagging Tool (VoTT)
-	 - Annotate images
+     - Install Microsoft's Visual Object Tagging Tool (VoTT)
+     - Annotate images
  2. [Training](/2_Training/)
- 	- Download pre-trained weights
- 	- Train your custom YOLO model on annotated images 
+    - Download pre-trained weights
+    - Train your custom YOLO model on annotated images 
  3. [Inference](/3_Inference/)
- 	- Detect objects in new images and videos
-	- Detect objects in parallel in multiple streams and on multiple GPUs
+    - Detect objects in new images and videos
+    - Detect objects in parallel in multiple streams and on multiple GPUs
 
 ## Repo structure
 + [`1_Image_Annotation`](/1_Image_Annotation/): Scripts and instructions on annotating images
@@ -40,9 +40,9 @@ To build and test your YOLO object detection algorithm follow the below steps:
 The only hard requirement is a running version of python 3.6 or 3.7. To install python 3.7 go to 
 - [python.org/downloads](https://www.python.org/downloads/release/python-376/) 
 
-and follow the installation instructions. Note that this repo has only been tested with python 3.6 and python 3.7 thus it is recommened to use either `python3.6` or `python3.7`.
+and follow the installation instructions. Note that this repo has only been tested python 3.7 thus it is recommended to use `python3.7`.
 
-To speed up training, it is recommended to use a **GPU with CUDA** support. For example on [AWS](/2_Training/AWS/) you can use a `p2.xlarge` instance (Tesla K80 GPU with 12GB memory). Inference is very fast even on a CPU with approximately ~2 images per second. If you want to use your own machine, follow the instructions at [tensorflow.org/install/gpu](https://www.tensorflow.org/install/gpu) to install CUDA drivers. Make sure to install the [correct version of CUDA and cuDNN](https://www.tensorflow.org/install/source#linux). 
+To speed up training, it is recommended to use a **GPU with CUDA** support. For example on [AWS](/2_Training/AWS/) you can use a `p2.xlarge` instance (Tesla K80 GPU with 12GB memory). Inference is very fast even on a CPU with approximately ~2 images per second. If you want to use your own machine, follow the instructions at [tensorflow.org/install/gpu](https://www.tensorflow.org/install/gpu) to install CUDA drivers. Make sure to install the [correct version of CUDA and cuDNN](https://www.tensorflow.org/install/source#linux). Note: This repo has not been tested with anything else than pure metal GPUs. 
 
 
 ### Installation
