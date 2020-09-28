@@ -1,12 +1,12 @@
 # MultiDetect.py
 
-MultiDetect.py started as a quick and dirty testbench to validate multi-stream YOLO, and it (d)evolved into a 2,000+ lines monster that can show multiple YOLO streams on multiple (or one) monitor, it can record video automatically when a desired object is detected, it can even audibly alert the bored operator.
+MultiDetect.py started as a quick and dirty test-bench to validate multi-stream YOLO, and it (d)evolved into a 2,000+ lines monster that can show multiple YOLO streams on multiple (or one) monitor, it can record video automatically when a desired object is detected, it can even audibly alert the bored operator.
 
 ## The video_process(es)
 Each of the YOLO streams is handled by a completely independent Python process. You can launch as many processes as you desire, and as your hardware can stomach. The video process is, not surprisingly, called video_process(). It grabs video frames from a webcam, file, or on-line stream, it runs the video frames through a YOLO model specified by you, it then goes on to display, and optionally store the results in a video file.
 Using the modded YOLO class ([**more on that in its description**](https://github.com/bertelschmitt/multistreamYOLO/blob/master/MultiYOLO.md)), the video_process can use a dedicated GPU as specified in **FLAGS.run_on_gpu**, and/or it will run on a fraction of a GPU as specified in **gpu_memory_fraction**. There is no bounds checking. The process will crash if the GPU, or the total of claimed GPU memory are out of bounds. Be aware that each video_process will initialize and maintain its own copy of the YOLO class, and can require around 2.5 G of main memory each. With multiple streams, it can quickly add up. MultiDetect.py may crash ignominiously when memory-starved. The process will run forever unless stopped by the operator, or if an unrecoverable error occurs. 
 
-![You can have as many processes as your GPU xan stomach](/Utils/Screenshots/MD-arch.png)
+![You can have as many processes as your GPU can stomach](/Utils/Screenshots/MD-arch.png)
 
 ## The master process
 The master process is a central hub that acts as a common switchboard to facilitate communication with and between the video_processes. The master process also maintains a rudimentary GUI status window. 
@@ -40,7 +40,7 @@ If there are more **num_processes:** than per process settings, these processes 
 
 All settings are documented in MultiDetect.conf. Here are a few that need more explaining.
 
-**soundalert:** will, when True, alert you to the presence of a member of an object family specified in presence_trigger: If soundalert: is set to True, MultiDetect.py will probe for a valid sound output, and it will turn itself off when none is found. Due to the wild and wooly world of Linux audio, the probing is rather messy, and it can take time. Set soundalert: to False if your machine has no sound, or you don’t want to hear any. 
+**soundalert:** will, when True, alert you to the presence of a member of an object family specified in presence_trigger: If soundalert: is set to True, MultiDetect.py will probe for a valid sound output, and it will turn itself off when none is found. Due to the wild and woolly world of Linux audio, the probing is rather messy, and it can take time. Set soundalert: to False if your machine has no sound, or you don’t want to hear any. 
 
 The object families are created in **labeldict:** If, for instance, labeldict is equal to { 'Lily':'cat', 'Bella':'cat','Chloe':'cat','Tweety':'bird'}, and if presence_trigger: is set to ‘cat,’ an audible sound will be played when Lily, Bella, or Chloe are detected. The bird Tweety will be ignored. 
 
@@ -61,9 +61,9 @@ Even the most capable GPU can easily be overwhelmed when subjected to higher fra
 
 **do_only_every_initial:**  causes only every nth image to be run through YOLO. If set to 4, every 4th frame would be run through YOLO. With a 24fps video, YOLO would only be subjected to 6fps
 
-**do_only_every_autovideo:** runs only every nth image through yolo during autovideo recording 
+**do_only_every_autovideo:** runs only every nth image through YOLO during autovideo recording 
 
-**do_only_every_present:**  runs every nth image through yolo after activity was detected and until presence_timer_interval times out
+**do_only_every_present:**  runs every nth image through YOLO after activity was detected and until presence_timer_interval times out
 
 A judicious use of these settings will also result in considerable power savings. 
 
@@ -71,9 +71,9 @@ A judicious use of these settings will also result in considerable power savings
 
 The Master Window is a rudimentary status and control window. It is driven by the master process. It allows you to Quit and Restart the app, to start and stop recording of video and to turn on/off audible prompts. Most of all, it gives you a picture of the frame rates achieved by each video_process.
 
-The window will list the GPU(s) usable by YOLO via Tensorflow and CUDA. Note: The GPU number is as reported by Tensorflow, it sometimes is different from what Nvidia-smi says. 
+The window will list the GPU(s) usable by YOLO via TensorFlow and CUDA. Note: The GPU number is as reported by TensorFlow, it sometimes is different from what nvidia-smi says. 
 
-To help you in adjusting the proper frame rates, the master window will give you running stats per process. Let it run for a little while, the numbers are running averages and need a little time to settle. Current frames and seconds are displayed as reported by the streams. Keep in mind that IP cams often report bogus data. **IFPS** is the incoming frame rate, again as reported. It depends on what the videosource claims it is. 
+To help you in adjusting the proper frame rates, the master window will give you running stats per process. Let it run for a little while, the numbers are running averages and need a little time to settle. Current frames and seconds are displayed as reported by the streams. Keep in mind that IP cams often report bogus data. **IFPS** is the incoming frame rate, again as reported. It depends on what the video source claims it is. 
 
 **The strategy to determine incoming fps is as follows:**
 
@@ -87,14 +87,14 @@ Let’s say you process two streams, and you see a YFPS of 14, a common number f
 
 If EFPS > YFPS, either lower the frame rate at the source, or adjust the do_only_every settings. Say you incoming frame rate is 16, and do_only_every_initial is set to 4. This will result in an EFPS of 4, a number that will be easily handled. These settings become important as you add multiple streams to one GPU. You will see the per-process YFPS go down, because the power of the GPU is shared by multiple processes. If OFPS sinks below IFPS, you will experience frame drift in short order. Reduce the incoming frame rate, and/or adjust the do_only_every settings.
 
-When redcording video, outgoing OFPS should be the same as incoming IFPS. If the incoming stream isa webstream, or prodcued by a webcam, the outgoing FPS cannot exceed icoming FPS. If the sopurce is a file, the file can be consumed rapidly, and the outgoing rate can be much higher the the rated fps. If the incoming source is a file, MultiDetect.py will adjust **cv2.waitkey** to approximate the proper outgoing rate. It may take 30 seconds or so until an equilibrium is reached. 
+When recording video, outgoing OFPS should be the same as incoming IFPS. If the incoming stream is a webstream, or produced by a webcam, the outgoing FPS cannot exceed incoming FPS. If the source is a file, the file will be consumed rapidly, and thus the outgoing rate can be much higher the the rated fps. So if the incoming source is a file, MultiDetect.py will adjust **cv2.waitkey** to approximate the proper outgoing rate. This is an iterative process, made difficult by the fact that YFPS constantly fluctuates. It may take 30 seconds or so until something close to an equilibrium is reached. 
  
 As a default, the rolling YFPS average is calculated for the last 32 frames. You can adjust this number with the rolling_average_n setting in MultiDetect.conf
 
 The master window also will show the total of frames and seconds of each video stream and any differences between the streams and stream #1. This is based on what the video streams report via cv2.videocapture. These properties can be very unreliable, especially between IP cameras of different brands. As long as the actual video streams are halfway in sync, do not be alarmed if you see the frame and second differences pile up.
 
 
-**Buttons:**  **“Quit”** will quit. **“Restart”** will restart  MultiDetect.py. **“Record,”** if green, will cause as video_processes to record their video stream. If red, the button will stop recording. The **“Redraw”** button will cause the video_processes to move their output windows into the coordinates specified in their Process_ block. **Aduio** will turn on/off audible chimes.
+**Buttons:**  **“Quit”** will quit. **“Restart”** will restart  MultiDetect.py. **“Record,”** if green, will cause as video_processes to record their video stream. If red, the button will stop recording. The **“Redraw”** button will cause the video_processes to move their output windows into the coordinates specified in their Process_ block. **Audio** will turn on/off audible chimes.
  
 
 ## The YOLO settings
@@ -102,17 +102,17 @@ The master window also will show the total of frames and seconds of each video s
 **model_path:** should point to "…/TrainYourOwnYOLO/Data/Model_Weights /trained_weights_final.h5" or wherever you put your model.
 **classes_path:** should point to "…/TrainYourOwnYOLO/Data/Model_Weights/data_classes.txt" or wherever you stored the file.
 **anchors_path:** should point to "…/TrainYourOwnYOLO/2_Training/src/keras_yolo3/model_data/yolo_anchors.txt"or wherever you stored the anchors.
-**run_on_gpu:** The GPU number you want the process to run on. The number is the one reported by Tensorflow and shown in the Master Window. It may be different from what nvidia-smi says.
+**run_on_gpu:** The GPU number you want the process to run on. The number is the one reported by TensorFlow and shown in the Master Window. It may be different from what nvidia-smi says.
 **gpu_memory_fraction:** How much GPU memory to allocate to the process. 1 = 100%, 0.1 = 10% . Process will crash if GPU memory insufficient. When set to less than 1 (100%), the total for all processes must be less than 100% to allow for overhead. You will be able to fit more processes into a card that is not used for video output. The number is a recommendation, and will result in slightly different memory footprints. Experiment.
 **hush:** will, when True, try to suppress the annoying status messages during startup. It also may suppress non-fatal error messages. It is recommended to set hush: to false during setup and testing. It can be turned on when things run smoothly.
 **allow_growth:** GPU memory allocation strategy. -1 let Keras decide, 0 disallow, 1 allow memory to dynamically grow. Best setting to optimize memory usage appears to be 1 
 **score:** YOLO will report objects at and above that confidence score, it will keep anything lower to itself.
-ignore_labels: A list (i.e. ['Aaa','Bbb'] ) of object names YOLO will not report when found. Keep empty [ ] to disable this feature.
+ignore_labels: A list (i.e. ['aaa','bbb'] ) of object names YOLO will not report when found. Keep empty [ ] to disable this feature.
 
-**video_path:** specifies the incoming video source for that process. It can be anything understood by cv2.videocapture. It can be a video file, an URL of a video stream, or a webcam. For a webcam, set video-path to 0 (1, 2, 3 ....) no quotes. For video file, set to path to file name, in quotes. For live stream, set to the url of the stream, in quotes.
+**video_path:** specifies the incoming video source for that process. It can be anything understood by cv2.videocapture. It can be a video file, an URL of a video stream, or a webcam. For a webcam, set video-path to 0 (1, 2, 3 ....) no quotes. For video file, set to path to file name, in quotes. For live stream, set to the URL of the stream, in quotes.
 
 
-Like all of the settings, you can put the YOLO settings once into the Common: block, and they will be used by all processes. If you put the settings into a Process_ block, they will be used by that process only. This way, you can use different models in different processes, and you can assign a specific GPU to a process. If a setting is the same in all Process_ blocks, simply keep in it Common: 
+Like all of the Common settings, you can put the YOLO settings once into the Common: block, and they will be used by all processes. If you put the settings into a Process_ block, they will be used by that process only. This way, you can use different models in different processes, and you can assign a specific GPU to a process. If a setting is the same in all Process_ blocks, there is no need to repeat it. Simply keep it once in Common: 
 
 ## Output settings
 
@@ -122,11 +122,11 @@ With these settings, you can put multiple video windows on one monitor. To move 
 
 ## Hush!
 
-Tensorflow has the nasty habit to clutter the screen with rather useless status messages. Not only do they look messy, they also drown out real error messages. You can shut-up MultiDetect.py with the hush: setting. When True, most chattiness should cease. “Should,” because Tensorflow 2.3 introduced new chitchat during the initialization phase of YOLO. This can be silenced by starting TensorFlow.py with a small script called MM. MD will set the environment variable **TF_CPP_MIN_LOG_LEVEL=3** and start MultiDetect.py. You can also move MD somewhere on the path, for instance into /usr/local/bin, make it change to the directory where MultiDetect.py resides, and make md executable. Start MultiDetect.py via MD, and all will be quiet.
+TensorFlow has the nasty habit to clutter the screen with rather useless status messages. Not only do they look messy, they also drown out real error messages. You can shut-up MultiDetect.py with the hush: setting. When True, most chattiness should cease. “Should,” because TensorFlow 2.3 introduced new chitchat during the initialization phase of YOLO. This can be silenced by starting MultiDetect.py with a small script called MD. MD will set the environment variable **TF_CPP_MIN_LOG_LEVEL=3** before starting MultiDetect.py. You can move MD somewhere on the path, for instance into /usr/local/bin, make it change to the directory where MultiDetect.py resides, and make MD executable. Start MultiDetect.py via MD, and all will be quiet.
 
 ## General comments
 
-Throughput doesn’t seem very sensitive to the amount of GPU memory. I have reduced the memory allocation of a single process to just 4% of the available memory of a 11G 1080ti, and YOLO still ran at 18fps. With multiple processes, the frame rate of each process of course sinks. However, the total frame rates of all processes occasionally is higher than a single process running at full speed. Variations between runs are quite common. Frame rates often are higher after a hard reset. I noticed that occasionally and very counterintuitively, a higher do_only_every_ setting can result in lower YFPS. I have no idea why. Also quite mysteriously, YOLO occasionally delivered a higher frame rate when objects were detected, and lower FPS when there was nothing to see. The above could be caused by dynamic frequency scaling, but it’s just a guess.
+Throughput doesn’t seem very sensitive to the amount of GPU memory. I have reduced the memory allocation of a single process to just 4% of the available memory of a 11G 1080ti, and YOLO still ran at 18fps. With multiple processes, the frame rate of each process of course sinks. However, the total frame rates of all processes occasionally is higher than a single process running at full speed. Variations between runs are quite common. Frame rates often are higher after a hard reset. I noticed that occasionally and very counter-intuitively, a higher do_only_every_ setting can result in lower YFPS. I have no idea why. Also quite mysteriously, YOLO occasionally delivered a higher frame rate when objects were detected, and lower FPS when there was nothing to see. The above could be caused by dynamic frequency scaling, but it’s just a guess.
 
 ## A word on IP cameras 
 The market is flooded with cheap IP cameras. Their picture quality can be quite decent these days, their software quality often is lousy. You will often find them contacting servers in China. If you don’t want to star on insecam.org, the infamous database of live IP cameras, do the following: Avoid WiFi cams, use hardwired. Put the cams behind a firewall, making sure that the cameras can’t be reached from the outside, AND MOST OF ALL make sure that the cameras cannot reach the outside. This also keeps the cams from updating their internal clock via NTP. For that, set up your own local NTP server that acts as a common reference for your cams.
