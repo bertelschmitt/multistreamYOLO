@@ -92,6 +92,8 @@ To train your own custom YOLO object detector please follow the instructions det
 - [`1_Image_Annotation`](/1_Image_Annotation/),
 - [`2_Training`](/2_Training/) and
 - [`3_Inference`](/3_Inference/).
+
+When your model(s) run, then venture forth to multiple streams, possibly even on multiple GPUs. 
  
 **To make everything run smoothly it is highly recommended to keep the original folder structure of this repo!**
 
