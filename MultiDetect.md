@@ -124,6 +124,11 @@ With these settings, you can put multiple video windows on one monitor. To move 
 
 TensorFlow has the nasty habit to clutter the screen with rather useless status messages. Not only do they look messy, they also drown out real error messages. You can shut-up MultiDetect.py with the hush: setting. When True, most chattiness should cease. “Should,” because TensorFlow 2.3 introduced new chitchat during the initialization phase of YOLO. This can be silenced by starting MultiDetect.py with a small script called MD. MD will set the environment variable **TF_CPP_MIN_LOG_LEVEL=3** before starting MultiDetect.py. You can move MD somewhere on the path, for instance into /usr/local/bin, make it change to the directory where MultiDetect.py resides, and make MD executable. Start MultiDetect.py via MD, and all will be quiet.
 
+## Bugs!
+
+MultiDetect.py is a very early version, and it is full of bugs. I find new ones every day. The version is on Github, because I’m under pressure to release something. It also is on Github, because we are a community of programmers. If you find a bug, please don’t just report it. Try to find out why it fails.  Much, if not most of the code can be coded better. If you know a better, faster, more elegant way, please let us know. 
+
+
 ## General comments
 
 Throughput doesn’t seem very sensitive to the amount of GPU memory. I have reduced the memory allocation of a single process to just 4% of the available memory of a 11G 1080ti, and YOLO still ran at 18fps. Whrn multiple processes share on GPU, the frame rate of each process of course will sink. However, the total frame rates of all processes occasionally is higher than a single process running at full speed. Variations between runs are quite common. Frame rates often are higher after a hard reset. I noticed that occasionally and very counter-intuitively, a higher do_only_every_ setting can result in lower YFPS. I have no idea why. Also quite mysteriously, YOLO occasionally delivers a higher frame rate when objects were detected, and lower FPS when there was nothing to see. The above could be caused by dynamic frequency scaling, but it’s just a guess.
