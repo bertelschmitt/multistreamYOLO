@@ -93,8 +93,10 @@ As a default, the rolling YFPS average is calculated for the last 32 frames. You
 
 The master window also will show the total of frames and seconds of each video stream and any differences between the streams and stream #1. This is based on what the video streams report via cv2.videocapture. These properties can be very unreliable, especially between IP cameras of different brands. As long as the actual video streams are halfway in sync, do not be alarmed if you see the frame and second differences pile up.
 
+### The Buttons:  
 
-**Buttons:**  **“Quit”** will quit. **“Restart”** will restart  MultiDetect.py. **“Record,”** if green, will cause as video_processes to record their video stream. If red, the button will stop recording. The **“Redraw”** button will cause the video_processes to move their output windows into the coordinates specified in their Process_ block. **Audio** will turn on/off audible chimes.
+**“Quit”** will quit. **“Restart”** will restart MultiDetect.py. **“Record,”** if green, will cause all video_processes to record their video stream. If red, the button will stop recording. Automatic recording is set with the **record_autovideo:** flag in the config file, it also can be re-enabled and re-disabled with the **Autorec** button. Chimes can alert you to the presence of objects. This is set with the ** **Audio** will turn on/off audible chimes. 
+**“Quit”** will quit. **“Restart”** will restart MultiDetect.py. **“Record,”** if green, will cause all video_processes to record their video stream. If red, the button will stop recording. Automatic recording is set with the **record_autovideo:** flag in the config file, it also can be re-enabled and re-disabled with the **Autorec** button. Chimes can alert you to the presence of objects. This is normally set with the **soundalert** flag in the config file. The **Audio** button will also turn on/off audible chimes. The button will be greyed-out if no suitable audio playback was found during startup. 
  
 
 ## The YOLO settings
