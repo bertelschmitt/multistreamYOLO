@@ -2,6 +2,9 @@
 
 MultiDetect.py started as a quick and dirty test-bench to validate multi-stream YOLO, and it (d)evolved into a 2,000+ lines monster that can show multiple YOLO streams on multiple (or one) monitor, it can record video automatically when a desired object is detected, it can even audibly alert the bored operator.
 
+## The Main process
+The main process launches the Master and Video processes after it has parsed the configuration file. It otherwise gets out of the way, except for checking wther all processes are alive and running. The demise of a video process will be announced on the master panel. A dead master process will cause an immediate shutoff. 
+
 ## The video_process(es)
 Each of the YOLO streams is handled by a completely independent Python process. You can launch as many processes as you desire, and as your hardware can stomach. The video process is, not surprisingly, called video_process(). It grabs video frames from a webcam, file, or on-line stream, it runs the video frames through a YOLO model specified by you, it then goes on to display, and optionally store the results in a video file.
 Using the modded YOLO class ([**more on that in its description**](https://github.com/bertelschmitt/multistreamYOLO/blob/master/MultiYOLO.md)), the video_process can use a dedicated GPU as specified in **FLAGS.run_on_gpu**, and/or it will run on a fraction of a GPU as specified in **gpu_memory_fraction**. There is no bounds checking. The process will crash if the GPU, or the total of claimed GPU memory are out of bounds. Be aware that each video_process will initialize and maintain its own copy of the YOLO class, and can require around 2.5 G of main memory each. With multiple streams, it can quickly add up. MultiDetect.py may crash ignominiously when memory-starved. The process will run forever unless stopped by the operator, or if an unrecoverable error occurs. 
