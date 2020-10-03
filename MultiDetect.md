@@ -26,7 +26,7 @@ For instance, a ‘startrecording’ command, sent to 0, i.e. all processes, wou
 New commands can be implemented in code. 
 
 ## Configuration and initialization
-**DO NOT CHANGE OPTIONS IN CODE** – it would break the logic. MultiDetect.py is configured with an extensive configuration file, **MultiDetect.conf**. If you run MultiDetect.py without the MultiDetect.conf file, it will try starting with limited defaults 
+MultiDetect.py is configured with an extensive configuration file, **MultiDetect.conf**. If you run MultiDetect.py without the MultiDetect.conf file, it will try starting with limited defaults. **DO NOT CHANGE OPTIONS IN CODE** – it would break the logic. The code is there to set the defaults only.  
 
 The MultiDetect.conf file has the following sections:
 
@@ -41,7 +41,7 @@ Same can be done manually via the “Redraw” button in the master window.
 If you stick a setting into a **Process_** block, then the setting will be for this particular process only. It overrides the same setting in Common: For instance, if **gpu_memory_fraction** is set to 0.1 in the Common: block, all YOLO processes will claim 10% of the available GPU memory. However, if in the Process_3: block gpu_memory_fraction is set to 0.5, then process #3 will claim 50% of the available GPU memory, while all other processes will continue allocating 10% each. No sanity check is performed.  
 If there are more **num_processes:** than per process settings, these processes will use the settings in **Common:**. If there are no settings in Common:, the process will use the settings of the last good process. If all fails, the process will attempt falling back to defaults.
 
-All settings are documented in MultiDetect.conf. Here are a few that need more explaining.
+All settings are documented in **MultiDetect.conf**. Here are a few that need more explaining.
 
 **soundalert:** will, when True, alert you to the presence of a member of an object family specified in presence_trigger: If soundalert: is set to True, MultiDetect.py will probe for a valid sound output, and it will turn itself off when none is found. Due to the wild and woolly world of Linux audio, the probing is rather messy, and it can take time. Set soundalert: to False if your machine has no sound, or you don’t want to hear any. 
 
