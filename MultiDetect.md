@@ -1,6 +1,6 @@
 # MultiDetect.py
 
-MultiDetect.py started as a quick and dirty test-bench to validate multi-stream YOLO, and it (d)evolved into a 2,000+ lines monster that can show multiple YOLO streams on multiple (or one) monitor, it can record video automatically when a desired object is detected, it can even audibly alert the bored operator.
+MultiDetect.py started as a quick and dirty test-bench to validate multi-stream YOLO, and it (d)evolved into a ~2,000 lines monster that can show multiple YOLO streams on multiple (or one) monitor, it can record video automatically when a desired object is detected, it can even audibly alert the bored operator.
 
 ## The Main process
 The main process launches the Master and Video processes after it has parsed the configuration file. It otherwise gets out of the way, except for checking wther all processes are alive and running. The demise of a video process will be announced on the master panel. A dead master process will cause an immediate shutoff. 
@@ -14,7 +14,7 @@ Using the modded YOLO class ([**more on that in its description**](https://githu
 ## The master process
 The master process is a central hub that acts as a common switchboard to facilitate communication with and between the video_processes. The master process also maintains a rudimentary GUI status window. 
 
-##Process communication
+## Process communication
 The master communicates with the processes, and the processes can communicate with each other through queues. There is a pair of queues (in and out) between the master and each video_process. Communication is via a standardized command block, which is a dictionary, structured as follows:
 
 **{'To': To, 'From': From , 'Command': Command, 'Args': {‘Arg1’:arg, ‘Arg2’:arg …. }}**
