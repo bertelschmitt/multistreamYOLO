@@ -30,18 +30,41 @@ MultiDetect.py is configured with an extensive configuration file, **MultiDetect
 
 The MultiDetect.conf file has the following sections:
 
-**The Startup: block** has settings for the main program. It currently has only one setting, namely num_processes: MultiDetect.py will try launching the number of processes specified in this setting.
+**The Startup: block** has settings for the main program. It currently has only one setting, namely **num_processes:** - MultiDetect.py will try launching the number of processes specified in this setting.  If no ** Startup:** block is specified, or if there is no **num_processes:**, MultiDetect.py will start with default **num_processes: ** set to 1.
 
 **The Master: block** has settings for the master process, i.e.
 **master_window_title:**  title of the master monitor window
 **redraw:**  Set to True to redraw screen to settle windows into their place. When building a grid of multiple small windows, initial positioning of the small windows can be off on certain x-window implementations. The redraw: setting will put the screens into their intended places.
-Same can be done manually via the “Redraw” button in the master window.
+Same can be done manually via the “Redraw” button in the master window. If no **Master:** block is specified, or if the settings are empty, MultiDetect.py will start with defaults master_window_title = "Master", redraw = False, hush = False
 
-**The Common: block** has the settings for the video processes. Settings that will propagate to all processes with ID > 0, i.e. all except the master and any special processes.
-If you stick a setting into a **Process_** block, then the setting will be for this particular process only. It overrides the same setting in Common: For instance, if **gpu_memory_fraction** is set to 0.1 in the Common: block, all YOLO processes will claim 10% of the available GPU memory. However, if in the Process_3: block gpu_memory_fraction is set to 0.5, then process #3 will claim 50% of the available GPU memory, while all other processes will continue allocating 10% each. No sanity check is performed.  
-If there are more **num_processes:** than per process settings, these processes will use the settings in **Common:**. If there are no settings in Common:, the process will use the settings of the last good process. If all fails, the process will attempt falling back to defaults.
+**The Common: block** has the settings for the video processes. Settings will propagate to all processes with ID > 0, i.e. all except the master and any special processes.
+If you stick a setting into a **Process_** block, then the setting will be used in this particular process only. For instance, if **gpu_memory_fraction** is set to 0.1 in the Common: block, all YOLO processes will claim 10% of the available GPU memory. However, if in the Process_3: block gpu_memory_fraction is set to 0.5, then process #3 will claim 50% of the available GPU memory, while all other processes will continue allocating 10% each. No sanity check is performed.  If there is no corresponding **Process_** block, the process will use the settings in **Common:**. If there are no settings in Common:, defaults will be used. 
 
 All settings are documented in **MultiDetect.conf**. Here are a few that need more explaining.
+
+## The YOLO settings
+
+**model_path:** should point to "…/TrainYourOwnYOLO/Data/Model_Weights /trained_weights_final.h5" or wherever you put your model.
+**classes_path:** should point to "…/TrainYourOwnYOLO/Data/Model_Weights/data_classes.txt" or wherever you stored the file.
+**anchors_path:** should point to "…/TrainYourOwnYOLO/2_Training/src/keras_yolo3/model_data/yolo_anchors.txt"or wherever you stored the anchors.
+**run_on_gpu:** The GPU number you want the process to run on. The number is the one reported by TensorFlow and shown in the Master Window. It may be different from what nvidia-smi says.
+**gpu_memory_fraction:** How much GPU memory to allocate to the process. 1 = 100%, 0.1 = 10% . Process will crash if GPU memory insufficient. When set to less than 1 (100%), the total for all processes must be less than 100% to allow for overhead. You will be able to fit more processes into a card that is not used for video output. The number is a recommendation, and will result in slightly different memory footprints. Experiment.
+**hush:** will, when True, try to suppress the annoying status messages during startup. It also may suppress non-fatal error messages. It is recommended to set hush: to false during setup and testing. It can be turned on when things run smoothly.
+**allow_growth:** GPU memory allocation strategy. -1 let Keras decide, 0 disallow, 1 allow memory to dynamically grow. Best setting to optimize memory usage appears to be 1 
+**score:** YOLO will report objects at and above that confidence score, it will keep anything lower to itself.
+ignore_labels: A list (i.e. ['aaa','bbb'] ) of object names YOLO will not report when found. Keep empty [ ] to disable this feature.
+
+**video_path:** specifies the incoming video source for that process. It can be anything understood by cv2.videocapture. It can be a video file, an URL of a video stream, or a webcam. For a webcam, set video-path to 0 (1, 2, 3 ....) no quotes. For video file, set to path to file name, in quotes. For live stream, set to the URL of the stream, in quotes.
+
+Like all of the Common settings, you can put the YOLO settings once into the Common: block, and they will be used by all processes. If you put the settings into a Process_ block, they will be used by that process only. This way, you can use different models in different processes, and you can assign a specific GPU to a process. If a setting is the same in all Process_ blocks, there is no need to repeat it. Simply keep it once in Common: 
+
+## Output settings
+
+**window_wide:** and **window_high:** set the dimensions of the video output of the process.
+**window_x:** and **window_y:**  specify where on the screen the respective window is to be placed.
+With these settings, you can put multiple video windows on one monitor. To move video output to separate monitors, first set-up multi-monitors in your display settings. Set window_wide: and window_high: to match the resolution of your separate monitors. Then set window_x: in Process_1: large enough so that the output window gets pushed to the separate monitor. Set window_y: in Process_1: to 0. Repeat for a second separate monitor as needed. 
+
+## Alerts and recordings
 
 **soundalert:** will, when True, alert you to the presence of a member of an object family specified in presence_trigger: If soundalert: is set to True, MultiDetect.py will probe for a valid sound output, and it will turn itself off when none is found. Due to the wild and woolly world of Linux audio, the probing is rather messy, and it can take time. Set soundalert: to False if your machine has no sound, or you don’t want to hear any. 
 
@@ -52,6 +75,9 @@ The same logic is used for **record_autovideo:** When True, video is recorded if
 **Record_framecode:** causes the creation of special framecode files. The framecode files are supplemental to their respective video files. For each frame where an object is detected, a line in the framecode file is created. Recorded will be the dimensions of the bounding box(es), the name of the detected object, the confidence, and the frame number. If more stats are needed, they can easily be added in code. The framecode file can be helpful for statistics, or for feedback training. 
 
 For more in-depth studies, a result log can be kept by setting **maintain_result_log:** to True. The result logs will be stored in subdirectories off **result_log_basedir:**  The result log will document the result of each call to detect_image_extended(), along with the round-trip time of each call. The file is in CSV format and can be opened in Excel for further studies. 
+
+
+
 
 ## Fighting frame drift
 Frame drift will be an ever-present problem when processing multiple real-time streams. Most IP cameras lack common timecode, have an unreliable timebase, or report unreliable or plain false fps etc data. MultiDetect.py will attempt every mitigation possible at its end, but it can be a losing battle. Here are a few steps to keep frame drift in check as much as possible. 
@@ -98,32 +124,8 @@ The master window also will show the total of frames and seconds of each video s
 
 ### The Buttons:  
 
-**“Quit”** will quit. **“Restart”** will restart MultiDetect.py. **“Record,”** if green, will cause all video_processes to record their video stream. If red, the button will stop recording. Automatic recording is set with the **record_autovideo:** flag in the config file, it also can be re-enabled and re-disabled with the **Autorec** button. Chimes can alert you to the presence of objects. This is set with the ** **Audio** will turn on/off audible chimes. 
 **“Quit”** will quit. **“Restart”** will restart MultiDetect.py. **“Record,”** if green, will cause all video_processes to record their video stream. If red, the button will stop recording. Automatic recording is set with the **record_autovideo:** flag in the config file, it also can be re-enabled and re-disabled with the **Autorec** button. Chimes can alert you to the presence of objects. This is normally set with the **soundalert** flag in the config file. The **Audio** button will also turn on/off audible chimes. The button will be greyed-out if no suitable audio playback was found during startup. 
  
-
-## The YOLO settings
-
-**model_path:** should point to "…/TrainYourOwnYOLO/Data/Model_Weights /trained_weights_final.h5" or wherever you put your model.
-**classes_path:** should point to "…/TrainYourOwnYOLO/Data/Model_Weights/data_classes.txt" or wherever you stored the file.
-**anchors_path:** should point to "…/TrainYourOwnYOLO/2_Training/src/keras_yolo3/model_data/yolo_anchors.txt"or wherever you stored the anchors.
-**run_on_gpu:** The GPU number you want the process to run on. The number is the one reported by TensorFlow and shown in the Master Window. It may be different from what nvidia-smi says.
-**gpu_memory_fraction:** How much GPU memory to allocate to the process. 1 = 100%, 0.1 = 10% . Process will crash if GPU memory insufficient. When set to less than 1 (100%), the total for all processes must be less than 100% to allow for overhead. You will be able to fit more processes into a card that is not used for video output. The number is a recommendation, and will result in slightly different memory footprints. Experiment.
-**hush:** will, when True, try to suppress the annoying status messages during startup. It also may suppress non-fatal error messages. It is recommended to set hush: to false during setup and testing. It can be turned on when things run smoothly.
-**allow_growth:** GPU memory allocation strategy. -1 let Keras decide, 0 disallow, 1 allow memory to dynamically grow. Best setting to optimize memory usage appears to be 1 
-**score:** YOLO will report objects at and above that confidence score, it will keep anything lower to itself.
-ignore_labels: A list (i.e. ['aaa','bbb'] ) of object names YOLO will not report when found. Keep empty [ ] to disable this feature.
-
-**video_path:** specifies the incoming video source for that process. It can be anything understood by cv2.videocapture. It can be a video file, an URL of a video stream, or a webcam. For a webcam, set video-path to 0 (1, 2, 3 ....) no quotes. For video file, set to path to file name, in quotes. For live stream, set to the URL of the stream, in quotes.
-
-
-Like all of the Common settings, you can put the YOLO settings once into the Common: block, and they will be used by all processes. If you put the settings into a Process_ block, they will be used by that process only. This way, you can use different models in different processes, and you can assign a specific GPU to a process. If a setting is the same in all Process_ blocks, there is no need to repeat it. Simply keep it once in Common: 
-
-## Output settings
-
-**window_wide:** and **window_high:** set the dimensions of the video output of the process.
-**window_x:** and **window_y:**  specify where on the screen the respective window is to be placed.
-With these settings, you can put multiple video windows on one monitor. To move video output to separate monitors, first set-up multi-monitors in your display settings. Set window_wide: and window_high: to match the resolution of your separate monitors. Then set window_x: in Process_1: large enough so that the output window gets pushed to the separate monitor. Set window_y: in Process_1: to 0. Repeat for a second separate monitor as needed. 
 
 ## Screen flickering? Windows don’t fit?
 
