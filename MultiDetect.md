@@ -19,14 +19,14 @@ The master communicates with the processes, and the processes can communicate wi
 
 **{'To': To, 'From': From , 'Command': Command, 'Args': {‘Arg1’:arg, ‘Arg2’:arg …. }}**
 
-**‘To”** specifies the recipient, specified as a process number. A ‘To’ larger than 0 is sent to the process specified. A ‘To’ equal to 0 is sent to all processes. A ‘To’ equal to -1 is sent to the master process only. Addresses smaller than -1 can be used for specialized processes (currently not implemented.)
-**‘From’** specifies the sender. It is either a process number, -1 for the master process, or less than -1 for a special process.
+**‘To”** specifies the recipient, specified as a process number. A ‘To’ larger than 0 is sent to the process specified. A ‘To’ equal to 0 is sent to all processes. A ‘To’ equal to -1 is sent to the master process only.  A ‘To’ equal to -2 is sent to the main startup process only. Addresses smaller than -2 can be used for specialized processes (currently not implemented.)
+**‘From’** specifies the sender. It is either a process number, -1 for the master process, -2 for the startup process, or less than -2 for any special processes.
 **'Command'** can be any command agreed upon. **‘Args’** is a dict of arguments for that command. 
 For instance, a ‘startrecording’ command, sent to 0, i.e. all processes, would cause all processes to start recording their video.
 New commands can be implemented in code. 
 
 ## Configuration and initialization
-MultiDetect.py is configured with an extensive configuration file, **MultiDetect.conf**. If you run MultiDetect.py without the MultiDetect.conf file, it will try starting with limited defaults. **DO NOT CHANGE OPTIONS IN CODE** – it would break the logic. The code is there to set the defaults only.  
+MultiDetect.py is configured with an extensive configuration file, **MultiDetect.conf**. If you run MultiDetect.py without the MultiDetect.conf file, it will try starting with limited defaults. **DO NOT CHANGE OPTIONS IN CODE** – it would break the logic. The code is there to set the defaults only. **CHANGE OPTIONS IN THE CONFIG FILE ONLY**  
 
 The MultiDetect.conf file has the following sections:
 
