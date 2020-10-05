@@ -76,7 +76,10 @@ The same logic is used for **record_autovideo:** When True, video is recorded if
 
 For more in-depth studies, a result log can be kept by setting **maintain_result_log:** to True. The result logs will be stored in subdirectories off **result_log_basedir:**  The result log will document the result of each call to detect_image_extended(), along with the round-trip time of each call. The file is in CSV format and can be opened in Excel for further studies. 
 
-
+### The On-Screen-Display
+An on-screen-display (OSD) can optionally be put on the outgoing video. The display is controlled by the **OSD:** setting in the config file. There are further settings to control the font of the display.  
+The OSD shows:
+**IFPS:** Incoming FPS. This is a best effort number, dependent on the willingness of the incoming stream to reveal that number. It can range from real-time update when the stream supports CAP_PROP_FPS, to a crude, one-time measurement at startup when the stream does not expose the frame rate, or, worse, when it gives bogus data.  **YFPS** is the current max frame rate supported by YOLO. It is a rolling average over **rolling_average_n:** frames. **OFPS** is the outgoing frame rate. **RT** is the rolling average round-trip time of a video frame processed by YOLO.
 
 
 ## Fighting frame drift
