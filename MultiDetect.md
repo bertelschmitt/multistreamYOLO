@@ -135,7 +135,7 @@ Similar to the preceding, except that by now, we need to give serious considerat
 **18 video sources, 18 models, 18 video outputs:**  
 For that, we will definitely need two GPUs, and we will need to move the **run_on_gpu:**  into each **Process_** section. Half of the processes will **run_on_gpu: 0**, the other half will **run_on_gpu: 1**  We also need a 2nd monitor. How do we move the output windows to that 2nd monitor? Simple, add the width of the monitor, in pixels, to the **window_x: ** of the window we want to show.  If our monitors are 1920 pixels wide, and if the output window of **process_1**  is at **window_x: 0** and **window_y: 28**, then **process_10**  would live  at **window_x: 1920** and **window_y: 28**, and so forth .  Why  **window_y: 28 ???**  Because your screen may go crazy. See below under **Flicker!!** 
 
-Here is, in Super Todd-AO, the picture of 18/18/18. Click on it to enlarge. For anything above 18, use your vivid imagination. 
+Here is, in Super Todd-AO, the picture of 18/18/18. You may have to zoom in ... For anything above 18, use your imagination. 
 
 
 
