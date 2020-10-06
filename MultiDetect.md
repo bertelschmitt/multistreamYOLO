@@ -115,12 +115,18 @@ Put the paths to your model into **Common:**  Also in **Common:** set the proper
 **Four video sources, four models, four video outputs:**  
 This is pretty much the same as the previous, except that now the paths to the different models go into their respective **Process_** sections. I’ve painted you a picture:
 
+
+
+
 ![4-up](/Utils/Screenshots/1920screen_4up.png)
+
 
 
 
 **Nine video sources, nine models, nine video outputs:**  
 Similar to the preceding, except that by now, we need to give serious consideration to the memory size of our GPU. The nine processes will fit nicely into an 11 Gbyte GPU, but they would be too much for a 6 Gbyte GPU. For that, a second GPU would be needed. How to do that will follow.  Again, a picture would explain our 9/9/9 setup much better.
+
+
 
 ![9-up](/Utils/Screenshots/1920screen_9up.png)
 
@@ -130,6 +136,7 @@ Similar to the preceding, except that by now, we need to give serious considerat
 For that, we will definitely need two GPUs, and we will need to move the **run_on_gpu:**  into each **Process_** section. Half of the processes will **run_on_gpu: 0**, the other half will **run_on_gpu: 1**  We also need a 2nd monitor. How do we move the output windows to that 2nd monitor? Simple, add the width of the monitor, in pixels, to the **window_x: ** of the window we want to show.  If our monitors are 1920 pixels wide, and if the output window of **process_1**  is at **window_x: 0** and **window_y: 28**, then **process_10**  would live  at **window_x: 1920** and **window_y: 28**, and so forth .  Why  **window_y: 28 ???**  Because your screen may go crazy. See below under **Flicker!!** 
 
 Here is, in Super Todd-AO, the picture of 18/18/18. Click on it to enlarge. For anything above 18, use your vivid imagination. 
+
 
 
 ![18-up](/Utils/Screenshots/1920screen_18up.png)
