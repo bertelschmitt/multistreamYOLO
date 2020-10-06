@@ -1,12 +1,12 @@
 # TrainYourOwnYOLO XXL: Build a Custom Object Detector from Scratch, and run many in parallel [![License: CC BY 4.0](https://img.shields.io/badge/License-CC%20BY%204.0-lightgrey.svg)](https://creativecommons.org/licenses/by/4.0/)
 
-This repo let's you train a custom image detector using the state-of-the-art [YOLOv3](https://pjreddie.com/darknet/yolo/) computer vision algorithm. For a short write up check out this [medium post](https://medium.com/@muehle/how-to-train-your-own-yolov3-detector-from-scratch-224d10e55de2). This repo works with TensorFlow 2.3 and Keras 2.4. 
+This repo works with TensorFlow 2.3 and Keras 2.4. This repo builds on the very successful [BuildYourOwnYOLO](https://github.com/AntonMu/TrainYourOwnYOLO) repo maintained by Anton Mu. His  repo lets you train a custom image detector using the state-of-the-art [YOLOv3](https://pjreddie.com/darknet/yolo/) computer vision algorithm. For a short write up check out this [medium post](https://medium.com/@muehle/how-to-train-your-own-yolov3-detector-from-scratch-224d10e55de2).  
 
-This repo also allows you to detect objects in multiple streams, with multiple GPUs, and with multiple models, all at the same time, and in parallel in multiple independent Python processes. The number of streams depends on the amount of memory available on the GPU and in your computer. A YOLO process demands around a gigabyte of GPU memory, therefore, 11 streams can be squeezed into a Geforce 1080ti with 11 Gbytes. This is achieved with a modified YOLO object. A more [**in-depth description is here.**](https://github.com/bertelschmitt/multistreamYOLO/blob/master/MultiYOLO.md)
+This repo brings everything BuildYourOwnYOLO does, and on top, it allows you to detect objects in multiple streams, with multiple GPUs, and with multiple models, all at the same time, all in parallel in multiple independent Python processes. The number of streams depends on the amount of memory available on the GPU and in your computer. A YOLO process demands around a gigabyte of GPU memory, therefore, 11 streams can be squeezed into a Geforce 1080ti with 11 Gbytes. This is achieved with a modified YOLO object. A more [**in-depth description is here.**](https://github.com/bertelschmitt/multistreamYOLO/blob/master/MultiYOLO.md)
 
 This repo comes with a very early version of MultiDetect.py, an application that makes use of the multi-stream, multi-GPU YOLO object. MultiDetect.py allows you to manage multiple streams and GPUs, to display the output on one or many monitors, and to automatically record video and attendant data files. An [**in-depth description of  MultiDetect.py is here**](https://github.com/bertelschmitt/multistreamYOLO/blob/master/MultiDetect.md). 
 
-Both the modified YOLO process and MultiDetect.py are written in pure Python3.7. They integrate into TrainYourOwnYOLO, use the same models and workflows. 
+Both the modified YOLO process and MultiDetect.py are written in pure Python3.7. They integrate with TrainYourOwnYOLO, use the same models, workflows, file and directory structures. This version targets the Linux platform only. I have not yet tested it on Windows. I do not have access to a MacOS machine, please help. Let's work on it a bit, shake the bugs out, and then offer it as a merge. 
 
 ![4windows](/Utils/Screenshots/4stream.gif)
 
@@ -46,6 +46,21 @@ To speed up training, it is recommended to use a **GPU with CUDA** support. For 
 
 
 ### Installation
+
+You have two choices. You can graft it upon an existing TrainYourOwnYOLO installation like so:
+
+### Either
+
+- Rename .../TrainYourOwnYOLO/2_Training/src/keras_yolo3/yolo.py to yolo.py.ori, and replace the file with the [new version from thios repo](https://github.com/bertelschmitt/multistreamYOLO/blob/master/2_Training/src/keras_yolo3/yolo.py) This is the modified YOLO object that does all the work. It should be a drop-in, bolt-on replacement, compatible with the current BuildYourOwnYOLO version.
+- Add the complete content of [.../TrainYourOwnYOLO/3_Inference](https://github.com/bertelschmitt/multistreamYOLO/tree/master/3_Inference), including the [MDResource](https://github.com/bertelschmitt/multistreamYOLO/tree/master/3_Inference/MDResource) folder to .../TrainYourOwnYOLO/3_Inference. This brings in MultiDetect.py and a feww attendant files. MultiDetect.conf is the config file of MultiDetect.py, and it's where the magic happens. [See in-depth explanantion here]https://github.com/bertelschmitt/multistreamYOLO/blob/master/MultiDetect.md). There are a few conf file versions for multiple scenarios for you to play with. Edit to your use case and liking, and rename to MultiDetect.conf. 
+- Replace your current requirements.txt with the [new requirements.txt in this repo](https://github.com/bertelschmitt/multistreamYOLO/blob/master/requirements.txt) 
+- Enter your virtualenv if you use one
+- Run pip install -r requirements.txt , and you are good to go.
+
+
+### OR
+
+Clone this complete repo, follow the steps below, read [MultiYOLO.md](https://github.com/bertelschmitt/multistreamYOLO/blob/master/MultiYOLO.md) (docs for the modofied YOLO object) and [MultiDetect.md](https://github.com/bertelschmitt/multistreamYOLO/blob/master/MultiDetect.md), and you are an expert.
 
 
 #### Setting up Virtual Environment 
