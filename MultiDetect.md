@@ -104,15 +104,15 @@ A judicious use of these settings will also result in considerable power savings
 
 MultiDetect.conf may have a myriad of options, but you will use only a few because most will work with their defaults, and you can use the few sparingly. Remember: If it’s the same setting for all the video_processes, leave the setting in **Common:**  Put into **Process_1, 2,3 etc***  only what is special for the respective process. A setting in **Common:**  is a catch-all for each  video_process.
 
-## Here are a few scenarios:
+Here are a few scenarios.
 
-**One video source, one model, one video output:** 
+### One video source, one model, one video output: 
 Everything goes into, and stays in **Common:** Your **video_path:** that points to your video source file, the paths to your model, the size and coordinates of your output widow, everything goes into **Common:**. Done
 
-**Four video sources, one model, four video outputs:**  
+### Four video sources, one model, four video outputs:  
 Put the paths to your model into **Common:**  Also in **Common:** set the proper **gpu_memory_fraction** for your GPU.  You want at least 1Gbyte of video RAM for each process.  Define, in  **Common:** again,  the size of the output windows by dividing your screen into same-sized quadrants. Now in each **Process_** section, define the video source, and the window_x: and window_y: coordinates of each output window.  Done.
 
-**Four video sources, four models, four video outputs:**  
+### Four video sources, four models, four video outputs:  
 This is pretty much the same as the previous, except that now the paths to the different models go into their respective **Process_** sections. I’ve painted you a picture:
 
 
@@ -123,8 +123,8 @@ This is pretty much the same as the previous, except that now the paths to the d
 
 
 
-**Nine video sources, nine models, nine video outputs:**  
-Similar to the preceding, except that by now, we need to give serious consideration to the memory size of our GPU. The nine processes will fit nicely into an 11 Gbyte GPU, but they would be too much for a 6 Gbyte GPU. For that, a second GPU would be needed. How to do that will follow.  Again, a picture would explain our 9/9/9 setup much better.
+### Nine video sources, nine models, nine video outputs:  
+Similar to the preceding, except that by now, we need to give serious consideration to the memory size of our GPU. **Careful, at these settings, you are approachiong trhe ragged edge. Run MultiDetect.py without the hush setting, and watch for out of memory errors, and/or processes dying.** The nine processes fit into an 11 Gbyte GPU, but they would be too much for a 6 Gbyte GPU. For that, a second GPU would be needed. How to do that will follow. Again, a picture would explain our 9/9/9 setup much better.
 
 
 
@@ -132,7 +132,7 @@ Similar to the preceding, except that by now, we need to give serious considerat
 
 
 
-**18 video sources, 18 models, 18 video outputs:**  
+### 18 video sources, 18 models, 18 video outputs:  
 For that, we will definitely need two GPUs, and we will need to move the **run_on_gpu:**  into each **Process_** section. Half of the processes will **run_on_gpu: 0**, the other half will **run_on_gpu: 1**  We also need a 2nd monitor. How do we move the output windows to that 2nd monitor? Simple, add the width of the monitor, in pixels, to the **window_x: ** of the window we want to show.  If our monitors are 1920 pixels wide, and if the output window of **process_1**  is at **window_x: 0** and **window_y: 28**, then **process_10**  would live  at **window_x: 1920** and **window_y: 28**, and so forth .  Why  **window_y: 28 ???**  Because your screen may go crazy. See below under **Flicker!!** 
 
 Here is, in Super Todd-AO, the picture of 18/18/18. You may have to zoom in ... For anything above 18, use your imagination. 
