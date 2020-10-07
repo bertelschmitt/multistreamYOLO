@@ -124,7 +124,7 @@ This is pretty much the same as the previous, except that now the paths to the d
 
 
 ### Nine video sources, nine models, nine video outputs:  
-Similar to the preceding, except that by now, we need to give serious consideration to the memory size of our GPU. **Careful, at these settings, you are approachiong trhe ragged edge. Run MultiDetect.py without the hush setting, and watch for out of memory errors, and/or processes dying.** The nine processes fit into an 11 Gbyte GPU, but they would be too much for a 6 Gbyte GPU. For that, a second GPU would be needed. How to do that will follow. Again, a picture would explain our 9/9/9 setup much better.
+Similar to the preceding, except that by now, we need to give serious consideration to the memory size of our GPU. **Careful, at these settings, you are approachiong trhe ragged edge. Run MultiDetect.py without the hush setting, and watch for out of memory errors, and/or processes dying.** The nine processes fit into an 11 Gbyte GPU, but they would be too much for a 6 Gbyte GPU. For that, a second GPU would be needed. How to use two GPUs will follow. Again, a picture would explain our 9/9/9 setup much better.
 
 
 
