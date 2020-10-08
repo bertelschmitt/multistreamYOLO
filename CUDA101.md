@@ -3,10 +3,12 @@
 Before you delve into YOLO, you need a running CUDA installation. If you have one, then you are a decorated CUDA veteran. Stop reading, you'll find nothing new.
 If you are new at CUDA, please note that the Tensorflow version used in the repo seems to be happiest with CUDA 10.1 so that's what you should install . Don't install anything else, it could send you to version hell. Nvidia is pushing the latest 11.X CUDA version, and is making 10.1 a little hard to find. [Follow this link.](https://developer.nvidia.com/cuda-10.1-download-archive-update2)
 Be wary of the [offered .deb files](https://developer.nvidia.com/cuda-10.1-download-archive-update2target_os=Linux&target_arch=x86_64&target_distro=Ubuntu&target_version=1804&target_type=deblocal). They will work on a system untouched by prior CUDA installations, but otherwise, they might install a different version than 10.1, or none at all. The easiest and safest installation is with this runfile:
+
 `
 wget http://developer.download.nvidia.com/compute/cuda/10.1/Prod/local_installers/cuda_10.1.243_418.87.00_linux.run
 sudo sh cuda_10.1.243_418.87.00_linux.run
 `
+
 If your Ubuntu is newer, the .run file may complain about the wrong gcc compiler. Don't install an older compiler. Simply restart the run file with --override. If you have a newer Nvidia video driver, don't let the .run file install an older one. Simply deselect the driver option. Newer Nvidia video drivers are compatible with older CUDA versions.
 Now add the following lines to your .bashrc file:
 
@@ -22,6 +24,7 @@ This will put your cuda-10.1 on the path, but only if /usr/local/cuda-10.1/bin/ 
 ## Tes your CUDA
 
 #Type this into your command line monitor:
+
 `
 nvidia-smi  
 `
