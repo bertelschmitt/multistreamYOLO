@@ -80,4 +80,4 @@ print("Num GPUs Available: ", len(tf.config.experimental.list_physical_devices('
 That line should cause screen output that ends in "Num GPUs Available: ..." and the number of GPUs in your machine. If it says 0 are available, and if you have Nvidia GPUs in your machine, your CUDA installation needs attention.
 
 The "Could not load dynamic library 'libcudart.so.10.1" reminds us that the installed TensorFlow version is happiest with CUDA 10.1. Please install that. 
-As long as you see these errors, do not proceed. It won't work. You need to resolve the problem first. CUDA installation can be a pain. We've all been there, don't give up.
+As long as you see errors, do not proceed. It won't work. You need to resolve the problem first. CUDA installation can be a pain. We've all been there, don't give up.
