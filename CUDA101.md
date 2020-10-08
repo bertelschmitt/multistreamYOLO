@@ -1,6 +1,6 @@
 ## A quickie CUDA primer
 
-Before you delve into YOLO, you need a running CUDA installation. If you have one, then you are a decorated CUDA veteran. Stop reading, you'll find nothing new.
+Before you delve into YOLO, you need a running CUDA installation. If you already have one, then you are a decorated CUDA veteran. Stop reading, you'll find nothing new.
 If you are new at CUDA, please note that the Tensorflow version used in the repo seems to be happiest with CUDA 10.1 so that's what you should install . Don't install anything else, it could send you to version hell. Nvidia is pushing the latest 11.X CUDA version, and is making 10.1 a little hard to find. [Follow this link.](https://developer.nvidia.com/cuda-10.1-download-archive-update2)
 Be wary of the [offered .deb files](https://developer.nvidia.com/cuda-10.1-download-archive-update2target_os=Linux&target_arch=x86_64&target_distro=Ubuntu&target_version=1804&target_type=deblocal). They will work on a system untouched by prior CUDA installations, but if your Ubuntu wears scars of prior battles with the installer, the .deb files might install a different version than 10.1, or none at all. The easiest and safest installation is with this runfile:
 
