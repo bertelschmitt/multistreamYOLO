@@ -200,3 +200,4 @@ Development was on Ubuntu 18.04 and 20.04, with Python3.7, CUDA 10.1, and the Nv
 I am a retired advertising executive, and my programming “skills” are completely self-taught. I tried my hands on assembler and BASIC half a century ago when computers had 8 bits and 4K of memory. I took up Python to keep me busy after retirement. My code definitely is in need of improvement, and it could be completely flawed. The stuff is on Github in hope for improvement – of the code, and of myself. 
 
 Have at it. 
+
