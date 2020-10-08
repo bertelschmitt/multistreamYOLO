@@ -76,3 +76,4 @@ All the settings used in init_yolo are on a per-session basis. From session to s
 ## Infamous last words
 Development was on Ubuntu 18.04, with Python3.7. No other systems were tested. 
 My programming skills are completely self-taught. I tried my hands on assembler and BASIC half a century ago, and I took up Python to keep me busy after retirement. My code definitely is in need of improvement, and it could be completely flawed. Have at it. 
+
