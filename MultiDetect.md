@@ -44,12 +44,13 @@ All settings are documented in **MultiDetect.conf**. Here are a few that need mo
 
 ## The YOLO settings
 
-**model_path:** should point to "…/TrainYourOwnYOLO/Data/Model_Weights /trained_weights_final.h5" or wherever you put your model.<br>
-**classes_path:** should point to "…/TrainYourOwnYOLO/Data/Model_Weights/data_classes.txt" or wherever you stored the file.<br>
-**anchors_path:** should point to "…/TrainYourOwnYOLO/2_Training/src/keras_yolo3/model_data/yolo_anchors.txt"or wherever you stored the anchors.<br>
+**model_path:** should point to where you put your model, usually ".../Data/Model_Weights /trained_weights_final.h5".<br>
+**classes_path:** should point to where you stored the file, usually ".../Data/Model_Weights/data_classes.txt".<br>
+**anchors_path:** should point to wherever you stored the anchors, usually "…/2_Training/src/keras_yolo3/model_data/yolo_anchors.txt".<br>
+(Of course, mutiple models need to go into their respective directories, and the paths would need to be likewise adjusted on a per-process basis.)<br>
 **run_on_gpu:** The GPU number you want the process to run on. The number is the one reported by TensorFlow and shown in the Master Window. It may be different from what nvidia-smi says.<br>
-**gpu_memory_fraction:** How much GPU memory to allocate to the process. 1 = 100%, 0.1 = 10% . Process will crash if GPU memory insufficient. When set to less than 1 (100%), the total for all processes must be less than 100% to allow for overhead. You will be able to fit more processes into a card that is not used for video output. The number is a recommendation, and will result in slightly different memory footprints. Experiment.<br>
-**hush:** will, when True, try to suppress the annoying status messages during startup. It also may suppress non-fatal error messages. It is recommended to set hush: to false during setup and testing. It can be turned on when things run smoothly.<br>
+**gpu_memory_fraction:** How much GPU memory to allocate to the process. 1 = 100%, 0.1 = 10% . Process will crash if GPU memory is insufficient. When set to less than 1 (100%), the total for all processes must be less than 100% to allow for overhead. You will be able to fit more processes into a card that is not used for video output. Experiment.<br>
+**hush:** will, when True, try to suppress the annoying status messages during startup. It also may suppress non-fatal error messages. It is recommended to set hush: to False during setup and testing. It can be turned on when things run smoothly.<br>
 **allow_growth:** GPU memory allocation strategy. -1 let Keras decide, 0 disallow, 1 allow memory to dynamically grow. Best setting to optimize memory usage appears to be 1. If you really, really want to live on the edge, you can set **allow_growth:** to 1 while setting **gpu_memory_fraction:** to 1 (i.e.100%) also. In that setting, Keras/Tensorflow appear to initially grab only the barest amounts of memory necessary, and they won't (well, can't) grow it further. However, you might lose the occasional process due to memory starvation. <br> 
 **score:** YOLO will report objects at and above that confidence score, it will keep anything lower to itself.<br>
 ignore_labels: A list (i.e. ['aaa','bbb'] ) of object names YOLO will not report when found. Keep empty [ ] to disable this feature.<br>
