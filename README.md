@@ -44,12 +44,25 @@ and follow the installation instructions. Note that this repo has only been test
 
 To speed up training, it is recommended to use a **GPU with CUDA** support. For example on [AWS](/2_Training/AWS/) you can use a `p2.xlarge` instance (Tesla K80 GPU with 12GB memory). Inference is very fast even on a CPU with approximately ~2 images per second. If you want to use your own machine, follow the instructions at [tensorflow.org/install/gpu](https://www.tensorflow.org/install/gpu) to install CUDA drivers. Make sure to install the [correct version of CUDA and cuDNN](https://www.tensorflow.org/install/source#linux). Note: This repo has not been tested with anything else than pure metal GPUs. 
 
+MultiDetect.py offers you audible prompts. For that, it uses the pydub library. Pydub can't function withoout working audio either. If no audio is found, pydub will complain with a 
+
+`
+RuntimeWarning: Couldn't find ffplay or avplay - defaulting to ffplay, but may not work
+`
+You can safely ignore the warning, or you can install ffmpeg:
+
+`
+sudo apt install ffmpeg
+`
+
 
 ### Installation
 
-You have two choices. You can graft it upon an existing TrainYourOwnYOLO installation like so:
+You have two choices. 
 
 ### Either
+
+You can graft multistreamYOOLO upon an existing TrainYourOwnYOLO installation like so:
 
 - Rename .../TrainYourOwnYOLO/2_Training/src/keras_yolo3/yolo.py to yolo.py.ori, and replace the file with the [new version from thios repo](https://github.com/bertelschmitt/multistreamYOLO/blob/master/2_Training/src/keras_yolo3/yolo.py) This is the modified YOLO object that does all the work. It should be a drop-in, bolt-on replacement, compatible with the current BuildYourOwnYOLO version.
 - Add the complete content of [.../TrainYourOwnYOLO/3_Inference](https://github.com/bertelschmitt/multistreamYOLO/tree/master/3_Inference), including the [MDResource](https://github.com/bertelschmitt/multistreamYOLO/tree/master/3_Inference/MDResource) folder to .../TrainYourOwnYOLO/3_Inference. This brings in MultiDetect.py and a feww attendant files. MultiDetect.conf is the config file of MultiDetect.py, and it's where the magic happens. [See in-depth explanantion here]https://github.com/bertelschmitt/multistreamYOLO/blob/master/MultiDetect.md). There are a few conf file versions for multiple scenarios for you to play with. Edit to your use case and liking, and rename to MultiDetect.conf. 
