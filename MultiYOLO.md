@@ -1,6 +1,6 @@
 # YOLO on all cylinders - The YOLO object, tuned for multiple processes
 
-**So you have successfully mastered TrainYourOwnYOLO, and it happily processes any video stream you throw at it. But what about two, or more streams at the same time? No matter how big and powerful your GPU is, no matter how many GPUs you stick into your computer, YOLO just won’t let you process two, or more streams at once. 
+**So you have successfully mastered TrainYourOwnYOLO, and it happily processes any video stream you can throw at it. But what about two, or more streams at the same time? No matter how big and powerful your GPU is, no matter how many GPUs you stick into your computer, YOLO just won’t let you process two, or more streams at once. 
 Until now, that is. With this tweak to the popular TrainYourOwnYOLO, and with a halfway powerful GPU, you will be able to process video streams in the double digits.** 
 
 With this bored-out YOLO object, your only limit will be memory (both GPU and system, more of the latter below). The more memory on your GPU, the more streams it can accommodate. I am waiting for the RTX 3090 with 24 G of memory to become available to mere mortals, and it should be good for ~25 streams all at the same time on one GPU. 
