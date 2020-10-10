@@ -39,9 +39,9 @@ MultiDetect.py will start with one stream, TrainYourOwnYOLO's trademark black&wh
 
 ## For more information ... 
 
-[## MultiDetect intro](/README.md)
-[## The YOLO object, tuned for multiple processes](/MultiYOLO.md)
-[## CUDA crash course](/CUDA101.md)
+[*README!*](/README.md) A MultiDetect intro<br>
+[*YOLO on all cylinders*](/MultiYOLO.md) The YOLO object, tuned for multiple processes<br>
+[*CUDA crash course*](/CUDA101.md) Some CUDA installation pointers<br> 
 
 ### That's all!
 Congratulations on building your own custom YOLOv3 computer vision application.
