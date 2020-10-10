@@ -23,7 +23,7 @@ Following init_yolo() down the dark rabbit-hole of keras_yolo, and digging aroun
 
 With these options in place, multiple Python processes can claim their own YOLO instance, and run in parallel. They can use the same model, or different models. Of course, throughput per process will drop as you add more processes, after all, you are sharing GPU power. You can get around this problem by sending only every n-th frame to YOLO while displaying all. Depending on your use case, it probably won’t make much difference whether you try detecting an object twenty times, or four times a second.
 
-## Improvements 
+## Improvements. 
 
 While we are at it, let’s implement a few improvements.
 
@@ -38,7 +38,7 @@ What if we want the actual name of the detected object, along with the time spen
 (Tangent: detect_image spends quite some time drawing boxes, which made the original author leave an exasperated comment: “My kingdom for a good redistributable image drawing library.” OpenCV has a snappy box draw routine, and it is generally faster than the Pillow library used in detect_image. To shave off a few cycles, OpenCV could be used. If all you are interested in are the coordinates, and the detected object, the image drawing could be (optionally) avoided altogether. Room for improvement ….)
 
 
-## Your options
+## Your options.
 
 Here are all options, old and new, that are built into the YOLO object. You don't have to use them all, there are defaults ...
 
@@ -69,13 +69,13 @@ Here are all options, old and new, that are built into the YOLO object. You don'
 **ignore_labels** :   List of objects to ignore
 
 
-## Other than GPU factors
+## Other than GPU factors.
 Each separate process creates its own YOLO object along with a completely separate model. This can translate into a healthy chunk of systems memory. On my system, TOP reports the resident memory footprint of one YOLO process as 2.8 Gigabytes. 10 streams amount to 28 Gigabytes, and many machines don’t have that much. While the GPU and memory play the leading role, the CPU is not that much of a factor. An aging 4core Intel 6700K, taxed with 9 processes run in parallel on a 1080 ti, would deliver around 4 fps per process, while the load average zoomed to 13. A beefy 32core monster, the Threadripper 3970x, also delivered 4 fps per each of the 9 processes, but with a load average of 3.8, it barely broke a sweat. 
 
 ## Needless to say, but said anyway: 
 All the settings used in init_yolo are on a per-session basis. From session to session, settings can be completely different, or mostly all the same. 
 
-## Infamous last words
+## Infamous last words.
 Development was on Ubuntu 18.04, with Python3.7. No other systems were tested. 
 My programming skills are completely self-taught. I tried my hands on assembler and BASIC half a century ago, and I took up Python to keep me busy after retirement. My code definitely is in need of improvement, and it could be completely flawed. Have at it. 
 
@@ -83,4 +83,8 @@ My programming skills are completely self-taught. I tried my hands on assembler 
 
 [**README!**](/README.md) A MultiDetect intro<br>
 [**CUDA crash course**](/CUDA101.md) Some CUDA installation pointers<br> 
+[**Running inference**](/3_Inference/README.md) Putting it to use<br>
+
+- Please **star** ⭐ this repo to get notifications on future improvements and
+- Please **fork** 🍴 this repo if you like to use it as part of your own project.
 
