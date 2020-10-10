@@ -93,4 +93,5 @@ As long as you see errors, do not proceed. It won't work. You need to resolve th
 [**Running inference**](/3_Inference/README.md) Putting it to use<br>
 
 - Please **star** ⭐ this repo to get notifications on future improvements and
-- Please **fork** 🍴 this repo if you like to use it as part of your own project.
+- Please **fork** 🍴 this repo if you like to use it as part of your own project. 
+
