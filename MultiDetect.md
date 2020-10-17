@@ -2,17 +2,14 @@
 
 MultiDetect.py started as a quick and dirty test-bench to validate multi-stream YOLO, and it (d)evolved into a ~2,000 lines monster that can show multiple YOLO streams on multiple (or one) monitor, it can record video automatically when a desired object is detected, it can even audibly alert the bored operator.
 
-## The Main process
-The main process launches the Master and Video processes after it has parsed the configuration file. It otherwise gets out of the way, except for checking wther all processes are alive and running. The demise of a video process will be announced on the master panel. A dead master process will cause an immediate shutoff. 
+## The Master process
+The main process launches the video processes after it has parsed the configuration file. That done, it acts as a common switchboard to facilitate communication with and between the video_processes. The master process also maintains a rudimentary GUI status window. The demise of a video process will be announced on the master panel. If all videi processes are dead, the master will exit also.
 
 ## The video_process(es)
 Each of the YOLO streams is handled by a completely independent Python process. You can launch as many processes as you desire, and as your hardware can stomach. The video process is, not surprisingly, called video_process(). It grabs video frames from a webcam, file, or on-line stream, it runs the video frames through a YOLO model specified by you, it then goes on to display, and optionally store the results in a video file.
 Using the modded YOLO class ([**more on that in its description**](https://github.com/bertelschmitt/multistreamYOLO/blob/master/MultiYOLO.md)), the video_process can use a dedicated GPU as specified in **FLAGS.run_on_gpu**, and/or it will run on a fraction of a GPU as specified in **gpu_memory_fraction**. There is no bounds checking. The process will crash if the GPU, or the total of claimed GPU memory are out of bounds. Be aware that each video_process will initialize and maintain its own copy of the YOLO class, and can require around 2.5 G of main memory each. With multiple streams, it can quickly add up. MultiDetect.py may crash ignominiously when memory-starved. The process will run forever unless stopped by the operator, or if an unrecoverable error occurs. 
 
 ![You can have as many processes as your GPU can stomach](/Utils/Screenshots/MD-arch2.png)
-
-## The master process
-The master process is a central hub that acts as a common switchboard to facilitate communication with and between the video_processes. The master process also maintains a rudimentary GUI status window. 
 
 ## Process communication
 The master communicates with the processes, and the processes can communicate with each other through queues. There is a pair of queues (in and out) between the master and each video_process. Communication is via a standardized command block, which is a dictionary, structured as follows:
@@ -32,10 +29,12 @@ The MultiDetect.conf file has the following sections:
 
 **The Startup: block** has settings for the main program. It currently has only one setting, namely **num_processes:** - MultiDetect.py will try launching the number of processes specified in this setting.  If no ** Startup:** block is specified, or if there is no **num_processes:**, MultiDetect.py will start with default **num_processes: ** set to 1.
 
-**The Master: block** has settings for the master process, i.e.
+**The Master: block** has settings for the has settings for the main program.
 **master_window_title:**  title of the master monitor window
 **redraw:**  Set to True to redraw screen to settle windows into their place. When building a grid of multiple small windows, initial positioning of the small windows can be off on certain x-window implementations. The redraw: setting will put the screens into their intended places.
-Same can be done manually via the “Redraw” button in the master window. If no **Master:** block is specified, or if the settings are empty, MultiDetect.py will start with defaults master_window_title = "Master", redraw = False, hush = False
+Same can be done manually via the “Redraw” button in the master window. 
+
+If no **Master:** block is specified, or if the settings are empty, MultiDetect.py will start with defaults master_window_title = "Master", redraw = False, hush = False
 
 **The Common: block** has the settings for the video processes. Settings will propagate to all processes with ID > 0, i.e. all except the master and any special processes.
 If you stick a setting into a **Process_** block, then the setting will be used in this particular process only. For instance, if **gpu_memory_fraction** is set to 0.1 in the Common: block, all YOLO processes will claim 10% of the available GPU memory. However, if in the Process_3: block gpu_memory_fraction is set to 0.5, then process #3 will claim 50% of the available GPU memory, while all other processes will continue allocating 10% each. No sanity check is performed.  If there is no corresponding **Process_** block, the process will use the settings in **Common:**. If there are no settings in Common:, defaults will be used. 
