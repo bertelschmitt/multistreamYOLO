@@ -39,7 +39,7 @@ If no **Master:** block is specified, or if the settings are empty, MultiDetect.
 
 **The Common: block** has the settings for the video processes. Settings will propagate to all processes with ID > 0, i.e. all except the master and any special processes.<br>
 
-If you stick a setting into a **Process_** block, than that setting will affect this particular process only. For instance, if **gpu_memory_fraction** is set to 0.1 in the Common: block, all YOLO processes will claim 10% of the available GPU memory. However, if in the Process_3: block gpu_memory_fraction is set to 0.5, then process #3 will claim 50% of the available GPU memory, while all other processes will continue allocating 10% each. No sanity check is performed. If there is no corresponding **Process_** block, the process will use the settings in **Common:**. If there are no settings in Common:, defaults will be used.<br> 
+If you stick a setting into a **Process_** block, that setting will affect this particular process only. For instance, if **gpu_memory_fraction** is set to 0.1 in the Common: block, all YOLO processes will claim 10% of the available GPU memory. However, if in the Process_3: block gpu_memory_fraction is set to 0.5, then process #3 will claim 50% of the available GPU memory, while all other processes will continue allocating 10% each. No sanity check is performed. If there is no corresponding **Process_** block, the process will use the settings in **Common:**. If there are no settings in Common:, defaults will be used.<br> 
 
 All settings are documented in **MultiDetect.conf**. Here are a few that need more explaining.<br>
 
