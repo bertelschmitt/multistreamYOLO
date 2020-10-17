@@ -27,22 +27,21 @@ MultiDetect.py is configured with an extensive configuration file, **MultiDetect
 
 The MultiDetect.conf file has the following sections:
 
-**The Master: block** has settings for the has settings for the main program.
-The most iomportant setting is **num_processes:** - MultiDetect.py will try launching the number of processes specified in this setting.
-**master_window_title:** title of the master monitor window
-**redraw:** Set to True to redraw screen to settle windows into their place. When building a grid of multiple small windows, initial positioning of the small windows can be off on certain x-window implementations. The redraw: setting will put the screens into their intended places.
-Same can be done manually via the “Redraw” menu option. 
+**The Master: block** has settings for the main program.<br>
+The most iomportant setting is **num_processes:** MultiDetect.py will try launching the number of processes specified in this setting.<br>
+**master_window_title:** title of the master monitor window.<br>
+**redraw:** Set to True to redraw screen to settle windows into their place. When building a grid of multiple small windows, initial positioning of the small windows can be off on certain x-window implementations. The redraw: setting will put the screens into their intended places. Same can be done manually via the “Redraw” menu option.<br> 
 **hush:** will, when True, try to suppress the annoying status messages during startup. It also may suppress non-fatal error messages. TensorFlow has the nasty habit to clutter the screen with rather useless status messages. Not only do they look messy, they also drown out real error messages. Hush will try ro hush-up the chatter. It is recommended to set hush: to False during setup and testing. It can be turned on when things run smoothly.<br>
-**sync_start:** will, when True cause all video streams to start at the same time to mitigate time drift between videos. Some video sources, especially IP cameras, can take a while before sending video. With **sync_start:** set, each video process will wait until all video processes are ready.
-sync_start_wait: # is the time, in seconds, to wait for the start signal. This will be multiplied by num_processes to allow for longer staging due to higher load. When the wait time is exceeded without a start signal, video will start playing regardless. If a video process dies during startup, sync_start is canceled, and all surviving video processes will play.
+**sync_start:** will, when True cause all video streams to start at the same time to mitigate time drift between videos. Some video sources, especially IP cameras, can take a while before sending video. With **sync_start:** set, each video process will wait until all video processes are ready.<br>
+**sync_start_wait:** is the time, in seconds, to wait for the start signal. This will be multiplied by num_processes to allow for longer staging due to higher load. When the wait time is exceeded without a start signal, video will start playing regardless. If a video process dies during startup, sync_start is canceled, and all surviving video processes will play.<br>
 
-If no **Master:** block is specified, or if the settings are empty, MultiDetect.py will start with defaults.
+If no **Master:** block is specified, or if the settings are empty, MultiDetect.py will start with defaults.<br>
 
-**The Common: block** has the settings for the video processes. Settings will propagate to all processes with ID > 0, i.e. all except the master and any special processes.
+**The Common: block** has the settings for the video processes. Settings will propagate to all processes with ID > 0, i.e. all except the master and any special processes.<br>
 
-If you stick a setting into a **Process_** block, than that setting will affect this particular process only. For instance, if **gpu_memory_fraction** is set to 0.1 in the Common: block, all YOLO processes will claim 10% of the available GPU memory. However, if in the Process_3: block gpu_memory_fraction is set to 0.5, then process #3 will claim 50% of the available GPU memory, while all other processes will continue allocating 10% each. No sanity check is performed. If there is no corresponding **Process_** block, the process will use the settings in **Common:**. If there are no settings in Common:, defaults will be used. 
+If you stick a setting into a **Process_** block, than that setting will affect this particular process only. For instance, if **gpu_memory_fraction** is set to 0.1 in the Common: block, all YOLO processes will claim 10% of the available GPU memory. However, if in the Process_3: block gpu_memory_fraction is set to 0.5, then process #3 will claim 50% of the available GPU memory, while all other processes will continue allocating 10% each. No sanity check is performed. If there is no corresponding **Process_** block, the process will use the settings in **Common:**. If there are no settings in Common:, defaults will be used.<br> 
 
-All settings are documented in **MultiDetect.conf**. Here are a few that need more explaining.
+All settings are documented in **MultiDetect.conf**. Here are a few that need more explaining.<br>
 
 ## The YOLO settings
 
