@@ -73,15 +73,15 @@ You have two choices.
 You can graft multistreamYOOLO upon an existing TrainYourOwnYOLO installation like so:
 
 - Rename .../TrainYourOwnYOLO/2_Training/src/keras_yolo3/yolo.py to yolo.py.ori, and replace the file with the [new version from this repo](/2_Training/src/keras_yolo3/yolo.py) This is the modified YOLO object that does all the work. It should be a drop-in, bolt-on replacement, compatible with the current BuildYourOwnYOLO version.
-- Add the complete content of [.../TrainYourOwnYOLO/3_Inference](https://github.com/bertelschmitt/multistreamYOLO/tree/master/3_Inference), including the [MDResource](https://github.com/bertelschmitt/multistreamYOLO/tree/master/3_Inference/MDResource) folder to .../TrainYourOwnYOLO/3_Inference. This brings in MultiDetect.py and a feww attendant files. MultiDetect.conf is the config file of MultiDetect.py, and it's where the magic happens. [See in-depth explanantion here]https://github.com/bertelschmitt/multistreamYOLO/blob/master/MultiDetect.md). There are a few conf file versions for multiple scenarios for you to play with. Edit to your use case and liking, and rename to MultiDetect.conf. 
-- Replace your current requirements.txt with the [new requirements.txt in this repo](https://github.com/bertelschmitt/multistreamYOLO/blob/master/requirements.txt) 
+- Add the complete content of [.../TrainYourOwnYOLO/3_Inference](/3_Inference), including the [MDResource](/3_Inference/MDResource) folder to .../TrainYourOwnYOLO/3_Inference. This brings in MultiDetect.py and a feww attendant files. MultiDetect.conf is the config file of MultiDetect.py, and it's where the magic happens. [See in-depth explanantion here](/MultiDetect.md). There are a few conf file versions for multiple scenarios for you to play with. Edit to your use case and liking, and rename to MultiDetect.conf. 
+- Replace your current requirements.txt with the [new requirements.txt in this repo](/requirements.txt) 
 - Enter your virtualenv if you use one
 - Run pip install -r requirements.txt , and you are good to go.
 
 
 ### OR
 
-Clone this complete repo, follow the steps below, read [MultiYOLO.md](https://github.com/bertelschmitt/multistreamYOLO/blob/master/MultiYOLO.md) (docs for the modofied YOLO object) and [MultiDetect.md](https://github.com/bertelschmitt/multistreamYOLO/blob/master/MultiDetect.md), and you are an expert.
+Clone this complete repo, follow the steps below, read [MultiYOLO.md](/MultiYOLO.md) (docs for the modofied YOLO object) and [MultiDetect.md](/MultiDetect.md), and you are an expert.
 
 
 #### Setting up Virtual Environment 
