@@ -33,7 +33,7 @@ With the **hush** flag set, most of the annoying notices cluttering your monitor
 
 The strategically important routine is **detect_image()**. We feed it an image, and if a match (or matches) are found, the coordinates of the object and their confidence, along with an index into an object list are returned in out_prediction, the image, adorned with bounding boxes, are returned in image. You can detect objects in stills in parallel, or in video streams. After all, video streams are nothing but series of many stills.
 
-What if we want the actual name of the detected object, along with the time spent on the detection? **detect_image_extended()** will provide that additional info. **detect_image()** is kept for backward compatibility.
+What if we want the actual name of the detected object, along with the time spent on the detection? **detect_image_extended()** will provide that additional info, returning the (possibly annotated) image, time-spent, and out_prediction_ext, which is a list of list, containing, for each object dectected [left, top, right, bottom, predicted_class, score]. **detect_image()** is kept for backward compatibility.
 
 (Tangent: detect_image spends quite some time drawing boxes, which made the original author leave an exasperated comment: “My kingdom for a good redistributable image drawing library.” OpenCV has a snappy box draw routine, and it is generally faster than the Pillow library used in detect_image. To shave off a few cycles, OpenCV could be used. If all you are interested in are the coordinates, and the detected object, the image drawing could be (optionally) avoided altogether. Room for improvement ….)
 
@@ -76,7 +76,7 @@ Each separate process creates its own YOLO object along with a completely separa
 All the settings used in init_yolo are on a per-session basis. From session to session, settings can be completely different, or mostly all the same. 
 
 ## Infamous last words.
-Development was on Ubuntu 18.04, with Python3.7. No other systems were tested. 
+Development was on Ubuntu 18.04, with Python3.7. Except for a successful run on python 3.8, no other systems were tested. 
 My programming skills are completely self-taught. I tried my hands on assembler and BASIC half a century ago, and I took up Python to keep me busy after retirement. My code definitely is in need of improvement, and it could be completely flawed. Have at it. 
 
 ## For more information ... 
