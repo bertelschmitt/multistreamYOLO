@@ -4,7 +4,7 @@
 
 The number of streams depends on the amount of memory available on the GPU and in your computer. A YOLO process demands around a gigabyte of GPU memory, therefore, 11 streams can ideally be squeezed into a Geforce 1080ti with 11 Gbytes (it will be a very tight fit.) This is achieved with a modified YOLO object. A more [**in-depth description is here.**](https://github.com/bertelschmitt/multistreamYOLO/blob/master/MultiYOLO.md)
 
-This repo comes with a very early version of MultiDetect.py, an application that makes use of the multi-stream, multi-GPU YOLO object. MultiDetect.py allows you to manage multiple streams and GPUs, to display the output on one or many monitors, and to automatically record video and attendant data files. An [**in-depth description of  MultiDetect.py is here**](https://github.com/bertelschmitt/multistreamYOLO/blob/master/MultiDetect.md). 
+This repo comes with a very early version of MultiDetect.py, an application that makes use of the multi-stream, multi-GPU YOLO object. MultiDetect.py allows you to manage multiple streams and GPUs, to display the output on one or many monitors, and to automatically record video and attendant data files. An [**in-depth description of  MultiDetect.py is here**](/MultiDetect.md). 
 
 Both the modified YOLO process and MultiDetect.py are written in pure Python3.7. They integrate with TrainYourOwnYOLO, use the same models, workflows, file and directory structures. This version targets the Linux platform only. I have not yet tested it on Windows. I do not have access to a MacOS machine, please help. Let's work on it a bit, shake the bugs out, and then offer it as a merge. 
 
@@ -37,16 +37,20 @@ To build and test your YOLO object detection algorithm follow the below steps:
 ## Getting Started
 
 ### Requisites
-The only hard requirement is a running version of python 3.6 or 3.7. To install python 3.7 go to 
+This repo s has been tested with python3.7 and python 3.8. To install python 3.7 go to 
 - [python.org/downloads](https://www.python.org/downloads/release/python-376/) 
+and follow the installation instructions.  The modified YOLO object should work with python 3.6, MultiDetect.py uses features available only from python 3.7 on up.
 
-and follow the installation instructions. Note that this repo has only been tested python 3.7 thus it is recommended to use `python3.7`.
+This repo is focused 
 
-To speed up training, it is recommended to use a **GPU with CUDA** support. For example on [AWS](/2_Training/AWS/) you can use a `p2.xlarge` instance (Tesla K80 GPU with 12GB memory). Inference is very fast even on a CPU with approximately ~2 images per second. If you want to use your own machine, follow the instructions at [tensorflow.org/install/gpu](https://www.tensorflow.org/install/gpu) to install CUDA drivers. Make sure to install the [correct version of CUDA and cuDNN](https://www.tensorflow.org/install/source#linux). Note: This repo has not been tested with anything else than pure metal GPUs. 
+
+This repo is focused on multiple video streams running on one or more GPUs, and hence, it is CUDA centric. As this repo is focused on multi-stream inference, no changes were made to the training part of TrainYourOwnYOLO. 
+To install CUDA on your own machine, follow the instructions at [tensorflow.org/install/gpu](https://www.tensorflow.org/install/gpu) to install CUDA drivers. Make sure to install the [correct version of CUDA and cuDNN](https://www.tensorflow.org/install/source#linux). There also is a small [CUDA crash course](/CUDA101.md). Note: This repo has not been tested with anything else than pure metal GPUs.  
+
 
 ## Working environment
 
-MultiDetect.py offers you audible prompts. For that, it uses the pydub library. Pydub can't function withoout working audio either. If no audio is found, pydub will complain with a 
+MultiDetect.py offers you audible prompts. For that, it uses the pydub library. Pydub can't function without working audio either. If no audio is found, pydub will complain with:
 
 `
 RuntimeWarning: Couldn't find ffplay or avplay - defaulting to ffplay, but may not work
@@ -68,7 +72,7 @@ You have two choices.
 
 You can graft multistreamYOOLO upon an existing TrainYourOwnYOLO installation like so:
 
-- Rename .../TrainYourOwnYOLO/2_Training/src/keras_yolo3/yolo.py to yolo.py.ori, and replace the file with the [new version from thios repo](https://github.com/bertelschmitt/multistreamYOLO/blob/master/2_Training/src/keras_yolo3/yolo.py) This is the modified YOLO object that does all the work. It should be a drop-in, bolt-on replacement, compatible with the current BuildYourOwnYOLO version.
+- Rename .../TrainYourOwnYOLO/2_Training/src/keras_yolo3/yolo.py to yolo.py.ori, and replace the file with the [new version from this repo](https://github.com/bertelschmitt/multistreamYOLO/blob/master/2_Training/src/keras_yolo3/yolo.py) This is the modified YOLO object that does all the work. It should be a drop-in, bolt-on replacement, compatible with the current BuildYourOwnYOLO version.
 - Add the complete content of [.../TrainYourOwnYOLO/3_Inference](https://github.com/bertelschmitt/multistreamYOLO/tree/master/3_Inference), including the [MDResource](https://github.com/bertelschmitt/multistreamYOLO/tree/master/3_Inference/MDResource) folder to .../TrainYourOwnYOLO/3_Inference. This brings in MultiDetect.py and a feww attendant files. MultiDetect.conf is the config file of MultiDetect.py, and it's where the magic happens. [See in-depth explanantion here]https://github.com/bertelschmitt/multistreamYOLO/blob/master/MultiDetect.md). There are a few conf file versions for multiple scenarios for you to play with. Edit to your use case and liking, and rename to MultiDetect.conf. 
 - Replace your current requirements.txt with the [new requirements.txt in this repo](https://github.com/bertelschmitt/multistreamYOLO/blob/master/requirements.txt) 
 - Enter your virtualenv if you use one
