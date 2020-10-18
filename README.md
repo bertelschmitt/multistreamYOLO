@@ -37,15 +37,12 @@ To build and test your YOLO object detection algorithm follow the below steps:
 ## Getting Started
 
 ### Requisites
-This repo s has been tested with python3.7 and python 3.8. To install python 3.7 go to 
+This repo has been tested with python3.7 and python 3.8. To install python 3.7 go to 
 - [python.org/downloads](https://www.python.org/downloads/release/python-376/) 
 and follow the installation instructions.  The modified YOLO object should work with python 3.6, MultiDetect.py uses features available only from python 3.7 on up.
 
-This repo is focused 
-
-
-This repo is focused on multiple video streams running on one or more GPUs, and hence, it is CUDA centric. As this repo is focused on multi-stream inference, no changes were made to the training part of TrainYourOwnYOLO. 
-To install CUDA on your own machine, follow the instructions at [tensorflow.org/install/gpu](https://www.tensorflow.org/install/gpu) to install CUDA drivers. Make sure to install the [correct version of CUDA and cuDNN](https://www.tensorflow.org/install/source#linux). There also is a small [CUDA crash course](/CUDA101.md). Note: This repo has not been tested with anything else than pure metal GPUs.  
+This repo is focused on multiple video streams running on one or more GPUs, and hence, it is CUDA centric. As this repo is focused on multi-stream inference, no changes were made to the training part of TrainYourOwnYOLO. **The modifications of the YOLO object do not address multi-GPU training.**
+To install CUDA on your own machine, follow the instructions at [tensorflow.org/install/gpu](https://www.tensorflow.org/install/gpu) to install CUDA drivers. Make sure to install the [correct version of CUDA and cuDNN](https://www.tensorflow.org/install/source#linux). There also is a small [CUDA crash course](/CUDA101.md). Note: This repo has not been tested on anything else than pure metal GPUs.  
 
 
 ## Working environment
