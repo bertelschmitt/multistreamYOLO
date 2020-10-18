@@ -1,18 +1,19 @@
 # MultiDetect.py
 
-MultiDetect.py started as a quick and dirty test-bench to validate multi-stream YOLO, and it (d)evolved into a ~2,000 lines monster that can show multiple YOLO streams on multiple (or one) monitor, it can record video automatically when a desired object is detected, it can even audibly alert the bored operator.
+MultiDetect.py started as a quick and dirty test-bench to validate multi-stream YOLO, and it (d)evolved into a >2,000 lines monster that can show multiple YOLO streams on multiple (or one) monitor, it can record video automatically when a desired object is detected, it can even audibly alert the bored operator. 
+MultiDetect.py has been written in pure python 3.7. It also works in 3.8. To run, it requires [the modified YOLO object in this repo](/2_Training/src/keras_yolo3/polo.py) and a working CUDA installation
 
 ## The Master process
-The main process launches the video processes after it has parsed the configuration file. That done, it acts as a common switchboard to facilitate communication with and between the video_processes. The master process also maintains a rudimentary GUI status window. The demise of a video process will be announced on the master panel. If all video processes are dead, the master will exit also.
+The main process parses the configuration file, and launches the video processes with their chunk of the configuration settings. That done, master acts as a common switchboard to facilitate communication with and between the video_processes. This is done via queues. The master process also maintains a rudimentary GUI status window. The demise of a video process will be announced on the master panel. If all video processes are dead, the master will exit also.
 
 ## The video_process(es)
-Each of the YOLO streams is handled by a completely independent Python process. You can launch as many processes as you desire, and as your hardware can stomach. The video process is, not surprisingly, called video_process(). It grabs video frames from a webcam, file, or on-line stream, it runs the video frames through a YOLO model specified by you, it then goes on to display, and optionally store the results in a video file.
-Using the modded YOLO class ([**more on that in its description**](https://github.com/bertelschmitt/multistreamYOLO/blob/master/MultiYOLO.md)), the video_process can use a dedicated GPU as specified in **FLAGS.run_on_gpu**, and/or it will run on a fraction of a GPU as specified in **gpu_memory_fraction**. There is no bounds checking. The process will crash if the GPU, or the total of claimed GPU memory are out of bounds. Be aware that each video_process will initialize and maintain its own copy of the YOLO class, and can require around 2.5 G of main memory each. With multiple streams, that can quickly add up. When memory gets too tight, a videoprocess can abort. MultiDetect.py may crash ignominiously when memory-starved. The process will run forever unless stopped by the operator, or if an unrecoverable error occurs. 
+Each of the YOLO streams is handled by a completely independent python process. You can launch as many processes as you desire, and as your hardware can stomach. The video process is, not surprisingly, called video_process(). It grabs video frames from a webcam, a file, or an on-line stream. It runs the video frames through a YOLO model specified by you, it then goes on to display the video, and optionally store the results in a file.
+Using the modded YOLO class ([**more on that in its description**](/MultiYOLO.md)), the video_process can use a dedicated GPU as specified in **FLAGS.run_on_gpu**, and/or it will run on a fraction of a GPU as specified in **gpu_memory_fraction**. There is no bounds checking. The process will crash if the GPU, or the total of claimed GPU memory are out of bounds. Be aware that each video_process will initialize and maintain its own copy of the YOLO class, and can require around 2.5 G of main memory each. With multiple streams, that can quickly add up. When memory gets too tight, a video process can abort. MultiDetect.py may crash ignominiously when memory-starved. The process will run forever unless stopped by the operator, or if an unrecoverable error occurs. 
 
 ![You can have as many processes as your GPU can stomach](/Utils/Screenshots/MD-arch2.png)
 
 ## Process communication
-The master communicates with the processes, and the processes can communicate with each other through queues. Communication takes place via a standardized command block, which is a dictionary, structured as follows:
+The master communicates with the processes, and the processes can communicate with each other through queues. Communication takes place via a standardized command block, a dictionary, structured as follows:
 
 **{'To': To, 'From': From , 'Command': Command, 'Args': {‘Arg1’:arg, ‘Arg2’:arg …. }}**
 
@@ -28,10 +29,10 @@ MultiDetect.py is configured with an extensive configuration file, **MultiDetect
 The MultiDetect.conf file has the following sections:
 
 **The Master: block** has settings for the main program.<br>
-The most iomportant setting is **num_processes:** MultiDetect.py will try launching the number of processes specified in this setting.<br>
+The most important setting is **num_processes:** MultiDetect.py will try launching the number of processes specified in this setting.<br>
 **master_window_title:** title of the master monitor window.<br>
 **redraw:** Set to True to redraw screen to settle windows into their place. When building a grid of multiple small windows, initial positioning of the small windows can be off on certain x-window implementations. The redraw: setting will put the screens into their intended places. Same can be done manually via the “Redraw” menu option.<br> 
-**hush:** will, when True, try to suppress the annoying status messages during startup. It also may suppress non-fatal error messages. TensorFlow has the nasty habit to clutter the screen with rather useless status messages. Not only do they look messy, they also drown out real error messages. Hush will try ro hush-up the chatter. It is recommended to set hush: to False during setup and testing. It can be turned on when things run smoothly.<br>
+**hush:** will, when True, try to suppress the annoying status messages during startup. It also may suppress non-fatal error messages. TensorFlow has the nasty habit to clutter the screen with rather useless status messages. Not only do they look messy, they also drown out real error messages. Hush will try to hush-up the chatter. It is recommended to set hush: to False during setup and testing. It can be turned on when things run smoothly.<br>
 **sync_start:** will, when True cause all video streams to start at the same time to mitigate time drift between videos. Some video sources, especially IP cameras, can take a while before sending video. With **sync_start:** set, each video process will wait until all video processes are ready.<br>
 **sync_start_wait:** is the time, in seconds, to wait for the start signal. This will be multiplied by num_processes to allow for longer staging due to higher load. When the wait time is exceeded without a start signal, video will start playing regardless. If a video process dies during startup, sync_start is canceled, and all surviving video processes will play.<br>
 
@@ -48,10 +49,10 @@ All settings are documented in **MultiDetect.conf**. Here are a few that need mo
 **model_path:** should point to where you put your model, usually ".../Data/Model_Weights /trained_weights_final.h5".<br>
 **classes_path:** should point to where you stored the file, usually ".../Data/Model_Weights/data_classes.txt".<br>
 **anchors_path:** should point to wherever you stored the anchors, usually "…/2_Training/src/keras_yolo3/model_data/yolo_anchors.txt".<br>
-(Of course, mutiple models need to go into their respective directories, and the paths would need to be likewise adjusted on a per-process basis.)<br>
+(Of course, multiple models need to go into their respective directories, and the paths would need to be likewise adjusted on a per-process basis.)<br>
 **run_on_gpu:** The GPU number you want the process to run on. The number is the one reported by TensorFlow and shown in the Master Window. It may be different from what nvidia-smi says.<br>
 **gpu_memory_fraction:** How much GPU memory to allocate to the process. 1 = 100%, 0.1 = 10% . Process will crash if GPU memory is insufficient. When set to less than 1 (100%), the total for all processes must be less than 100% to allow for overhead. You will be able to fit more processes into a card that is not used for video output. Experiment.<br>
-**allow_growth:** GPU memory allocation strategy. -1 let Keras decide, 0 disallow, 1 allow memory to dynamically grow. Best setting to optimize memory usage appears to be 1. If you really, really want to live on the edge, you can set **allow_growth:** to 1 while setting **gpu_memory_fraction:** to 1 (i.e.100%) also. In that setting, Keras/Tensorflow appear to initially grab only the barest amounts of memory necessary, and they won't (well, can't) grow it further. However, you might lose the occasional process due to memory starvation. <br> 
+**allow_growth:** GPU memory allocation strategy. -1 let Keras decide, 0 disallow, 1 allow memory to dynamically grow. Best setting to optimize memory usage appears to be 1. If you really, really want to live on the edge, you can set **allow_growth:** to 1 while setting **gpu_memory_fraction:** to 1 (i.e.100%) also. In that setting, Keras/Tensorflow appear to initially grab only the barest amounts of memory necessary, and they won't (well, can't) grow it further. However, you might lose the occasional process due to memory starvation.<br> 
 **score:** YOLO will report objects at and above that confidence score, it will keep anything lower to itself.<br>
 ignore_labels: A list (i.e. ['aaa','bbb'] ) of object names YOLO will not report when found. Keep empty [ ] to disable this feature.<br>
 
@@ -67,7 +68,7 @@ With these settings, you can put multiple video windows on one monitor. To move 
 
 ## Alerts and recordings
 
-**soundalert:** will, when True, alert you to the presence of a member of an object family specified in presence_trigger: If soundalert: is set to True, MultiDetect.py will probe for a valid sound output, and it will turn itself off when none is found. Due to the wild and woolly world of Linux audio, the probing is rather messy, and it can take time. Set soundalert: to False if your machine has no sound, or you don’t want to hear any. 
+**soundalert:** will, when True, alert you to the presence of a member of an object family specified in presence_trigger: If soundalert: is set to True, MultiDetect.py will probe for a valid sound output, and it will turn itself off when none is found. Due to the wild and woolly world of Linux audio, the probing is rather messy, and it can take time. Set **soundalert:** to False if your machine has no sound, or if you don’t want to hear any. 
 
 The object families are created in **labeldict:** If, for instance, labeldict is equal to { 'Lily':'cat', 'Bella':'cat','Chloe':'cat','Tweety':'bird'}, and if presence_trigger: is set to ‘cat,’ an audible sound will be played when Lily, Bella, or Chloe are detected. The bird Tweety will be ignored. 
 
@@ -106,13 +107,13 @@ A judicious use of these settings will also result in considerable power savings
 MultiDetect.conf may have a myriad of options, but you will use only a few because most will work with their defaults, and you can use the few sparingly. Remember: If it’s the same setting for all the video_processes, leave the setting in **Common:** <br>
 Put into **Process_1, 2,3 etc*** only what is special for the respective process. A setting in **Common:** is a catch-all for each video_process.
 
-Here are a few scenarios.
+Here are a few scenarios, along with their respective skeleton MultiDetect.conf files. To use a .conf file, rename tio to MultiDetect.conf, insert your paths to video sources and models, and run MultiDetect.py
 
 ### One video source, one model, one video output: 
-Everything goes into, and stays in **Common:** Your **video_path:** that points to your video source file, the paths to your model, the size and coordinates of your output widow, everything goes into **Common:**. Done
+Everything goes into, and stays in **Common:** Your **video_path:** that points to your video source file, the paths to your model, the size and coordinates of your output widow, everything goes into **Common:**. Done. [A skeleton conf file is in MultiDetect.conf.111](/3_Inference/MultiDetect.conf.111)
 
 ### Four video sources, one model, four video outputs: 
-Put the paths to your model into **Common:** Also in **Common:** set the proper **gpu_memory_fraction** for your GPU. You want at least 1Gbyte of video RAM for each process. Define, in **Common:** again, the size of the output windows by dividing your screen into same-sized quadrants. Now in each **Process_** section, define the video source, and the window_x: and window_y: coordinates of each output window. Done.
+Put the paths to your model into **Common:** Also in **Common:** set the proper **gpu_memory_fraction** for your GPU. You want at least 1Gbyte of video RAM for each process. Define, in **Common:** again, the size of the output windows by dividing your screen into same-sized quadrants. Now in each **Process_** section, define the video source, and the window_x: and window_y: coordinates of each output window. Done. [A skeleton conf file is in MultiDetect.conf.411](/3_Inference/MultiDetect.conf.411)
 
 ### Four video sources, four models, four video outputs: 
 This is pretty much the same as the previous, except that now the paths to the different models go into their respective **Process_** sections. I’ve painted you a picture:
@@ -121,27 +122,29 @@ This is pretty much the same as the previous, except that now the paths to the d
 
 
 ![4-up](/Utils/Screenshots/1920screen_4up.png)
-
+[A skeleton conf file is in MultiDetect.conf.444](/3_Inference/MultiDetect.conf.444)
 
 
 
 ### Nine video sources, nine models, nine video outputs: 
-Similar to the preceding, except that by now, we need to give serious consideration to the memory size of our GPU. **Careful, at these settings, you are approaching trhe ragged edge. Run MultiDetect.py without the hush setting, and watch for out of memory errors, and/or processes dying.** In a production setting, it would bne advisable to back-off from the ragged edge, run fewer processes on one GPU, or get a GPU with more memory. The nine processes fit into an 11 Gbyte GPU, but they would be too much for a 6 Gbyte GPU. For that, a second GPU would be needed. How to use two GPUs will follow. Again, a picture would explain our 9/9/9 setup much better.
+Similar to the preceding, except that by now, we need to give serious consideration to the memory size of our GPU. **Careful, at these settings, you are approaching the ragged edge. Run MultiDetect.py without the hush setting, and watch for out of memory errors, and/or processes dying.** In a production setting, it would be advisable to back-off from the ragged edge, run fewer processes on one GPU, or get a GPU with more memory. The nine processes fit into an 11 Gbyte GPU, but they would be too much for a 6 Gbyte GPU. For that, a second GPU would be needed. How to use two GPUs will follow. Again, a picture will explain our 9/9/9 setup much better.
 
 
 
 ![9-up](/Utils/Screenshots/1920screen_9up.png)
+[A skeleton conf file is in MultiDetect.conf.999](/3_Inference/MultiDetect.conf.999)
 
 
 
 ### 18 video sources, 18 models, 18 video outputs: 
-For that, we will definitely need two GPUs, and we will need to put a **run_on_gpu:** setting into each **Process_** section. Half of the processes will **run_on_gpu: 0**, the other half will **run_on_gpu: 1** We also need a 2nd monitor. How do we move the output windows to that 2nd monitor? Simple, we add the width of the monitor, in pixels, to the **window_x:** of the window we want to show on the 2nd monitor. If our monitors are 1920 pixels wide, and if the output window of **process_1** is at **window_x: 0** and **window_y: 28**, then **process_10** would live at **window_x: 1920** and **window_y: 28**, and so forth . Why **window_y: 28 ???** Because your screen may go crazy. See below under **Flicker!!** 
+For that, we will definitely need two GPUs, and we will need to put a **run_on_gpu:** setting into each **Process_** section. Half of the processes will **run_on_gpu: 0**, the other half will **run_on_gpu: 1** We also need a 2nd monitor. How do we move the output windows to that 2nd monitor? Simple, we add the width of the monitor, in pixels, to the **window_x:** of the window we want to show on the 2nd monitor. If our monitors are 1920 pixels wide, and if the output window of **process_1** is at **window_x: 0** and **window_y: 28**, then **process_10** would live at **window_x: 1920** and **window_y: 28**, and so forth . Why **window_y: 28 ???** Because your screen may go crazy with **window_y:** set to 0. See below under **Flicker!!** 
 
 Here is, in Super Todd-AO, the picture of 18/18/18. You may have to zoom in ... For anything above 18, use your imagination. 
 
 
 
 ![18-up](/Utils/Screenshots/1920screen_18up.png)
+[A skeleton conf file is in MultiDetect.conf.181818](/3_Inference/MultiDetect.conf.181818)
 
 
 
@@ -151,7 +154,7 @@ The Master Window is a rudimentary status and control window. It is driven by th
 
 The window will list the GPU(s) usable by YOLO via TensorFlow and CUDA. Note: The GPU number is as reported by TensorFlow, it sometimes is different from what nvidia-smi says. 
 
-The Master Window will, in the "Porcess" tab, give you a per-process status report, report any errors in the "Error" tab, and give you running stats per process in the "Stats" tab. If your machine is low on resources, constant updates of the stats can be a performance hit. Stats are off be default.
+The Master Window will, in the "Process" tab, give you a per-process status report, report any errors in the "Error" tab, and give you running stats per process in the "Stats" tab. If your machine is low on resources, constant updates of the stats can be a performance hit. Stats are off be default.
 
 Stats can help in adjusting the proper frame rates. Let stats run for a little while, the numbers are running averages and need a little time to settle. Current frames and seconds are displayed as reported by the streams. Keep in mind that IP cams often report bogus data. **IFPS** is the incoming frame rate, again as reported. It depends on what the video source claims it is. 
 
@@ -189,7 +192,7 @@ If your screen flickers during full screen playback, or if your carefully calcul
 
 ## Bugs!
 
-MultiDetect.py is a very early version, and it is full of bugs. I find new ones every day. The version is on Github, because I’m under pressure to release something. It also is on Github, because we are a community of programmers. If you find a bug, please don’t just report it. Try to find out why it fails. Much, if not most of the code can be coded better. If you know a better, faster, more elegant way, please let us know. 
+MultiDetect.py is a very early version, and it is full of bugs. I find new ones every day. This version is on Github, because I’m under pressure to release something. It also is on Github, because we are a community of programmers. If you find a bug, please don’t just report it. Try to find out why it fails. Much, if not most of the code can be coded better. If you know a better, faster, more elegant way, please let us know. 
 
 ## General comments
 
