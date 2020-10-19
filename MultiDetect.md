@@ -84,22 +84,41 @@ The OSD shows:
 **IFPS:** Incoming FPS. This is a best effort number, dependent on the willingness of the incoming stream to reveal that number. It can range from real-time update when the stream supports CAP_PROP_FPS, to a crude, one-time measurement at startup when the stream does not expose the frame rate, or, worse, when it gives bogus data. **YFPS** is the current max frame rate supported by YOLO. It is a rolling average over **rolling_average_n:** frames. **OFPS** is the outgoing frame rate. **RT** is the rolling average round-trip time of a video frame processed by YOLO.
 
 
-## Fighting frame drift
-Frame drift will be an ever-present problem when processing multiple real-time streams. Most IP cameras lack common timecode, have an unreliable timebase, or report unreliable or plain false fps etc data. MultiDetect.py will attempt every mitigation possible at its end, but it can be a losing battle. Here are a few steps to keep frame drift in check as much as possible. 
+## The Master Window
 
-**buffer_depth:** sets the size of the frame buffer in frames. If the buffer is set too high, frames will simply pile up in the buffer. Keep the buffer low to combat drift, and high enough for smooth video. A buffer of around 20 should be fine. Note: Some webcams do not allow buffers > 10.
+The Master Window is a rudimentary status and control window. It is driven by the master process. It allows you to Quit and Restart the app, to start and stop recording of video and to turn on/off audible prompts. Most of all, it gives you a picture of the frame rates achieved by each video_process. You can run MultiDetect.py without the master window by setting **showmaster:** to False in the **Master:** section of ther config file.
 
-IP cameras don’t always send video immediately, some take considerably longer than others. This is exacerbated when a number of IP cameras is started up at the same time by multiple processes. MultiDetect.py addresses this with **sync_start:** When set to True, the respective video_process will initialize its video source, and it will signal readiness to the master process while holding the video. Once the master process has received a ‘videoready’ signal from all processes, it will send a sync_start signal to all processes, and they will all start processing video at the same time, and in a semblance of sync. If no videoready signal has been received from all processes (probably because one crashed) the surviving processes will start playing after a timeout. The timeout is sync_start_wait:, internally multiplied by num_processes: 
+The window will list the GPU(s) usable by YOLO via TensorFlow and CUDA. Note: The GPU number is as reported by TensorFlow, it sometimes is different from what nvidia-smi says. 
 
-Even the most capable GPU can easily be overwhelmed when subjected to higher frame rates than it can process, even more so when multiple frames are being handled. This will result in video lag, and quickly, the timing of the individual streams will drift apart. To help mitigate video drift, you should send fewer frames to YOLO than a single process can handle. The first step would be to lower the incoming frame rate at the source. For further mitigation, MultiDetect.py has three settings that allow only a subset of the video frames to be run through YOLO, while all frames are displayed.
+The Master Window will, in the "Process" tab, give you a per-process status report, report any errors in the "Error" tab, and give you running stats per process in the "Stats" tab. If your machine is low on resources, constant updates of the stats can be a performance hit. Stats are off be default.
 
-**do_only_every_initial:** causes only every nth image to be run through YOLO. If set to 4, every 4th frame would be run through YOLO. With a 24fps video, YOLO would only be subjected to 6fps
+Stats can help in adjusting the proper frame rates. Let stats run for a little while, the numbers are running averages and need a little time to settle. Current frames and seconds are displayed as reported by the streams. Keep in mind that IP cams often report bogus data. **IFPS** is the incoming frame rate, again as reported. It depends on what the video source claims it is. 
 
-**do_only_every_autovideo:** runs only every nth image through YOLO during autovideo recording 
+**The strategy to determine incoming fps is as follows:**
 
-**do_only_every_present:** runs every nth image through YOLO after activity was detected and until presence_timer_interval times out
+If the stream exposes **PROP_FPS**, and if the PROP_FPS reported look somewhat believable ( 0 < PROP_FPS < 200 – adjust the code for a super high speed camera), we take that number. The incoming FPS are updated continuously to reflect any changes during the run.
+If the above fails, we will try **PROP_POS_FRAMES / PROP_POS_MSEC * 1000** , and if the result passes the sanity check as above, we will take it. The incoming FPS are updated continuously, HOWEVER, as the total of frames since start is divided by the total of seconds since start, the fps will be a cumulative average.
+If all else fails, we will measure the incoming fps in a **timing loop**. We do this only once after the stream starts.
 
-A judicious use of these settings will also result in considerable power savings. 
+A --- denotes a missing, or bogus frame rate. **YFPS** is the frame rate the respective YOLO stream currently can handle. **OFPS** is the outgoing frame rate. **N** tells you that every nth frame is being processed. **EFPS** is the effective frame rate of what is sent to YOLO, i.e. IFPS divided by n.
+
+Let’s say you process two streams, and you see a YFPS of 14, a common number for a 1080ti. To avoid video drift, the number of frames (EFPS) sent to YOLO should not exceed its YFPS, actually, it should be a little lower to allow for overhead. Be aware that YFPS is the average round-trip speed of your video sent through YOLO. The calling video_process needs time also, as a matter of fact, a lot of time is spent in waiting for the next video frame. (If you want to investigate this a bit further, set **profile:** to true. With the help of cProfile, a timing profile of the video_process() will be built for 3000 frames, and shown for each process, so you can see where all the time is spent.)
+
+If EFPS > YFPS, either lower the frame rate at the source, or adjust the do_only_every settings. Say you incoming frame rate is 16, and do_only_every_initial is set to 4. This will result in an EFPS of 4, a number that will be easily handled. These settings become important as you add multiple streams to one GPU. You will see the per-process YFPS go down, because the power of the GPU is shared by multiple processes. If OFPS sinks below IFPS, you will experience frame drift in short order. Reduce the incoming frame rate, and/or adjust the do_only_every settings.
+
+When recording video, outgoing OFPS should be the same as incoming IFPS. If the incoming stream is a webstream, or produced by a webcam, the outgoing FPS cannot exceed incoming FPS. If the source is a file, the file will be consumed rapidly, and thus the outgoing rate can be much higher the the rated fps. So if the incoming source is a file, MultiDetect.py will adjust **cv2.waitkey** to approximate the proper outgoing rate. This is an iterative process, made difficult by the fact that YFPS constantly fluctuates. It may take 30 seconds or so until something close to an equilibrium is reached. 
+ 
+As a default, the rolling YFPS average is calculated for the last 32 frames. You can adjust this number with the rolling_average_n setting in MultiDetect.conf
+
+The master window also will show the total of frames and seconds of each video stream and any differences between the streams and stream #1. This is based on what the video streams report via cv2.videocapture. These properties can be very unreliable, especially between IP cameras of different brands. As long as the actual video streams are halfway in sync, do not be alarmed if you see the frame and second differences pile up.
+
+
+
+## The Menu 
+
+**Stop** Menu": **“Quit”** will quit. **“Restart”** will restart MultiDetect.py. 
+**Record** Menu: **“Record on”** will cause all video_processes to record their video stream. **“Record off”** will stop recording. "AutoRec on" enables automatic recording, "AutoRec off" disables it.
+**Misc Menu:** **Ding On** enables chimes that alert you to the presence of objects, **Ding Off** disables. **OSD on** enables on-screen display, **OSD off** disables. **Hush on** enables hush, **Hush off** disables. **Stats on** enables running stats, **Stats off** disables.
 
 
 ## Hands-on MultiDetect.conf
@@ -148,42 +167,25 @@ Here is, in Super Todd-AO, the picture of 18/18/18. You may have to zoom in ... 
 
 
 
-## The Master Window
+## Fighting frame drift
 
-The Master Window is a rudimentary status and control window. It is driven by the master process. It allows you to Quit and Restart the app, to start and stop recording of video and to turn on/off audible prompts. Most of all, it gives you a picture of the frame rates achieved by each video_process.
+Frame drift will be an ever-present problem when processing multiple real-time streams. Most IP cameras lack common timecode, have an unreliable timebase, or report unreliable or plain false fps etc data. MultiDetect.py will attempt every mitigation possible at its end, but it can be a losing battle. Here are a few steps to keep frame drift in check as much as possible. 
 
-The window will list the GPU(s) usable by YOLO via TensorFlow and CUDA. Note: The GPU number is as reported by TensorFlow, it sometimes is different from what nvidia-smi says. 
+**buffer_depth:** sets the size of the frame buffer in frames. If the buffer is set too high, frames will simply pile up in the buffer. Keep the buffer low to combat drift, and high enough for smooth video. A buffer of around 20 should be fine. Note: Some webcams do not allow buffers > 10.
 
-The Master Window will, in the "Process" tab, give you a per-process status report, report any errors in the "Error" tab, and give you running stats per process in the "Stats" tab. If your machine is low on resources, constant updates of the stats can be a performance hit. Stats are off be default.
+IP cameras don’t always send video immediately, some take considerably longer than others. This is exacerbated when a number of IP cameras is started up at the same time by multiple processes. MultiDetect.py addresses this with **sync_start:** When set to True, the respective video_process will initialize its video source, and it will signal readiness to the master process while holding the video. Once the master process has received a ‘videoready’ signal from all processes, it will send a sync_start signal to all processes, and they will all start processing video at the same time, and in a semblance of sync. If no videoready signal has been received from all processes (probably because one crashed) the surviving processes will start playing after a timeout. The timeout is sync_start_wait:, internally multiplied by num_processes: 
 
-Stats can help in adjusting the proper frame rates. Let stats run for a little while, the numbers are running averages and need a little time to settle. Current frames and seconds are displayed as reported by the streams. Keep in mind that IP cams often report bogus data. **IFPS** is the incoming frame rate, again as reported. It depends on what the video source claims it is. 
+Even the most capable GPU can easily be overwhelmed when subjected to higher frame rates than it can process, even more so when multiple frames are being handled. This will result in video lag, and quickly, the timing of the individual streams will drift apart. To help mitigate video drift, you should send fewer frames to YOLO than a single process can handle. The first step would be to lower the incoming frame rate at the source. For further mitigation, MultiDetect.py has three settings that allow only a subset of the video frames to be run through YOLO, while all frames are displayed.
 
-**The strategy to determine incoming fps is as follows:**
+**do_only_every_initial:** causes only every nth image to be run through YOLO. If set to 4, every 4th frame would be run through YOLO. With a 24fps video, YOLO would only be subjected to 6fps
 
-If the stream exposes **PROP_FPS**, and if the PROP_FPS reported look somewhat believable ( 0 < PROP_FPS < 200 – adjust the code for a super high speed camera), we take that number. The incoming FPS are updated continuously to reflect any changes during the run.
-If the above fails, we will try **PROP_POS_FRAMES / PROP_POS_MSEC * 1000** , and if the result passes the sanity check as above, we will take it. The incoming FPS are updated continuously, HOWEVER, as the total of frames since start is divided by the total of seconds since start, the fps will be a cumulative average.
-If all else fails, we will measure the incoming fps in a **timing loop**. We do this only once after the stream starts.
+**do_only_every_autovideo:** runs only every nth image through YOLO during autovideo recording 
 
-A --- denotes a missing, or bogus frame rate. **YFPS** is the frame rate the respective YOLO stream currently can handle. **OFPS** is the outgoing frame rate. **N** tells you that every nth frame is being processed. **EFPS** is the effective frame rate of what is sent to YOLO, i.e. IFPS divided by n.
+**do_only_every_present:** runs every nth image through YOLO after activity was detected and until presence_timer_interval times out
 
-Let’s say you process two streams, and you see a YFPS of 14, a common number for a 1080ti. To avoid video drift, the number of frames (EFPS) sent to YOLO should not exceed its YFPS, actually, it should be a little lower to allow for overhead. Be aware that YFPS is the average round-trip speed of your video sent through YOLO. The calling video_process needs time also, as a matter of fact, a lot of time is spent in waiting for the next video frame. (If you want to investigate this a bit further, set **profile:** to true. With the help of cProfile, a timing profile of the video_process() will be built for 3000 frames, and shown for each process, so you can see where all the time is spent.)
-
-If EFPS > YFPS, either lower the frame rate at the source, or adjust the do_only_every settings. Say you incoming frame rate is 16, and do_only_every_initial is set to 4. This will result in an EFPS of 4, a number that will be easily handled. These settings become important as you add multiple streams to one GPU. You will see the per-process YFPS go down, because the power of the GPU is shared by multiple processes. If OFPS sinks below IFPS, you will experience frame drift in short order. Reduce the incoming frame rate, and/or adjust the do_only_every settings.
-
-When recording video, outgoing OFPS should be the same as incoming IFPS. If the incoming stream is a webstream, or produced by a webcam, the outgoing FPS cannot exceed incoming FPS. If the source is a file, the file will be consumed rapidly, and thus the outgoing rate can be much higher the the rated fps. So if the incoming source is a file, MultiDetect.py will adjust **cv2.waitkey** to approximate the proper outgoing rate. This is an iterative process, made difficult by the fact that YFPS constantly fluctuates. It may take 30 seconds or so until something close to an equilibrium is reached. 
- 
-As a default, the rolling YFPS average is calculated for the last 32 frames. You can adjust this number with the rolling_average_n setting in MultiDetect.conf
-
-The master window also will show the total of frames and seconds of each video stream and any differences between the streams and stream #1. This is based on what the video streams report via cv2.videocapture. These properties can be very unreliable, especially between IP cameras of different brands. As long as the actual video streams are halfway in sync, do not be alarmed if you see the frame and second differences pile up.
+A judicious use of these settings will also result in considerable power savings. 
 
 
-
-## The Menu 
-
-**Stop** Menu": **“Quit”** will quit. **“Restart”** will restart MultiDetect.py. 
-**Record** Menu: **“Record on”** will cause all video_processes to record their video stream. **“Record off”** will stop recording. "AutoRec on" enables automatic recording, "AutoRec off" disables it.
-**Misc Menu:** **Ding On** enables chimes that alert you to the presence of objects, **Ding Off** disables. **OSD on** enables on-screen display, **OSD off** disables. **Hush on** enables hush, **Hush off** disables. **Stas on** enables running stats, **Stats off** disables.
- 
 
 ## Flicker?
 
@@ -202,7 +204,7 @@ Throughput doesn’t seem very sensitive to the amount of GPU memory allocated t
 The market is flooded with cheap IP cameras. Their picture quality can be quite decent these days, their software quality often is lousy. You will often find them contacting servers in China. If you don’t want to star on insecam.org, the infamous database of live IP cameras, do the following: Avoid WiFi cams, use hardwired. Put the cams behind a firewall, making sure that the cameras can’t be reached from the outside, AND MOST OF ALL make sure that the cameras cannot reach the outside. This also keeps the cams from updating their internal clock via NTP. For that, set up your own local NTP server that acts as a common reference for your cams.
 
 ## Infamous last words
-Development was on Ubuntu 18.04 and 20.04, with Python3.7, CUDA 10.1, and the Nvidia 450 video driver. CUDA 10.1 appears to get along best with the Tensorflow version used in this repo. I have developed and tested MultiDetect.py on a machine with a 3970x Threadripper and 128G of memory, and on an ancient Intel 6700K with 64G of memory. I have a stack of Geforce 1060/6G and Geforce 1080ti/11G GPUs, and I used them in various combinations. No other systems were tested. MultiDetect.py makes use of certain Unix functions and would have to be adapted to Windows, and possibly Mac.
+Development was on Ubuntu 18.04 and 20.04, with python 3.7, CUDA 10.1, and the Nvidia 450 video driver. CUDA 10.1 appears to get along best with the Tensorflow version used in this repo. I have developed and tested MultiDetect.py on a machine with a 3970x Threadripper and 128G of memory, and on an ancient Intel 6700K with 64G of memory. I have a stack of Geforce 1060/6G and Geforce 1080ti/11G GPUs, and I used them in various combinations. No other systems were tested. MultiDetect.py makes use of certain Unix functions and would have to be adapted to Windows, and possibly Mac.
 
 I am a retired advertising executive, and my programming “skills” are completely self-taught. I tried my hands on assembler and BASIC half a century ago when computers had 8 bits and 4K of memory. I took up Python to keep me busy after retirement. My code definitely is in need of improvement, and it could be completely flawed. The stuff is on Github in hope for improvement – of the code, and of myself. 
 
