@@ -126,7 +126,9 @@ The master window also will show the total of frames and seconds of each video s
 MultiDetect.conf may have a myriad of options, but you will use only a few because most will work with their defaults, and you can use the few sparingly. Remember: If it’s the same setting for all the video_processes, leave the setting in **Common:** <br>
 Put into **Process_1, 2,3 etc*** only what is special for the respective process. A setting in **Common:** is a catch-all for each video_process.
 
-Here are a few scenarios, along with their respective skeleton MultiDetect.conf files. To use a .conf file, rename tio to MultiDetect.conf, insert your paths to video sources and models, and run MultiDetect.py
+Here are a few scenarios, along with their respective skeleton MultiDetect.conf files. To use a .conf file, rename to to MultiDetect.conf, insert your paths to video sources and models, and run MultiDetect.py 
+
+The settings files are mere suggestions, they will need to be adapted to your circumstances, GPU sizes, monitor sizes, etc.
 
 ### One video source, one model, one video output: 
 Everything goes into, and stays in **Common:** Your **video_path:** that points to your video source file, the paths to your model, the size and coordinates of your output widow, everything goes into **Common:**. Done. [A skeleton conf file is in MultiDetect.conf.111](/3_Inference/MultiDetect.conf.111)
