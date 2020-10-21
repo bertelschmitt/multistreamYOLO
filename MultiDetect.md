@@ -194,7 +194,12 @@ If your screen flickers during full screen playback, or if your carefully calcul
 
 ## Bugs!
 
-MultiDetect.py is a very early version, and it is full of bugs. I find new ones every day. This version is on Github, because I’m under pressure to release something. It also is on Github, because we are a community of programmers. If you find a bug, please don’t just report it. Try to find out why it fails. Much, if not most of the code can be coded better. If you know a better, faster, more elegant way, please let us know. 
+MultiDetect.py is a very early version, and it is full of bugs. I find new ones every day. This version is on Github, because I’m under pressure to release something. It also is on Github, because we are a community of programmers. If you find a bug, please don’t just report it. Try to find out why it fails. Much, if not most of the code can be coded better. If you know a better, faster, more elegant way, please let us know. Here are some bugs I know of:
+
+- In a multi-monitor situation, and if the Master Window is moved to another monitor, an orphan drop-down menu sometimes is left on the other monitor. Tkinter issue. Cosmetic only.
+- If a video process crashes in the YOLO object/Tensorflow/Keras, the calling procedure never get notified. MultiDetect.py will eventually try to kill a crashed process, but it can take a while, and it may not happen. 
+
+
 
 ## General comments
 
