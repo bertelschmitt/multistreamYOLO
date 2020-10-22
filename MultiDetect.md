@@ -90,15 +90,15 @@ The Master Window is a rudimentary status and control window. It is driven by th
 
 The window will list the GPU(s) usable by YOLO via TensorFlow and CUDA. Note: The GPU number is as reported by TensorFlow, it sometimes is different from what nvidia-smi says. 
 
-The Master Window will, in the "Process" tab, give you a per-process status report, report any errors in the "Error" tab, and give you running stats per process in the "Stats" tab. If your machine is low on resources, constant updates of the stats can be a performance hit. Stats are off be default.
+The Master Window will, in the "Process" tab, give you a per-process status report, report any errors in the "Error" tab, and it will provide running stats per process in the "Stats" tab. If your machine is low on resources, constant updates of the stats can be a performance hit. Stats are off by default.
 
-Stats can help in adjusting the proper frame rates. Let stats run for a little while, the numbers are running averages and need a little time to settle. Current frames and seconds are displayed as reported by the streams. Keep in mind that IP cams often report bogus data. **IFPS** is the incoming frame rate, again as reported. It depends on what the video source claims it is. 
+Stats can help in adjusting the proper frame rates. Let stats run for a little while, the numbers are running averages and need a little time to settle. Current frames and seconds are displayed as reported by the streams. **IFPS** is the incoming frame rate, again as reported. It depends on what the video source claims it is. Keep in mind that IP cams often report bogus data. We will try to catch this, as best as we can.
 
 **The strategy to determine incoming fps is as follows:**
 
-If the stream exposes **PROP_FPS**, and if the PROP_FPS reported look somewhat believable ( 0 < PROP_FPS < 200 – adjust the code for a super high speed camera), we take that number. The incoming FPS are updated continuously to reflect any changes during the run.
-If the above fails, we will try **PROP_POS_FRAMES / PROP_POS_MSEC * 1000** , and if the result passes the sanity check as above, we will take it. The incoming FPS are updated continuously, HOWEVER, as the total of frames since start is divided by the total of seconds since start, the fps will be a cumulative average.
-If all else fails, we will measure the incoming fps in a **timing loop**. We do this only once after the stream starts.
+If the stream exposes **PROP_FPS**, and if the PROP_FPS reported look somewhat believable ( 0 < PROP_FPS < 200 – adjust the code for a super high speed camera), we take that number. In this case, the incoming FPS are updated continuously to reflect any changes during the run.
+If the above fails, we will try **PROP_POS_FRAMES / PROP_POS_MSEC * 1000** , and if the result passes the sanity check as above, we will take it. The incoming FPS are updated continuously, HOWEVER, as the total of frames since start is divided by the total of seconds since start, that fps flavor will be a cumulative average, and not a current incoming fps.<br>
+If all else fails, we will measure the incoming fps in a timing loop. We do this only once after the stream starts. This will slow-down startup of this process. It is signalled by a "preroll" message in the status window. The measured fps reflects to frame rate at startup, it won't be a current incoming fps.<br>
 
 A --- denotes a missing, or bogus frame rate. **YFPS** is the frame rate the respective YOLO stream currently can handle. **OFPS** is the outgoing frame rate. **N** tells you that every nth frame is being processed. **EFPS** is the effective frame rate of what is sent to YOLO, i.e. IFPS divided by n.
 
@@ -126,9 +126,9 @@ The master window also will show the total of frames and seconds of each video s
 MultiDetect.conf may have a myriad of options, but you will use only a few because most will work with their defaults, and you can use the few sparingly. Remember: If it’s the same setting for all the video_processes, leave the setting in **Common:** <br>
 Put into **Process_1, 2,3 etc*** only what is special for the respective process. A setting in **Common:** is a catch-all for each video_process.
 
-Here are a few scenarios, along with their respective skeleton MultiDetect.conf files. To use a .conf file, rename to to MultiDetect.conf, insert your paths to video sources and models, and run MultiDetect.py 
+Here are a few scenarios, along with their respective skeleton MultiDetect.conf files. The skeleton .conf files are in .../3_Inference/MDResource/confsamples. To use a .conf file, copy it to .../3_Inference/ , rename it to MultiDetect.conf, insert your paths to video sources and models, and run MultiDetect.py 
 
-The settings files are mere suggestions, they will need to be adapted to your circumstances, GPU sizes, monitor sizes, etc.
+Note that the skeletopn .conf files are mere suggestions, they will need to be adapted to your circumstances, GPU sizes, monitor sizes, etc.
 
 ### One video source, one model, one video output: 
 Everything goes into, and stays in **Common:** Your **video_path:** that points to your video source file, the paths to your model, the size and coordinates of your output widow, everything goes into **Common:**. Done. [A skeleton conf file is in MultiDetect.conf.111](/3_Inference/MultiDetect.conf.111)
