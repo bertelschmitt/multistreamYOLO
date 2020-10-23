@@ -116,9 +116,9 @@ The master window also will show the total of frames and seconds of each video s
 
 ## The Menu 
 
-**Stop** Menu": **“Quit”** will quit. **“Restart”** will restart MultiDetect.py. 
-**Record** Menu: **“Record on”** will cause all video_processes to record their video stream. **“Record off”** will stop recording. "AutoRec on" enables automatic recording, "AutoRec off" disables it.
-**Misc Menu:** **Ding On** enables chimes that alert you to the presence of objects, **Ding Off** disables. **OSD on** enables on-screen display, **OSD off** disables. **Hush on** enables hush, **Hush off** disables. **Stats on** enables running stats, **Stats off** disables.
+**Stop** Menu: **“Quit”** will quit. **“Restart”** will restart MultiDetect.py. <br>
+**Record** Menu: **“Record on”** will cause all video_processes to record their video stream. **“Record off”** will stop recording. "AutoRec on" enables automatic recording, "AutoRec off" disables it.<br>
+**Misc Menu:** **Ding On** enables chimes that alert you to the presence of objects, **Ding Off** disables. **OSD on** enables on-screen display, **OSD off** disables. **Hush on** enables hush, **Hush off** disables. **Stats on** enables running stats, **Stats off** disables.<br>
 
 
 ## Hands-on MultiDetect.conf
@@ -199,7 +199,7 @@ If your screen flickers during full screen playback, or if your carefully calcul
 MultiDetect.py is a very early version, and it is full of bugs. I find new ones every day. This version is on Github, because I’m under pressure to release something. It also is on Github, because we are a community of programmers. If you find a bug, please don’t just report it. Try to find out why it fails. Much, if not most of the code can be coded better. If you know a better, faster, more elegant way, please let us know. Here are some bugs I know of:
 
 - In a multi-monitor situation, and if the Master Window is moved to another monitor, an orphan drop-down menu sometimes is left on the other monitor. Tkinter issue. Cosmetic only.
-- YOLO is a pain when it comes to error reporting. If an error occurs inside of YOLO, the calling process is never notified. The call dies inside of YOLO, a bunch of messages is put on the console (if we are lucky), and the calling procedure literally is left hanging. There is a very experimental feature in MultiDetect.py that tries to catch a hung call to YOLO using timers. A timer is set before the call to YOLO, and reset after. If the call does not return, the timer triggers a (hopefully) graceful shutdown of the process. The feature is turned on by setting **monitor_YOLO:** to True in the config file. **YOLO_init_AWOL_wait:** sets the time in seconds to wait for YOLO to successfully initialize before it is declared missing. **YOLO_detect_AWOL_wait:**  sets the time in seconds to wait for YOLO to successfully complete one image detection.  It works to some degree, but it is messy. The YOLO object really needs to be rewritten to report errors up the chain.
+- YOLO is a pain when it comes to error reporting. If an error occurs inside of YOLO, the calling process is never notified. The call dies inside of YOLO, a bunch of messages is put on the console (if we are lucky), and the calling procedure literally is left hanging. There is a very experimental feature in MultiDetect.py that tries to catch a hung call to YOLO using timers. A timer is set before the call to YOLO, and reset after. If the call does not return, the timer triggers a (hopefully) graceful shutdown of the process. The feature is turned on by setting **monitor_YOLO:** to True in the config file. **YOLO_init_AWOL_wait:** sets the time in seconds to wait for YOLO to successfully initialize before it is declared missing. **YOLO_detect_AWOL_wait:**  sets the time in seconds to wait for YOLO to successfully complete one image detection.  It works to some degree, but it is messy. YOLO can get cranky when run at extreme settings. It probably is better to arrive at stable settings through experimentation, and leave **monitor_YOLO:** set trop False. The YOLO object really needs to be rewritten to report errors up the chain.
 
 
 ## General comments
