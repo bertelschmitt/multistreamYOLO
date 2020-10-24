@@ -1,0 +1,147 @@
+    #=================================================================================
+    # File: MultiDetect.conf.444 - To use, edit, rename to MultiDetect.conf
+    # and put in MultiDetect.py directory
+    #==================================================================================
+    # Example config file for 4 streams, 4 processes, 4 models, 1 monitor
+    # To edit a setting, put its value behind the colon and uncomment
+    # If the setting is commented-out, the default will be used
+    #==================================================================================
+    
+
+Master:
+    #==================================================================================
+    #settings for master only
+    #==================================================================================
+
+    num_processes: 4	 		# Number of processes to launch. Default 1
+    #hush: True       			# Try to suppress most warnings messages. Default  False
+    #master_window_title: 	 	# Title for master monitor window. Default "Master"
+    #redraw:	 			# Used to redraw screen to settle windows into their place. Default True
+    #sync_start: 	      		# Synchronize start of all video streams in an attempt to mitigate time drift between videos. Default True
+    #sync_start_wait:    		# Time in seconds to wait for sync_start before timeout. This will be multiplied by num_processes to allow for longer staging due to higher load  Default 15 
+    #showmaster: 	      		# If true, show master window. Default True
+    #do_stats:                          # Automatically show stats on stats tab. Default False
+    
+    
+Common:
+    #===================================================================================================================
+    #Settings common to all processes except master. A setting in process block will override a global setting for that block
+    #===================================================================================================================
+ 
+    #testing: True	                # If True, play video as specified in testvideo. Used for testing. Default False
+    #max_cams_to_probe:                 # Maximum number of usb cameras to probe for. Probing takes time at startup. Default 10
+    #profile:                           # If true, profile video_process() for 3000 frames, then show results for each process. Default False
+    #testvideo:                         # Dummy video file. Default is .../3_Inference/MDResource/testvid.mp4 
+    #clicksound:                        # Audible alert.  Default  .../3_Inference/MDResource/chime.mp3 
+    #soundalert:                        # Play click sound when a class specified in present_trigger is detected. Default False
+    #silence:                           # Needed for test of audio capabilities. Default .../3_Inference/MDResource/silence.mp3 
+
+    #buffer_depth:       	        # Size of frame buffer in frames. Keep low to combat drift, high enough for smooth video. Note: Some webcams do not allow buffers > 10. Default 20  
+    #presence_trigger:  	        # Family to monitor for presence trigger. Default []
+    #presence_timer_interval:           # seconds until reset. Default 20 
+    #ding_interval:     	        # Allow only one ding within that period. Default 20
+    #monitor_YOLO:                      # Experimental!!! Monitor YOLO execution using timers in lieu of proper error reporting. Shut down thread if timed out. Default: False
+    #YOLO_init_AWOL_wait:               # Time in seconds to wait for YOLO to initialize. Shutdown when time exceeded. Default: 20 
+    #YOLO_detect_AWOL_wait:             # Time in seconds to wait for YOLO to come back from detect_image_extended. Shutdown if time exceeded. Default 10
+    #record_autovideo:  	        # If true, automatically record captured video, and store it in output_path. Default False
+    #record_with_boxes                  # If True, record video with boxes (if any ), if False, record without. Default False
+    #output_path:                       # Full basepath for recorded video files. Default .../3_Inference/MDResource/videos
+    #record_framecode:                  # Record framecode files corresponding to recorded video files. Default False
+    #framecode_path:                    # Full basepath for framecode files.  Default .../3_Inference/MDResource/framecode 
+    #maintain_result_log: True          # Whether to keep a running log with result timings etc. Default False
+    #result_log_basedir:                # Full path to where to keep the result logs. Default .../3_Inference/MDResource/resultlogs
+    #rolling_average_n:                 # Length of rolling average used to determine average YOLO-fps. Default 32
+    #do_loop:                           # If set, a video file will loop to beginning when done. Default False
+
+    # To make up for less capable GPUs, or for high frame rates, use these settings to run only every nth frame through YOLO detection
+    # For instance, a frame rate of 25fps, and a setting of 2 would result in ~12 frames per second to be run through YOLO, which is well within the capabilities of a moderately-priced GPU
+    # These settings also make for considerable power savings
+
+    #do_only_every_autovideo:           # Run only every nth image through YOLO during autovideo recording. Default 1 
+    #do_only_every_initial:             # Run only every nth image through YOLO during normal times. Default 1
+    #do_only_every_present:             # Run every nth image through YOLO after activity was detected and until presence_timer_interval times out. Default 1
+
+    #Default settings for on-screen type. Can be obverridden in app
+    #osd:                               #  On screen display. Default: False
+    #osd_fontFace:                      #  Font index. Default 0 (index of cv2.FONT_HERSHEY_SIMPLEX)
+    #osd_fontScale:                     #  Font size. Default 1.2
+    #osd_fontColor:      	        #  Default green (0,255, 0)
+    #osd_fontWeight:                    #  Will be adjusted for smaller/bigger screens. Default 3
+
+
+    ###YOLO Model settings    
+    #===============================================================================================================
+    #model_path:                        # Full path to model. Default ".../Data/Model_Weights/trained_weights_final.h5"
+    #classes_path:                      # Full path to classes. Default ".../Data/Model_Weights/data_classes.txt" 
+    #anchors_path:                      # Full path to anchors. Default ".../2_Training/src/keras_yolo3/model_data/yolo_anchors.txt"
+    #show_stats: 	                # Causes YOLO to print stats to console, or not. Default False
+    #iou:  	 	                # Intersection over union threshold. Default : 0.9
+    #run_on_gpu:      		        # GPU to run on. GPU number or -1 let Keras decide. Default 0 
+    gpu_memory_fraction: 0.35  	        # Fraction of GPU memory to allocate. 0.05 would be 5%. Default is 1 - allocate all available, 100%
+    allow_growth: 1   		        # GPU memory allocation strategy. -1 let Keras decide, 0 disallow, 1 allow memory used to grow dynamically. Best setting to optimize memory usage appears to be 1 (Default)
+
+
+    # Families for automatic action. If set as below, "Fluffy" and "Ginger" would be members of the "cat" family, and all "cat" family members would trigger automatic action, such as sound alert (if set and supported) or automatic recording of video (if set)
+    # labeldict: {'Fluffy':'cat','Ginger':'cat','Crow':'bird'}
+    # presence_trigger: ['cat']
+
+    #labeldict:                         # Family dictionary. Default {}
+    #presence_trigger:                  # List of family members to trigger presence report (ding and auto video). Default []
+    #ignore_labels:                     # List of labels for YOLO to ignore and not to report. Default []
+        
+    # Dimensions for output window
+    window_wide: 960                    # Width  of output window in pixels. Default 1024
+    window_high: 489                    # Height of output window in pixels. Default 600
+    #window_x:                          # X-position of on-screen window, top left corner, in pixel. Default 200
+    #window_y:                          # Y-position of on-screen window, top left corner, in pixel. Default 200
+
+
+Process_1:
+    #===================================================================================================================
+    # Per process settings. Provide a Process_x block for each stream
+    # If fewer blocks than num_processes are provided, all other processes will use data in last provided block
+    # If no process_x is provided, process will inherit its settings from the Common block. If no Common block is provided, process will run with defaults
+    #===================================================================================================================
+
+    #video_path:    Uncomment and insert video path to stream 1
+    #model_path:    Uncomment and add full path to model 1.
+    #classes_path:  Uncomment and add full path to classes 1. 
+    #anchors_path:  Uncomment and add full path to anchors 1.
+
+    window_title:   "Monitor_1"
+    window_x: 0 
+    window_y: 28
+
+Process_2:
+    #video_path:    Uncomment and insert video path to stream 2
+    #model_path:    Uncomment and add full path to model 2.
+    #classes_path:  Uncomment and add full path to classes 2. 
+    #anchors_path:  Uncomment and add full path to anchors 2.
+
+    window_title:  "Monitor_2"
+    window_x: 960
+    window_y: 28
+
+Process_3:
+    #video_path:    Uncomment and insert video path to stream 3
+    #model_path:    Uncomment and add full path to model 3.
+    #classes_path:  Uncomment and add full path to classes 3. 
+    #anchors_path:  Uncomment and add full path to anchors 3.
+
+    window_title:  "Monitor_3"
+    window_x: 0
+    window_y: 554
+
+Process_4:
+    #video_path:    Uncomment and insert video path to stream 4
+    #model_path:    Uncomment and add full path to model 4.
+    #classes_path:  Uncomment and add full path to classes 4. 
+    #anchors_path:  Uncomment and add full path to anchors 4.
+
+    window_title:  "Monitor_4"
+    window_x: 960 
+    window_y: 554
+
+
+
+
