@@ -1,6 +1,6 @@
 # TrainYourOwnYOLO XXL: Build a Custom Object Detector from Scratch, and run many in parallel [![License: CC BY 4.0](https://img.shields.io/badge/License-CC%20BY%204.0-lightgrey.svg)](https://creativecommons.org/licenses/by/4.0/)
 
-**This repo works with TensorFlow 2.3 and Keras 2.4. This repo builds on the very successful [BuildYourOwnYOLO](https://github.com/AntonMu/TrainYourOwnYOLO) repo maintained by Anton Mu. His  repo lets you train a custom image detector using the state-of-the-art [YOLOv3](https://pjreddie.com/darknet/yolo/) computer vision algorithm. For a short write up check out this [medium post](https://medium.com/@muehle/how-to-train-your-own-yolov3-detector-from-scratch-224d10e55de2). This repo brings everything BuildYourOwnYOLO does, and on top, it allows you to detect objects in multiple streams, with multiple GPUs, and with multiple models, all at the same time, all in parallel in multiple independent Python processes.** 
+**This repo works with TensorFlow 2.3 and Keras 2.4. This repo builds on the very successful [TrainYourOwnYOLO](https://github.com/AntonMu/TrainYourOwnYOLO) repo maintained by Anton Mu. His  repo lets you train a custom image detector using the state-of-the-art [YOLOv3](https://pjreddie.com/darknet/yolo/) computer vision algorithm. For a short write up check out this [medium post](https://medium.com/@muehle/how-to-train-your-own-yolov3-detector-from-scratch-224d10e55de2). This repo brings everything BuildYourOwnYOLO does, and on top, it allows you to detect objects in multiple streams, with multiple GPUs, and with multiple models, all at the same time, all in parallel in multiple independent Python processes.** 
 
 The number of streams depends on the amount of memory available on the GPU and in your computer. A YOLO process demands around a gigabyte of GPU memory, therefore, 11 streams can ideally be squeezed into a Geforce 1080ti with 11 Gbytes (it will be a very tight fit.) This is achieved with a modified YOLO object. A more [**in-depth description is here.**](/MultiYOLO.md)
 
@@ -11,7 +11,13 @@ Both the modified YOLO process and MultiDetect.py are written in pure Python3.7.
 ![4windows](/Utils/Screenshots/4stream.gif)
 
 **You can create as many independent YOLO video streams as your GPU can stomach**
-            
+
+### Changes made to  [TrainYourOwnYOLO](https://github.com/AntonMu/TrainYourOwnYOLO)
+
+- [**Modified yolo.py**](/2_Training/src/keras_yolo3/yolo.py) to allow for multiple YOLO instances on one, or multiple GPUs.[More here.](/MultiYOLO.md)
+- [**Modified Train_YOLO.py**](/2_Training/Train_YOLO.py) to allow for a changed repo name, like the one in here
+- [**MultiDetect.py**](/3_Inference/MultiDetect.py) w/ sundry support files to demo the new capabilities
+- Added sundry documentation files
 
 ### Pipeline Overview
 
