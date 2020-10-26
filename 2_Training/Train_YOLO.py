@@ -1,6 +1,8 @@
 """
 MODIFIED FROM keras-yolo3 PACKAGE, https://github.com/qqwweee/keras-yolo3
 Retrain the YOLO model for your own dataset.
+
+10-26-20 MODIFIED by bertelschmitt to use new repo name if changed to something else that "trainyourownrepo"
 """
 
 import os
@@ -70,7 +72,8 @@ YOLO_classname = os.path.join(Model_Folder, "data_classes.txt")
 log_dir = Model_Folder
 anchors_path = os.path.join(keras_path, "model_data", "yolo_anchors.txt")
 weights_path = os.path.join(keras_path, "yolo.h5")
-
+#10-26-20 gety name of current repo, which should be the directory one down from ours
+current_repo = get_parent_dir(1).rsplit('/', 1)[1]
 FLAGS = None
 
 if __name__ == "__main__":
@@ -165,7 +168,6 @@ if __name__ == "__main__":
         anchors_path = os.path.join(
             os.path.dirname(FLAGS.anchors_path), "yolo-tiny_anchors.txt"
         )
-
     anchors = get_anchors(anchors_path)
 
     input_shape = (416, 416)  # multiple of 32, height, width
@@ -201,7 +203,8 @@ if __name__ == "__main__":
 
     # This step makes sure that the path names correspond to the local machine
     # This is important if annotation and training are done on different machines (e.g. training on AWS)
-    lines = ChangeToOtherMachine(lines, remote_machine="")
+	# 10-26-20 Changed by bertelschmitt to call with current_repo
+    lines = ChangeToOtherMachine(lines, remote_machine="", repo=current_repo)
     np.random.shuffle(lines)
     num_val = int(len(lines) * val_split)
     num_train = len(lines) - num_val
