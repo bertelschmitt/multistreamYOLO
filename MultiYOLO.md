@@ -75,6 +75,12 @@ Each separate process creates its own YOLO object along with a completely separa
 ## Needless to say, but said anyway: 
 All the settings used in init_yolo are on a per-session basis. From session to session, settings can be completely different, or mostly all the same. 
 
+## To Do
+
+-	Each YOLO instance is completely separate, resulting in a massive duplication of memory usage, even if the same model (or mostly the same) is used in the processes. At up to 3 gigabyte per process, it can add up. Investigate where shared memory can be used.
+-	Send error messages back to the calling process for graceful error handling.
+-	Investigate using CV2 instead of PIL for image processing, the drawing of boxes takes too much time. Dispense with the box drawing if only the coordinates are needed
+
 ## Infamous last words.
 Development was on Ubuntu 18.04, with Python3.7. Except for a successful run on python 3.8, no other systems were tested. 
 My programming skills are completely self-taught. I tried my hands on assembler and BASIC half a century ago, and I took up Python to keep me busy after retirement. My code definitely is in need of improvement, and it could be completely flawed. Have at it. 
