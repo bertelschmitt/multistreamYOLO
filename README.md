@@ -14,9 +14,10 @@ Both the modified YOLO process and MultiDetect.py are written in pure Python3.7.
 
 ### Changes made to  [TrainYourOwnYOLO](https://github.com/AntonMu/TrainYourOwnYOLO)
 
-- [**Modified yolo.py**](/2_Training/src/keras_yolo3/yolo.py) to allow for multiple YOLO instances on one, or multiple GPUs.[More here.](/MultiYOLO.md)
+- [**Modified yolo.py**](/2_Training/src/keras_yolo3/yolo.py) to allow for multiple YOLO instances on one, or multiple GPUs. [More here.](/MultiYOLO.md)
 - [**Modified Train_YOLO.py**](/2_Training/Train_YOLO.py) to allow for a changed repo name, like the one in here
-- [**MultiDetect.py**](/3_Inference/MultiDetect.py) w/ sundry support files to demo the new capabilities
+- [**MultiDetect.py**](/3_Inference/MultiDetect.py) w/ sundry support files to demo the new capabilities. [More here.](/MultiDetect.md)
+- [**Facility to download ready-made cat model**](/3_Inference/Download_Cat_Model.py) to demo new capabilities without a custom model
 - Added sundry documentation files
 
 ### Pipeline Overview
