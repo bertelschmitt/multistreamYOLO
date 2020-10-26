@@ -8,7 +8,7 @@ The main process parses the configuration file, and launches the video processes
 
 ## The video_process(es)
 Each of the YOLO streams is handled by a completely independent python process. You can launch as many processes as you desire, and as your hardware can stomach. The video process is, not surprisingly, called video_process(). It grabs video frames from a webcam, a file, or an on-line stream. It runs the video frames through a YOLO model specified by you, it then goes on to display the video, and optionally store the results in a file.
-Using the modded YOLO class ([**more on that in its description**](/MultiYOLO.md)), the video_process can use a dedicated GPU as specified in **FLAGS.run_on_gpu**, and/or it will run on a fraction of a GPU as specified in **gpu_memory_fraction**. There is no bounds checking. The process will crash if the GPU, or the total of claimed GPU memory are out of bounds. Be aware that each video_process will initialize and maintain its own copy of the YOLO class, and can require around 2.5 G of main memory each. With multiple streams, that can quickly add up. When memory gets too tight, a video process can abort. MultiDetect.py may crash ignominiously when memory-starved. The process will run forever unless stopped by the operator, or if an unrecoverable error occurs. 
+Using the modded YOLO class ([**more on that in its description**](/MultiYOLO.md)), the video_process can use a dedicated GPU as specified in **FLAGS.run_on_gpu:**, and/or it will run on a fraction of a GPU as specified in **gpu_memory_fraction:**. There is no bounds checking. The process will crash if the GPU, or the total of claimed GPU memory are out of bounds. Be aware that each video_process will initialize and maintain its own copy of the YOLO class, and can require around 2.5 G of main memory each. With multiple streams, that can quickly add up. When memory gets too tight, a video process can abort. MultiDetect.py may crash ignominiously when memory-starved. The process will run forever unless stopped by the operator, or if an unrecoverable error occurs. 
 
 ![You can have as many processes as your GPU can stomach](/Utils/Screenshots/MD-arch2.png)
 
@@ -40,7 +40,7 @@ If no **Master:** block is specified, or if the settings are empty, MultiDetect.
 
 **The Common: block** has the settings for the video processes. Settings will propagate to all processes with ID > 0, i.e. all except the master and any special processes.<br>
 
-If you stick a setting into a **Process_** block, that setting will affect this particular process only. For instance, if **gpu_memory_fraction** is set to 0.1 in the Common: block, all YOLO processes will claim 10% of the available GPU memory. However, if in the Process_3: block gpu_memory_fraction is set to 0.5, then process #3 will claim 50% of the available GPU memory, while all other processes will continue allocating 10% each. No sanity check is performed. If there is no corresponding **Process_** block, the process will use the settings in **Common:**. If there are no settings in Common:, defaults will be used.<br> 
+If you stick a setting into a **Process_** block, that setting will affect this particular process only. For instance, if **gpu_memory_fraction:** is set to 0.1 in the Common: block, all YOLO processes will claim 10% of the available GPU memory. However, if in the Process_3: block gpu_memory_fraction is set to 0.5, then process #3 will claim 50% of the available GPU memory, while all other processes will continue allocating 10% each. No sanity check is performed. If there is no corresponding **Process_** block, the process will use the settings in **Common:**. If there are no settings in Common:, defaults will be used.<br> 
 
 All settings are documented in **MultiDetect.conf**. Here are a few that need more explaining.<br>
 
@@ -199,8 +199,16 @@ If your screen flickers during full screen playback, or if your carefully calcul
 MultiDetect.py is a very early version, and it is full of bugs. I find new ones every day. This version is on Github, because I’m under pressure to release something. It also is on Github, because we are a community of programmers. If you find a bug, please don’t just report it. Try to find out why it fails. Much, if not most of the code can be coded better. If you know a better, faster, more elegant way, please let us know. Here are some bugs I know of:
 
 - In a multi-monitor situation, and if the Master Window is moved to another monitor, an orphan drop-down menu sometimes is left on the other monitor. Tkinter issue. Cosmetic only.
-- YOLO is a pain when it comes to error reporting. If an error occurs inside of YOLO, the calling process is never notified. The call dies inside of YOLO, a bunch of messages is put on the console (if we are lucky), and the calling procedure literally is left hanging. There is a very experimental feature in MultiDetect.py that tries to catch a hung call to YOLO using timers. A timer is set before the call to YOLO, and reset after. If the call does not return, the timer triggers a (hopefully) graceful shutdown of the process. The feature is turned on by setting **monitor_YOLO:** to True in the config file. **YOLO_init_AWOL_wait:** sets the time in seconds to wait for YOLO to successfully initialize before it is declared missing. **YOLO_detect_AWOL_wait:**  sets the time in seconds to wait for YOLO to successfully complete one image detection.  It works to some degree, but it is messy. YOLO can get cranky when run at extreme settings. It probably is better to arrive at stable settings through experimentation, and leave **monitor_YOLO:** set trop False. The YOLO object really needs to be rewritten to report errors up the chain.
+- YOLO is a pain when it comes to error reporting. If an error occurs inside of YOLO, the calling process is never notified. The call dies inside of YOLO, a bunch of messages is put on the console (if we are lucky), and the calling procedure literally is left hanging. There is a very experimental feature in MultiDetect.py that tries to catch a hung call to YOLO using timers. A timer is set before the call to YOLO, and reset after. If the call does not return, the timer triggers a (hopefully) graceful shutdown of the process. The feature is turned on by setting **monitor_YOLO:** to True in the config file. **YOLO_init_AWOL_wait:** sets the time in seconds to wait for YOLO to successfully initialize before it is declared missing. **YOLO_detect_AWOL_wait:**  sets the time in seconds to wait for YOLO to successfully complete one image detection.  It works to some degree, but it is messy. YOLO can get cranky when run at extreme settings. It probably is better to arrive at stable settings through experimentation, and leave **monitor_YOLO:** set to False. The YOLO object really needs to be rewritten to report errors up the chain.
 
+There are a few settings that possibly will help chsding bugs and improving performance:
+
+- **track_obj_mem:,**  when set to true, will cause stats of memory usage by the 100 most memory hungry objects to be written to logs.
+- **profile:,** when set, will produce a timing profile after the app has run for 3,000 frames.
+
+Cuurrently, video processes sometimes die for no apparent reason, and after many hours of running without a hitch. I am trying to find ou why. In the meantime there are two band-aid-type settings:
+- **hung_process_restart:,** when set to true, will cause a process to be restarted after master has determined that the process got hung up.
+- **all_dead_restart:** will do the same after all processes died.
 
 ## General comments
 
@@ -210,8 +218,8 @@ Throughput doesn’t seem very sensitive to the amount of GPU memory allocated t
 The market is flooded with cheap IP cameras. Their picture quality can be quite decent these days, their software quality often is lousy. You will often find them contacting servers in China. If you don’t want to star on insecam.org, the infamous database of live IP cameras, do the following: Avoid WiFi cams, use hardwired. Put the cams behind a firewall, making sure that the cameras can’t be reached from the outside, AND MOST OF ALL make sure that the cameras cannot reach the outside. This also keeps the cams from updating their internal clock via NTP. For that, set up your own local NTP server that acts as a common reference for your cams.
 
 ## To Do:
--	Code cleanup, a lot
--	Better, probably new GUI
+-   Code cleanup, a lot
+-   Better, probably new GUI
 
 ## Infamous last words
 Development was on Ubuntu 18.04 and 20.04, with python 3.7, CUDA 10.1, and the Nvidia 450 video driver. CUDA 10.1 appears to get along best with the Tensorflow version used in this repo. I have developed and tested MultiDetect.py on a machine with a 3970x Threadripper and 128G of memory, and on an ancient Intel 6700K with 64G of memory. I have a stack of Geforce 1060/6G and Geforce 1080ti/11G GPUs, and I used them in various combinations. No other systems were tested. MultiDetect.py makes use of certain Unix functions and would have to be adapted to Windows, and possibly Mac.
