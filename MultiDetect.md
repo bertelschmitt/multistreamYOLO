@@ -209,6 +209,10 @@ Throughput doesn’t seem very sensitive to the amount of GPU memory allocated t
 ## A word on IP cameras 
 The market is flooded with cheap IP cameras. Their picture quality can be quite decent these days, their software quality often is lousy. You will often find them contacting servers in China. If you don’t want to star on insecam.org, the infamous database of live IP cameras, do the following: Avoid WiFi cams, use hardwired. Put the cams behind a firewall, making sure that the cameras can’t be reached from the outside, AND MOST OF ALL make sure that the cameras cannot reach the outside. This also keeps the cams from updating their internal clock via NTP. For that, set up your own local NTP server that acts as a common reference for your cams.
 
+## To Do:
+-	Code cleanup, a lot
+-	Better, probably new GUI
+
 ## Infamous last words
 Development was on Ubuntu 18.04 and 20.04, with python 3.7, CUDA 10.1, and the Nvidia 450 video driver. CUDA 10.1 appears to get along best with the Tensorflow version used in this repo. I have developed and tested MultiDetect.py on a machine with a 3970x Threadripper and 128G of memory, and on an ancient Intel 6700K with 64G of memory. I have a stack of Geforce 1060/6G and Geforce 1080ti/11G GPUs, and I used them in various combinations. No other systems were tested. MultiDetect.py makes use of certain Unix functions and would have to be adapted to Windows, and possibly Mac.
 
