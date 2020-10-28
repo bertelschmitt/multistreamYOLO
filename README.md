@@ -169,6 +169,8 @@ Unless explicitly stated otherwise at the top of a file, all code is licensed un
     snap install --dangerous vott-2.1.0-linux.snap
     ```
     See [Snap Tutorial](https://tutorials.ubuntu.com/tutorial/advanced-snap-usage#2) for more information.
+    
+3. **MultiDetect.py may crash, hang up, and possibly freeze the computer.**  In most cases, this is caused  by wrong settings. This is an experimental project, and you need to experiment to find the settings right for your use case. Start with only 2 simultaneous streams, and work your way up.  Use one of the skeleton *conf files as a base
 
 ## Need more help? File an Issue!
 If you would like to file an issue, please use the provided issue template and make sure to complete all fields. This makes it easier to reproduce the issue for someone trying to help you. 
