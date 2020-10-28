@@ -43,7 +43,6 @@ nvidia-smi
 `
 
 - **Does your [CUDA recognize and report your GPU(s) correctly?](/CUDA101.md)**:
-
 `
 python -c 'import tensorflow as tf; len(tf.config.experimental.list_physical_devices("GPU"))'
 `
