@@ -42,7 +42,7 @@ If you have followed the instructions exactly, couldn't solve your problem with 
 nvidia-smi
 `
 
-- **Does your [CUDA recognize and report your GPU(s) correctly?](/CUDA101.md)**:<br>
+- **Does your [CUDA recognize and report your GPU(s) correctly?](/CUDA101.md)**:
 
 `
 python -c 'import tensorflow as tf; len(tf.config.experimental.list_physical_devices("GPU"))'
@@ -51,7 +51,7 @@ python -c 'import tensorflow as tf; len(tf.config.experimental.list_physical_dev
 - **Do you have enough main memory (12 Gigabytes for 2 concurrent processes, 3+ Gigabytes for each additional?**:
 - **Did you experiment with the CUDA settings in MultiDetect.conf, especially with gpu_memory_fraction and allow_growth?**:   
 - **OS Platform and Distribution (e.g., Linux Ubuntu 16.04)**:
-- **TensorFlow version (use command below)**:<br>
+- **TensorFlow version (use command below)**:
 `
 python -c "import tensorflow as tf; print(tf.GIT_VERSION, tf.VERSION)"
 `
