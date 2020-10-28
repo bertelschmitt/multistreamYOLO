@@ -190,6 +190,7 @@ Issues without a completed issue template will be closed after 7 days.
 
 ![CatVideo](/Utils/Screenshots/CatVideo.gif)
 
+
 ## Licensing 
 This work is licensed under a [Creative Commons Attribution 4.0 International
 License][cc-by]. This means that you are free to:
@@ -218,5 +219,6 @@ If your work doesn't include a citation list, simply link this [github repo](htt
 [cc-by]: http://creativecommons.org/licenses/by/4.0/
 [cc-by-image]: https://i.creativecommons.org/l/by/4.0/88x31.png
 [cc-by-shield]: https://img.shields.io/badge/License-CC%20BY%204.0-lightgrey.svg
+
 
 
