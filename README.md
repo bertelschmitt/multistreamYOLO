@@ -4,9 +4,9 @@
 
 The number of streams depends on the amount of memory available on the GPU and in your computer. A YOLO process demands around a gigabyte of GPU memory, therefore, 11 streams can ideally be squeezed into a Geforce 1080ti with 11 Gbytes (it will be a very tight fit.) This is achieved with a modified YOLO object. A more [**in-depth description is here.**](/MultiYOLO.md)
 
-This repo comes with a very early version of MultiDetect.py, an application that makes use of the multi-stream, multi-GPU YOLO object. MultiDetect.py allows you to manage multiple streams and GPUs, to display the output on one or many monitors, and to automatically record video and attendant data files. A [**detailled description of  MultiDetect.py is here**](/MultiDetect.md). 
+This repo comes with a very early version of MultiDetect.py, an application that makes use of the multi-stream, multi-GPU YOLO object. MultiDetect.py allows you to manage multiple streams and GPUs, to display the output on one or many monitors, and to automatically record video and attendant data files. A [**detailed description of  MultiDetect.py is here**](/MultiDetect.md). 
 
-Both the modified YOLO process and MultiDetect.py are written in pure Python3.7. They integrate with TrainYourOwnYOLO, use the same models, workflows, file and directory structures. This version targets the Linux platform only. I have not yet tested it on Windows. I do not have access to a MacOS machine, please help. Let's work on it a bit, shake the bugs out, and then offer it as a merge. 
+Both the modified YOLO process and MultiDetect.py are written in pure Python 3.7. They integrate with TrainYourOwnYOLO, use the same models, workflows, file and directory structures. This version targets the Linux platform only. I have not yet tested it on Windows. I do not have access to a MacOS machine, please help. Let's work on it a bit, shake the bugs out, and then offer it as a merge. 
 
 ![4windows](/Utils/Screenshots/4stream.gif)
 
@@ -44,7 +44,7 @@ To build and test your YOLO object detection algorithm follow the below steps:
 ## Getting Started
 
 ### Requisites
-This repo has been tested with python3.7 and python 3.8. To install python 3.7 go to 
+This repo has been tested with python 3.7 and python 3.8. To install python 3.7 go to 
 - [python.org/downloads](https://www.python.org/downloads/release/python-376/) 
 and follow the installation instructions.  The modified YOLO object should work with python 3.6, MultiDetect.py uses features available only from python 3.7 on up.
 
@@ -77,7 +77,7 @@ You have two choices.
 You can graft multistreamYOOLO upon an existing TrainYourOwnYOLO installation like so:
 
 - Rename .../TrainYourOwnYOLO/2_Training/src/keras_yolo3/yolo.py to yolo.py.ori, and replace the file with the [new version from this repo](/2_Training/src/keras_yolo3/yolo.py) This is the modified YOLO object that does all the work. It should be a drop-in, bolt-on replacement, compatible with the current BuildYourOwnYOLO version.
-- Add the complete content of [.../TrainYourOwnYOLO/3_Inference](/3_Inference), including the [MDResource](/3_Inference/MDResource) folder to .../TrainYourOwnYOLO/3_Inference. This brings in MultiDetect.py and a feww attendant files. MultiDetect.conf is the config file of MultiDetect.py, and it's where the magic happens. [See in-depth explanantion here](/MultiDetect.md). There are a few conf file versions for multiple scenarios for you to play with. Edit to your use case and liking, and rename to MultiDetect.conf. 
+- Add the complete content of [.../TrainYourOwnYOLO/3_Inference](/3_Inference), including the [MDResource](/3_Inference/MDResource) folder to .../TrainYourOwnYOLO/3_Inference. This brings in MultiDetect.py and a few attendant files. MultiDetect.conf is the config file of MultiDetect.py, and it's where the magic happens. [See in-depth explanation here](/MultiDetect.md). There are a few conf file versions for multiple scenarios for you to play with. Edit to your use case and liking, and rename to MultiDetect.conf. 
 - Replace your current requirements.txt with the [new requirements.txt in this repo](/requirements.txt) 
 - Enter your virtualenv if you use one
 - Run pip install -r requirements.txt , and you are good to go.
@@ -85,7 +85,7 @@ You can graft multistreamYOOLO upon an existing TrainYourOwnYOLO installation li
 
 ### OR
 
-Clone this complete repo, follow the steps below, read [MultiYOLO.md](/MultiYOLO.md) (docs for the modofied YOLO object) and [MultiDetect.md](/MultiDetect.md), and you are an expert.
+Clone this complete repo, follow the steps below, read [MultiYOLO.md](/MultiYOLO.md) (docs for the modified YOLO object) and [MultiDetect.md](/MultiDetect.md), and you are an expert.
 
 
 #### Setting up Virtual Environment 
@@ -94,8 +94,8 @@ Note: This repo so far has been developed and tested on Ubuntu (20.04, and 18.04
 
 Clone this repo with:
 ```
-git clone https://github.com/AntonMu/TrainYourOwnYOLO
-cd TrainYourOwnYOLO/
+git clone https://github.com/bertelschmitt/multistreamYOLO/
+cd multistreamYOLO/
 ```
 Create Virtual **(Linux)** Environment:
 ```
@@ -114,13 +114,13 @@ pip install -r requirements.txt
 If this fails, you may have to upgrade your pip version first with `pip install pip --upgrade`.
 
 ## Quick Start (Inference only)
-To test the cat face detector on test images located in [`TrainYourOwnYOLO/Data/Source_Images/Test_Images`](/Data/Source_Images/Test_Images) run the `Minimal_Example.py` script in the root folder with:
+To test the cat face detector on test images located in [`multistreamYOLO/Data/Source_Images/Test_Images`](/Data/Source_Images/Test_Images) run the `Minimal_Example.py` script in the root folder with:
 
 ```
 python Minimal_Example.py
 ```
 
-The outputs are saved in [`TrainYourOwnYOLO/Data/Source_Images/Test_Image_Detection_Results`](/Data/Source_Images/Test_Image_Detection_Results). This includes:
+The outputs are saved in [`multistreamYOLO/Data/Source_Images/Test_Image_Detection_Results`](/Data/Source_Images/Test_Image_Detection_Results). This includes:
  - Cat pictures with bounding boxes around faces with confidence scores and
  - [`Detection_Results.csv`](/Data/Source_Images/Test_Image_Detection_Results/Detection_Results.csv) file with file names and locations of bounding boxes.
 
@@ -153,14 +153,14 @@ Unless explicitly stated otherwise at the top of a file, all code is licensed un
 
 1. If you encounter a `FileNotFoundError`, `Module not found` or similar error, make sure that you did not change the folder structure. Your directory structure **must** look exactly like this: 
     ```
-    TrainYourOwnYOLO
+    multistreamYOLO
     └─── 1_Image_Annotation
     └─── 2_Training
     └─── 3_Inference
     └─── Data
     └─── Utils
     ```
-    If you use a different name such as e.g. `TrainYourOwnYOLO-master` you will have to specify the correct paths as command line arguments in every function call.
+    If you use a different name such as e.g. `multiastreamYOLO-master` you may have to specify the correct paths as command line arguments in every function call.
 
     Don't use spaces in file or folder names, i.e. instead of `my folder` use `my_folder`.
 
@@ -204,14 +204,14 @@ Under the following terms:
  Cite as:
  
   ```
-  @misc{TrainYourOwnYOLO,
-    title={TrainYourOwnYOLO: Building a Custom Object Detector from Scratch},
-    author={Anton Muehlemann},
-    year={2019},
-    url={https://github.com/AntonMu/TrainYourOwnYOLO}
+  @misc{TrainYourOwnYOLO XXL,
+    title={TrainYourOwnYOLO XXL: Build a Custom Object Detector from Scratch, and run many in parallel},
+    authors={Anton Muehlemann, Anton Mu, Bertel Schmitt},
+    year={2019, 2020},
+    url={https://github.com/bertelschmitt/multistreamYOLO}
   }
   ```
-If your work doesn't include a citation list, simply link this [github repo](https://github.com/AntonMu/TrainYourOwnYOLO)!
+If your work doesn't include a citation list, simply link this [github repo](https://github.com/bertelschmitt/multistreamYOLO)!
  
 [![CC BY 4.0][cc-by-image]][cc-by]
 
