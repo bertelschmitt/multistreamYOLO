@@ -6,13 +6,17 @@ labels: ''
 assignees: ''
 
 ---
-Before filing a report consider the following two questions:
+Before filing a report consider the following questions:
 
-### Have you followed all Readme instructions exactly? 
+### Have you read and followed all [general readme instructions](/README.md), the [documentation of the modified YOLO object](/MultiYOLO.md), the [documentation of MultiDetect.py](/MultiDetect.md), and the [CUDA primer](CUDA101.md) exactly? 
+
+## Are you running either python3.7 or python3.8?
+
+## Have you installed all required libraraies with [requirements.txt?](/requirements.txt)
 
 ### Have you checked the [troubleshooting](https://github.com/AntonMu/TrainYourOwnYOLO#troubleshooting) section? 
 
-Once you are familiar with the code, you're welcome to modify it. Please only continue to file a bug report if you encounter an issue with the provided code and after having followed the instructions.
+Once you are familiar with the code, you're welcome to modify it. Please be aware that especially MultiDetect.py is quite complex, especially due to multiple processes and a GUI? Please only continue to file a bug report if you encounter an issue with the provided code and after having followed the instructions.
 
 If you have followed the instructions exactly, couldn't solve your problem with the provided troubleshooting tips and would still like to file a bug or make a feature requests please follow the steps below.
 
