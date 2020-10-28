@@ -37,7 +37,11 @@ If you have followed the instructions exactly, couldn't solve your problem with 
 ### System information
 - **What is the top-level directory of the model you are using?**:
 - **Have you written custom code (as opposed to using a stock example script provided in the repo)?**:
-- **Is your [CUDA installed correctly?](/CUDA101.md)**:
+- **Is your [CUDA installed correctly?](/CUDA101.md)**:<br>
+`
+nvidia-smi
+`
+
 - **Does your [CUDA recognize and report your GPU(s) correctly?](/CUDA101.md)**:<br>
 
 `
@@ -47,14 +51,17 @@ python -c 'import tensorflow as tf; len(tf.config.experimental.list_physical_dev
 - **Do you have enough main memory (12 Gigabytes for 2 concurrent processes, 3+ Gigabytes for each additional?**:
 - **Did you experiment with the CUDA settings in MultiDetect.conf, especially with gpu_memory_fraction and allow_growth?**:   
 - **OS Platform and Distribution (e.g., Linux Ubuntu 16.04)**:
-- **TensorFlow version (use command below)**:
-- **CUDA/cuDNN version**:
+- **TensorFlow version (use command below)**:<br>
+`
+python -c "import tensorflow as tf; print(tf.GIT_VERSION, tf.VERSION)"
+`
+- **CUDA/cuDNN version**:<br>
+'
+nvcc -V
+`
 - **GPU model and memory**:
 - **Exact command to reproduce**:
 
-You can obtain the TensorFlow version with
-
-`python -c "import tensorflow as tf; print(tf.GIT_VERSION, tf.VERSION)"`
 
 ### Describe the problem
 Describe the problem clearly here. Be sure to convey here why it's a bug or a feature request.
