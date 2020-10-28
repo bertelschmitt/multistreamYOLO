@@ -60,7 +60,7 @@ python -c "import tensorflow as tf; print(tf.GIT_VERSION, tf.VERSION)"
 nvcc -V
 `
 - **How many concurrent processes are you trying to run on how many GPUs with how much memory each?**
-- **GPU model and memory**:
+- **GPU models**:
 - **Exact command to reproduce**:
 
 
