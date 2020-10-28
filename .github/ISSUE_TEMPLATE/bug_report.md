@@ -24,14 +24,19 @@ If you have followed the instructions exactly, couldn't solve your problem with 
 ### Readme 
 
 - I have followed all Readme instructions carefully: **Answer**
+- I am aware that this is an experimental project: **Answer**
 
 ### Troubleshooting Section
 
 - I have looked at the  [troubleshooting](https://github.com/AntonMu/TrainYourOwnYOLO#troubleshooting) section: **Answer**
 
 ### System information
-- **What is the top-level directory of the model you are using**:
-- **Have I written custom code (as opposed to using a stock example script provided in the repo)**:
+- **What is the top-level directory of the model you are using?**:
+- **Have you written custom code (as opposed to using a stock example script provided in the repo)?**:
+- **Is your [CUDA installed correctly?](/CUDA101.md)**:
+- **Does your [CUDA report your GPU correctly?](/CUDA101.md)**:
+- **Do you have enough main memory (12 Gigabytes for 2 concurrent processes, 3+ Gigabytes for each additional?**:
+- **Did you experiment with the CUDA settings in MultiDetect.conf, especially with gpu_memory_fraction and allow_growth?**:   
 - **OS Platform and Distribution (e.g., Linux Ubuntu 16.04)**:
 - **TensorFlow version (use command below)**:
 - **CUDA/cuDNN version**:
