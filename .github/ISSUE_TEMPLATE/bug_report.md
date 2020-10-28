@@ -10,9 +10,9 @@ Before filing a report consider the following questions:
 
 ### Have you read and followed all [general readme instructions](/README.md), the [documentation of the modified YOLO object](/MultiYOLO.md), the [documentation of MultiDetect.py](/MultiDetect.md), and the [CUDA primer](CUDA101.md) exactly? 
 
-## Are you running either python3.7 or python3.8?
+### Are you running either python3.7 or python3.8?
 
-## Have you installed all required libraraies with [requirements.txt?](/requirements.txt)
+### Have you installed all required libraraies with [requirements.txt?](/requirements.txt)
 
 ### Have you checked the [troubleshooting](https://github.com/AntonMu/TrainYourOwnYOLO#troubleshooting) section? 
 
