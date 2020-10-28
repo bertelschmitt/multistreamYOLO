@@ -16,7 +16,7 @@ Before filing a report consider the following questions:
 
 ### Have you checked the [troubleshooting](https://github.com/AntonMu/TrainYourOwnYOLO#troubleshooting) section? 
 
-Once you are familiar with the code, you're welcome to modify it. Please be aware that MultiDetect.py can be quite complex, especially due to multiple processes and a GUI? Please only continue to file a bug report if you encounter an issue with the provided code and after having followed the instructions.
+Once you are familiar with the code, you're welcome to modify it. Please be aware that MultiDetect.py can be quite complex, especially due to multiple processes and a GUI. Please only continue to file a bug report if you encounter an issue with the provided code and after having followed the instructions.
 
 If you have followed the instructions exactly, couldn't solve your problem with the provided troubleshooting tips and would still like to file a bug or make a feature requests please follow the steps below.
 
