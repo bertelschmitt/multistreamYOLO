@@ -201,14 +201,14 @@ MultiDetect.py is a very early version, and it is full of bugs. I find new ones 
 - In a multi-monitor situation, and if the Master Window is moved to another monitor, an orphan drop-down menu sometimes is left on the other monitor. Tkinter issue. Cosmetic only.
 - YOLO is a pain when it comes to error reporting. If an error occurs inside of YOLO, the calling process is never notified. The call dies inside of YOLO, a bunch of messages is put on the console (if we are lucky), and the calling procedure literally is left hanging. There is a very experimental feature in MultiDetect.py that tries to catch a hung call to YOLO using timers. A timer is set before the call to YOLO, and reset after. If the call does not return, the timer triggers a (hopefully) graceful shutdown of the process. The feature is turned on by setting **monitor_YOLO:** to True in the config file. **YOLO_init_AWOL_wait:** sets the time in seconds to wait for YOLO to successfully initialize before it is declared missing. **YOLO_detect_AWOL_wait:**  sets the time in seconds to wait for YOLO to successfully complete one image detection.  It works to some degree, but it is messy. YOLO can get cranky when run at extreme settings. It probably is better to arrive at stable settings through experimentation, and leave **monitor_YOLO:** set to False. The YOLO object really needs to be rewritten to report errors up the chain.
 
-There are a few settings that possibly will help chsding bugs and improving performance:
+There are a few settings that possibly will help chasing bugs and improving performance:
 
 - **track_obj_mem:,**  when set to true, will cause stats of memory usage by the 100 most memory hungry objects to be written to logs.
 - **profile:,** when set, will produce a timing profile after the app has run for 3,000 frames.
 
-Cuurrently, video processes sometimes die for no apparent reason, and after many hours of running without a hitch. I am trying to find ou why. In the meantime there are two band-aid-type settings:
-- **hung_process_restart:,** when set to true, will cause a process to be restarted after master has determined that the process got hung up.
-- **all_dead_restart:** will do the same after all processes died.
+Currently, video processes sometimes die for no apparent reason, and after many hours of running without a hitch. If this happens, be a bit more generous with your **gpu_memory_fraction:** and experiment with setting  **allow_growth:** to 0. As a last resort, the app can be re-started automatically after a failure.<br>
+- **hung_process_restart:,** when set to true, **is supposed** to restart a process after master has determined that the process got hung up. Currently, the single-process restart fails as YOLO is initialized. At the moment, the whole app is restarted instead. (A restart_process function is left in the code. It will not be used.)
+- **all_dead_restart:** will cause the app to restart after all processes have died. (Currently, this setting is superfluous.)
 
 ## General comments
 
