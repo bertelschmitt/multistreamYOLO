@@ -38,8 +38,12 @@ If you have followed the instructions exactly, couldn't solve your problem with 
 - **What is the top-level directory of the model you are using?**:
 - **Have you written custom code (as opposed to using a stock example script provided in the repo)?**:
 - **Is your [CUDA installed correctly?](/CUDA101.md)**:
-- **Does your [CUDA recognize and report your GPU(s) correctly?](/CUDA101.md)**:
-`python -c 'import tensorflow as tf; len(tf.config.experimental.list_physical_devices("GPU"))'`
+- **Does your [CUDA recognize and report your GPU(s) correctly?](/CUDA101.md)**:<br>
+
+`
+python -c 'import tensorflow as tf; len(tf.config.experimental.list_physical_devices("GPU"))'
+`
+
 - **Do you have enough main memory (12 Gigabytes for 2 concurrent processes, 3+ Gigabytes for each additional?**:
 - **Did you experiment with the CUDA settings in MultiDetect.conf, especially with gpu_memory_fraction and allow_growth?**:   
 - **OS Platform and Distribution (e.g., Linux Ubuntu 16.04)**:
