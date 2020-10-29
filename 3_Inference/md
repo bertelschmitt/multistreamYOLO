@@ -1,0 +1,17 @@
+#!/bin/bash
+#Leave this script in the same directory as MultiDetect.py
+#This script will start a new instance of MultiDetect.py after killing a running MultiDetect.py and any zombie processes
+#If you start it with the -k option [ MultiDetect.py -k ], the script will only kill, but not restart MultiDetect.py 
+ 
+if [[ $1 != "-k" ]];then
+rst=true
+else rst=false
+fi
+#Try all known versions, and restart the version it found
+kill $(pgrep -f 'python MultiDetect.py') > /dev/null 2>&1 && if $rst; then python MultiDetect.py;exit;fi
+kill $(pgrep -f 'python ./MultiDetect.py') > /dev/null 2>&1  && if $rst; then  python MultiDetect.py;exit;fi
+kill $(pgrep -f 'python3.7 MultiDetect.py') > /dev/null 2>&1 && if $rst; then  python3.7 MultiDetect.py;exit;fi
+kill $(pgrep -f 'python3.7 ./MultiDetect.py') > /dev/null 2>&1 && if $rst; then  python3.7 MultiDetect.py;exit;fi
+kill $(pgrep -f 'python3.8 MultiDetect.py') > /dev/null 2>&1 && if $rst; then  python3.8 MultiDetect.py;exit;fi
+kill $(pgrep -f 'python3.8 ./MultiDetect.py') > /dev/null 2>&1 && if $rst; then  python3.8 MultiDetect.py;exit;fi
+if $rst; then python MultiDetect.py;fi
