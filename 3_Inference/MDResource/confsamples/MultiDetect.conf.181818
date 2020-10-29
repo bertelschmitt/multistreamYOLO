@@ -1,13 +1,12 @@
     #=================================================================================
-    # File: MultiDetect.conf.111 - To use, edit, rename to MultiDetect.conf
+    # File: MultiDetect.conf.181818 - To use, edit, rename to MultiDetect.conf
     # and put in MultiDetect.py directory
     #==================================================================================
-    # Example config file for 1 stream, 1 process, 1 model, 1 monitor
-    # To edit a setting, put its value behind the colon and uncomment, like so: num_processes: 1 
-    # If the setting is commented-out, the default will be used, like so:       #num_processes:
+    # Example config file for 18 streams, 18 processes, 18 models, 2 monitors
+    # To edit a setting, put its value behind the colon and uncomment
+    # If the setting is commented-out, the default will be used
     #==================================================================================
     
-
 
 Master:
     #==========================================================================================
@@ -15,7 +14,7 @@ Master:
     #==========================================================================================
 
     ###General settings
-    num_processes: 1               # Number of processes to launch. Default: 1     
+    num_processes:   18            # Number of processes to launch. Default: 1     
     #hush:                         # Try to suppress noisy warnings. Default: False 
     #sync_start:                   # Synchronize start of all video streams in an attempt to mitigate time drift between videos. Default: True  
     #sync_start_wait:              # Time in seconds to wait for sync_start before timeout. This will be adjusted to num_processes to allow for longer staging due to higher load. Default: 15    
@@ -78,8 +77,8 @@ Common:
 
     ### Global YOLO settings. To use different models on a per stream basis, specify these settings in the respective process block
     #run_on_gpu:                   # GPU to use. Set to -1 to let Keras pick the best GPU. "0,1" for both is required by spec, has little or no effect.  Default: 0        
-    #gpu_memory_fraction:          # How much GPU memory to claim for process. 1 eq 100%, 0.1 eq 10% . Performance will suffer when memory-starved, process will crash if GPU memory insufficient. Default: 1        
-    #allow_growth:                 #-1 let Keras decide, 0 disallow, 1 allow memory used on the GPU to dynamically grow.  Default: 1        
+    gpu_memory_fraction: 0.05      # How much GPU memory to claim for process. 1 eq 100%, 0.1 eq 10% . Performance will suffer when memory-starved, process will crash if GPU memory insufficient. Default: 1        
+    allow_growth: 1                #-1 let Keras decide, 0 disallow, 1 allow memory used on the GPU to dynamically grow.  Default: 1        
     #model_path:                   # Full path to model. Default: .../multistreamYOLO/2_Training/src/Model_Weights/trained_weights_final.h5
     #anchors_path:                 # Full path to anchors. Default: .../multistreamYOLO/2_Training/src/keras_yolo3/model_data/yolo_anchors.txt
     #classes_path:                 # Full path to classes. Default: .../multistreamYOLO/2_Training/src/Model_Weights/data_classes.txt
@@ -99,8 +98,8 @@ Common:
 
     ### Output window settings
     #window_title:                 # Title for output monitor window.  Default: "Monitor" 
-    #window_wide:                  # Width  of output window in pixels.  Default: 1024      
-    #window_high:                  # Height of output window in pixels.  Default: 600       
+    window_wide: 640               # Width  of output window in pixels.  Default: 1024      
+    window_high: 314               # Height of output window in pixels.  Default: 600       
     #window_x:                     # X-position of on-screen window, top left corner, in pixel. Default 200. Default: 200       
     #window_y:                     # Y-position of on-screen window, top left corner, in pixel.  Default: 200       
 
@@ -124,5 +123,188 @@ Process_1:
     # If no process_x is provided, process will inherit its settings from the Common block. If no Common block is provided, process will run with defaults
     #===================================================================================================================
 
-    # This config needs no Process_ setting. There is only 1 process, and it uses defaults.
+    #video_path:    Uncomment and insert video path to stream 1.
+    #model_path:    Uncomment and add full path to model 1.
+    #classes_path:  Uncomment and add full path to classes 1. 
+    #anchors_path:  Uncomment and add full path to anchors 1.
+    run_on_gpu: 0
+    window_title:   "Monitor_1"
+    window_x: 0 
+    window_y: 28
+
+Process_2:
+    #video_path:    Uncomment and insert video path to stream 2.
+    #model_path:    Uncomment and add full path to model 2.
+    #classes_path:  Uncomment and add full path to classes 2. 
+    #anchors_path:  Uncomment and add full path to anchors 2.
+    run_on_gpu: 0
+    window_title:  "Monitor_2"
+    window_x: 640  
+    window_y: 28
+
+Process_3:
+    #video_path:    Uncomment and insert video path to stream 3.
+    #model_path:    Uncomment and add full path to model 3.
+    #classes_path:  Uncomment and add full path to classes 3. 
+    #anchors_path:  Uncomment and add full path to anchors 3.
+    run_on_gpu: 0
+    window_title:  "Monitor_3"
+    window_x: 1280  
+    window_y: 28
+
+Process_4:
+    #video_path:    Uncomment and insert video path to stream 4.
+    #model_path:    Uncomment and add full path to model 4.
+    #classes_path:  Uncomment and add full path to classes 4. 
+    #anchors_path:  Uncomment and add full path to anchors 4.
+    run_on_gpu: 0
+    window_title:  "Monitor_4"
+    window_x: 0 
+    window_y: 379
+
+Process_5:
+    #video_path:    Uncomment and insert video path to stream 5.
+    #model_path:    Uncomment and add full path to model 5.
+    #classes_path:  Uncomment and add full path to classes 5. 
+    #anchors_path:  Uncomment and add full path to anchors 5.
+    run_on_gpu: 0
+    window_title: "Monitor_5"
+    window_x:640  
+    window_y:379
+
+Process_6:
+    #video_path:    Uncomment and insert video path to stream 6.
+    #model_path:    Uncomment and add full path to model 6.
+    #classes_path:  Uncomment and add full path to classes 6. 
+    #anchors_path:  Uncomment and add full path to anchors 6.
+    run_on_gpu: 0
+    window_title: "Monitor_6"
+    window_x: 1280  
+    window_y: 379
+
+Process_7:
+    #video_path:    Uncomment and insert video path to stream 7.
+    #model_path:    Uncomment and add full path to model 7.
+    #classes_path:  Uncomment and add full path to classes 7. 
+    #anchors_path:  Uncomment and add full path to anchors 7.
+    run_on_gpu: 0
+    window_title: "Monitor_7"
+    window_x: 0  
+    window_y: 730
+
+Process_8:
+    #video_path:    Uncomment and insert video path to stream 8.
+    #model_path:    Uncomment and add full path to model 8.
+    #classes_path:  Uncomment and add full path to classes 8.
+    #anchors_path:  Uncomment and add full path to anchors 8.
+    run_on_gpu: 0
+    window_title: "Monitor_8"
+    window_x:640  
+    window_y:730
+
+
+Process_9:
+    #video_path:    Uncomment and insert video path to stream 9.
+    #model_path:    Uncomment and add full path to model 9.
+    #classes_path:  Uncomment and add full path to classes 9.
+    #anchors_path:  Uncomment and add full path to anchors 9.
+    run_on_gpu: 0
+    window_title: "Monitor_9"
+    window_x: 1280  
+    window_y: 730
+
+Process_10:
+
+    #video_path:    Uncomment and insert video path to stream 10.
+    #model_path:    Uncomment and add full path to model 10.
+    #classes_path:  Uncomment and add full path to classes 10. 
+    #anchors_path:  Uncomment and add full path to anchors 10.
+    run_on_gpu: 1
+    window_title:   "Monitor_10"
+    window_x: 1920 
+    window_y: 28
+
+Process_11:
+    #video_path:    Uncomment and insert video path to stream 11.
+    #model_path:    Uncomment and add full path to model 11.
+    #classes_path:  Uncomment and add full path to classes 11. 
+    #anchors_path:  Uncomment and add full path to anchors 11.
+    run_on_gpu: 1
+    window_title:  "Monitor_11"
+    window_x: 2560  
+    window_y: 28
+
+Process_12:
+    #video_path:    Uncomment and insert video path to stream 12.
+    #model_path:    Uncomment and add full path to model 12.
+    #classes_path:  Uncomment and add full path to classes 12. 
+    #anchors_path:  Uncomment and add full path to anchors 12.
+    run_on_gpu: 1
+    window_title:  "Monitor_12"
+    window_x: 3200 
+    window_y: 28
+
+Process_13:
+    #video_path:    Uncomment and insert video path to stream 13.
+    #model_path:    Uncomment and add full path to model 13.
+    #classes_path:  Uncomment and add full path to classes 13. 
+    #anchors_path:  Uncomment and add full path to anchors 13.
+    run_on_gpu: 1
+    window_title:  "Monitor_13"
+    window_x: 1920 
+    window_y: 379
+
+Process_14:
+    #video_path:    Uncomment and insert video path to stream 14.
+    #model_path:    Uncomment and add full path to model 14.
+    #classes_path:  Uncomment and add full path to classes 14. 
+    #anchors_path:  Uncomment and add full path to anchors 14.
+    run_on_gpu: 1
+    window_title: "Monitor_14"
+    window_x: 2560  
+    window_y: 379
+
+Process_15:
+    #video_path:    Uncomment and insert video path to stream 15.
+    #model_path:    Uncomment and add full path to model 15.
+    #classes_path:  Uncomment and add full path to classes 15. 
+    #anchors_path:  Uncomment and add full path to anchors 15.
+    run_on_gpu: 1
+    window_title: "Monitor_15"
+    window_x: 3200 
+    window_y: 379
+
+Process_16:
+    #video_path:    Uncomment and insert video path to stream 16.
+    #model_path:    Uncomment and add full path to model 16.
+    #classes_path:  Uncomment and add full path to classes 16. 
+    #anchors_path:  Uncomment and add full path to anchors 16.
+    run_on_gpu: 1
+    window_title: "Monitor_16"
+    window_x: 1920  
+    window_y: 730
+
+Process_17:
+    #video_path:    Uncomment and insert video path to stream 17.
+    #model_path:    Uncomment and add full path to model 17.
+    #classes_path:  Uncomment and add full path to classes 17.
+    #anchors_path:  Uncomment and add full path to anchors 17.
+    run_on_gpu: 1
+    window_title: "Monitor_17"
+    window_x: 2560  
+    window_y: 730
+
+
+Process_18:
+    #video_path:    Uncomment and insert video path to stream 18.
+    #model_path:    Uncomment and add full path to model 18.
+    #classes_path:  Uncomment and add full path to classes 18.
+    #anchors_path:  Uncomment and add full path to anchors 18.
+    run_on_gpu: 1
+    window_title: "Monitor_18"
+    window_x: 3200 
+    window_y: 730
+
+
+
 

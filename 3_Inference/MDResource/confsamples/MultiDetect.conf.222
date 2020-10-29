@@ -1,13 +1,12 @@
     #=================================================================================
-    # File: MultiDetect.conf.111 - To use, edit, rename to MultiDetect.conf
+    # File: MultiDetect.conf.222 - To use, edit, rename to MultiDetect.conf
     # and put in MultiDetect.py directory
     #==================================================================================
-    # Example config file for 1 stream, 1 process, 1 model, 1 monitor
-    # To edit a setting, put its value behind the colon and uncomment, like so: num_processes: 1 
-    # If the setting is commented-out, the default will be used, like so:       #num_processes:
+    # Example config file for 2 streams, 2 processes, 2 models, 1 monitor
+    # To edit a setting, put its value behind the colon and uncomment
+    # If the setting is commented-out, the default will be used
     #==================================================================================
     
-
 
 Master:
     #==========================================================================================
@@ -15,11 +14,11 @@ Master:
     #==========================================================================================
 
     ###General settings
-    num_processes: 1               # Number of processes to launch. Default: 1     
-    #hush:                         # Try to suppress noisy warnings. Default: False 
+    num_processes: 2               # Number of processes to launch. Default: 1     
+    hush: True                     # Try to suppress noisy warnings. Default: False 
     #sync_start:                   # Synchronize start of all video streams in an attempt to mitigate time drift between videos. Default: True  
     #sync_start_wait:              # Time in seconds to wait for sync_start before timeout. This will be adjusted to num_processes to allow for longer staging due to higher load. Default: 15    
-    #redraw:                       # Used to redraw screen to settle windows into their place.  Default: True  
+    redraw: False                       # Used to redraw screen to settle windows into their place.  Default: True  
 
     ###Debug / monitor settings
     #all_dead_restart:             # If set, app will restart when all video processes have died. If not set, app will shut down.  Default: False      
@@ -78,8 +77,8 @@ Common:
 
     ### Global YOLO settings. To use different models on a per stream basis, specify these settings in the respective process block
     #run_on_gpu:                   # GPU to use. Set to -1 to let Keras pick the best GPU. "0,1" for both is required by spec, has little or no effect.  Default: 0        
-    #gpu_memory_fraction:          # How much GPU memory to claim for process. 1 eq 100%, 0.1 eq 10% . Performance will suffer when memory-starved, process will crash if GPU memory insufficient. Default: 1        
-    #allow_growth:                 #-1 let Keras decide, 0 disallow, 1 allow memory used on the GPU to dynamically grow.  Default: 1        
+    gpu_memory_fraction: 0.35      # How much GPU memory to claim for process. 1 eq 100%, 0.1 eq 10% . Performance will suffer when memory-starved, process will crash if GPU memory insufficient. Default: 1        
+    allow_growth:  0               #-1 let Keras decide, 0 disallow, 1 allow memory used on the GPU to dynamically grow.  Default: 1        
     #model_path:                   # Full path to model. Default: .../multistreamYOLO/2_Training/src/Model_Weights/trained_weights_final.h5
     #anchors_path:                 # Full path to anchors. Default: .../multistreamYOLO/2_Training/src/keras_yolo3/model_data/yolo_anchors.txt
     #classes_path:                 # Full path to classes. Default: .../multistreamYOLO/2_Training/src/Model_Weights/data_classes.txt
@@ -99,8 +98,8 @@ Common:
 
     ### Output window settings
     #window_title:                 # Title for output monitor window.  Default: "Monitor" 
-    #window_wide:                  # Width  of output window in pixels.  Default: 1024      
-    #window_high:                  # Height of output window in pixels.  Default: 600       
+    window_wide:  960             # Width  of output window in pixels.  Default: 1024      
+    window_high:  489             # Height of output window in pixels.  Default: 600       
     #window_x:                     # X-position of on-screen window, top left corner, in pixel. Default 200. Default: 200       
     #window_y:                     # Y-position of on-screen window, top left corner, in pixel.  Default: 200       
 
@@ -117,6 +116,7 @@ Common:
     #result_log_basedir:           # Where to keep the result logs.  Default: .../multistreamYOLO/3_Inference/MDResource/resultlogs/
     #rolling_average_n:            # Length of rolling average used to determine average YOLO-fps. Default: 32             
 
+
 Process_1:
     #===================================================================================================================
     # Per process settings. Provide a Process_x block for each stream
@@ -124,5 +124,18 @@ Process_1:
     # If no process_x is provided, process will inherit its settings from the Common block. If no Common block is provided, process will run with defaults
     #===================================================================================================================
 
-    # This config needs no Process_ setting. There is only 1 process, and it uses defaults.
+    #video_path:    Uncomment and insert video path to stream 1
+    window_title:   "Monitor_1"
+    window_x: 70 
+    window_y: 70
+
+Process_2:
+    #video_path:    Uncomment and insert video path to stream 2
+    window_title:  "Monitor_2"
+    window_x: 400
+    window_y: 400
+
+
+
+
 
