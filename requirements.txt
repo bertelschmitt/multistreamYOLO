@@ -67,3 +67,6 @@ zipp==3.1.0
 pydub
 opencv-python==4.4.0.42 --use-feature=2020-resolver
 numpy<1.19.0  --use-feature=2020-resolver
+#for debugging
+pympler
+psutil
