@@ -98,7 +98,8 @@ def getappname():
     """
     Return the name of the running app without the ending
     """
-    an = __file__
+    #an = __file__
+    an = os.path.basename(sys.argv[0])
     if "/" in an:
          _ , an = an.strip().rsplit('/',1)
     appname, _ = an.strip().rsplit('.',1)
@@ -113,10 +114,7 @@ def get_parent_dir(n=1):
     current_path = os.path.dirname(os.path.abspath(__file__))
     for _ in range(n):
         current_path = os.path.dirname(current_path)
-    return current_path
-
-
-
+    return(current_path)
 
 
 src_path = os.path.join(get_parent_dir(1), "2_Training", "src")
@@ -127,7 +125,6 @@ sys.path.append(src_path)
 sys.path.append(utils_path)
 sys.path.append(resource_path)
 pid_file =  os.path.join(resource_path,getappname())+".pid"
-print(pid_file)
 
 from keras_yolo3.yolo import YOLO  # pylint: disable=C0413
 mds = resource_path+"/MultiDetectStatus.py"
@@ -941,6 +938,7 @@ def writethelog(x):
     """
     Write x to log
     """
+    pathlib.Path(f'{resource_path}/logs/').mkdir(parents=True, exist_ok=True)
     nfile = f'{resource_path}/logs/{getappname()}_main.log'
     with open(nfile, 'a+') as f:
         f.write(datetime.now().strftime("%Y-%m-%d_%H:%M:%S") + "  " + str(x) + "\n")
@@ -2618,13 +2616,11 @@ def master(num_processes, myprocdict, myevent, mctl, my_geo):
     printandfile('Master process - start')
     if mctl.track_obj_mem:
         gc.enable()
+        #timer started automatically
         RepeatedTimer(300, writeobj,mctl)
-        nfile = argv[0]
-        nfile = nfile[:-3]+f"_objd_{mctl.procnum}" + ".log"
-        with open(nfile, 'a+') as f:
+        with open(objd_filename(mctl.procnum, createdir =True), 'a+') as f:
             f.write("\n" + datetime.now().strftime('%Y-%m-%d_%H:%M:%S') +" STARTED" +"\n")
         writeobj(mctl) # do first one
-
 
     #restart tracking #####################################################
     if 'restart_count' not in globals():
