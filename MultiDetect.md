@@ -187,7 +187,9 @@ Even the most capable GPU can easily be overwhelmed when subjected to higher fra
 
 A judicious use of these settings will also result in considerable power savings. 
 
+## Two-stage launch
 
+MultiDetect.py loads in two stages. We need to do this because python 2.7 still is on many machines, and it often is the version that gets launched after “sudo python …” But by the time our app is ready to  check the version, Python already has performed a syntax check, and it errors-out before our app can complain about a wrong version. Therefore, we need to move in two stages. The first stage does work with python2.7. It can make sure that we are up to python 3.7 or more, and then it loads MultiDetect.wk with all the code that needs python 3.7 .
 
 ## Flicker?
 
