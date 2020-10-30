@@ -14,28 +14,41 @@ It allows you to test our detector on cat and dog images and videos located in [
 
 ## MultiDetect.py
 
-This video-centric Python script allows you to detect objects in many video streams at the same time. The video sources can be files, webams, or video-streams created by IP cameras and such.  Start MultiDetect.py from the .../3_Inference directory with
+This video-centric Python script allows you to detect objects in many video streams at the same time. The video sources can be files, webams, or video-streams created by IP cameras and such.  **MultiDetect.py requires python 3.7 or python 3.8.** It will check the version, and fail if your python is lower. On many systems, python 2.7 is still installed, and it will not work. To find your python version, type
+
+'''
+python -V
+'''
+
+If that gives you a version of 3.7 or 3.8, you can start MultiDetect.py from the .../3_Inference directory with
 
 ```
 python MultiDetect.py
 ```
 
-If you use Python3.7, you can start it directly with
+Otherwise, you need to use
 
+```
+python3.7 MultiDetect.py
+```
+(or python 3.8 as needed)
+
+
+You can also start MultiDetect.py directly with
 
 ```
 ./MultiDetect.py
 ```
 
-For that, you need to make MultiDetect.py executable. For Python flavors other than 3.7, change the `#!/usr/bin/env python3.7` shebang on top of the  MultiDetect.py script.
-
-To start ./MultiDetect.py without reams of nagging status messages cluttering your terminal, set the **hush:** option to True in MultiDetect.conf, and start MultiDetect.py with this bash script (after having marked it as executable):
+For that, you need to make MultiDetect.py executable: 
 
 ```
-./md
+sudo chmod +x MultiDetect.py
 ```
 
-MultiDetect.py will start with one stream, TrainYourOwnYOLO's trademark black&white cat video. For more fun, set up multiple sources and multiple models by editing MultiDetect.conf
+For Python flavors other than 3.7, change the `#!/usr/bin/env python3.7` shebang on top of the  MultiDetect.py script.
+
+MultiDetect.py will start with one stream, TrainYourOwnYOLO's trademark black&white cat video. For more fun, set up multiple sources and multiple models by editing MultiDetect.conf. To start ./MultiDetect.py without reams of nagging status messages cluttering your terminal, set the **hush:** option to True in MultiDetect.conf
 
 ## For more information ... 
 
