@@ -226,11 +226,11 @@ class DefMaster:
         # default settings
 
         #General settings
-        self.num_processes   = 1     # Number of processes to launch
-        self.hush            = False # Try to suppress noisy warnings
-        self.sync_start      = True  # Synchronize start of all video streams in an attempt to mitigate time drift between videos
-        self.sync_start_wait = 15    # Time in seconds to wait for sync_start before timeout. This will be adjusted to num_processes to allow for longer staging due to higher load
-        self.redraw          = True  # True/False. When True, redraw screen to settle windows into their places.
+        self.num_processes               = 1     # Number of processes to launch
+        self.hush                        = False # Try to suppress noisy warnings
+        self.sync_start                  = True  # Synchronize start of all video streams in an attempt to mitigate time drift between videos
+        self.sync_start_wait             = 15    # Time in seconds to wait for sync_start before timeout. This will be adjusted to num_processes to allow for longer staging due to higher load
+        self.redraw                      = True  # True/False. When True, redraw screen to settle windows into their places.
 
         #Debug / monitor settings
         self.all_dead_restart            =   False      # If set, app will restart when all video processes have died. If not set, app will shut down.
@@ -240,25 +240,25 @@ class DefMaster:
         self.track_obj_mem               =   False      # If set, a log with object memory usage will be kept in 5 minute intervals
 
         #Master window settings
-        self.showmaster          = True     # If True, show master window, if false, turn master window off
-        self.master_window_title = "Master" # Title for master monitor window
-        self.master_window_x_pos = 100      # Where to place the master window
-        self.master_window_y_pos = 100      # Where to place the master window
-        self.do_stats            = False    # If set to True, immediately start collecting stats on master screen
+        self.showmaster                  = True     # If True, show master window, if false, turn master window off
+        self.master_window_title         = "Master" # Title for master monitor window
+        self.master_window_x_pos         = 100      # Where to place the master window
+        self.master_window_y_pos         = 100      # Where to place the master window
+        self.do_stats                    = False    # If set to True, immediately start collecting stats on master screen
 
         #workvars and placeholders
-        self.initdict             = {} # Dictionary for device stats
-        self.statsdict            = {} # Dictionary for stats messages
-        self.devdict              = {} # Device dictionary
-        self.coldict              = {} # Dictionary of column lengths
-        self.gridtop              = 0  # Workvar for status message
-        self.next_etab_statusline = 1  # For 3way status
-        self.next_ltab_statusline = 4  # For 3way status
-        self.next_stab_statusline = 4  # For 3way status
-        self.soundavailable       = False # Placeholder
-        self.masterup             = True # Placeholder
-        self.ost                  = None # Placeholder ost timer
-        self.do_YOLO              = None # Placeholder
+        self.initdict                    = {} # Dictionary for device stats
+        self.statsdict                   = {} # Dictionary for stats messages
+        self.devdict                     = {} # Device dictionary
+        self.coldict                     = {} # Dictionary of column lengths
+        self.gridtop                     = 0  # Workvar for status message
+        self.next_etab_statusline        = 1  # For error display
+        self.next_ltab_statusline        = 4  # For status display
+        self.next_stab_statusline        = 4  # For stats status
+        self.soundavailable              = False # Placeholder
+        self.masterup                    = True # Placeholder
+        self.ost                         = None # Placeholder ost timer
+        self.do_YOLO                     = None # Placeholder
 
         # DEFAULT SETTINGS, DO NOT EDIT!  DEFINE YOUR SETTINGS IN  MultiDetect.conf
 
@@ -271,9 +271,9 @@ class DefCommon:
     def __init__(self):
 
         # General Settings
-        self.soundalert     =  False                           # Play 'ding' sound when a class specified in presence_trigger  is detected
-        self.dingsound      =  resource_path + "/chime.mp3"    # Full path to audible alert file
-        self.ding_interval  = 20                               # Allow only one ding within that period (seconds)
+        self.soundalert              =  False                           # Play 'ding' sound when a class specified in presence_trigger  is detected
+        self.dingsound               =  resource_path + "/chime.mp3"    # Full path to audible alert file
+        self.ding_interval           = 20                               # Allow only one ding within that period (seconds)
 
 
 
@@ -287,8 +287,8 @@ class DefCommon:
 
 
         # Device settings
-        self.max_cams_to_probe =  10                              # Maximum number of USB cameras to probe for. Probing takes time at startup. 10 is a good number
-        self.silence           =  resource_path + "/silence.mp3"  # A few secs of silence. Needed for test of audio capabilities.
+        self.max_cams_to_probe       =  10                              # Maximum number of USB cameras to probe for. Probing takes time at startup. 10 is a good number
+        self.silence                 =  resource_path + "/silence.mp3"  # A few secs of silence. Needed for test of audio capabilities.
 
 
         # To make up for less capable GPUs, or for high frame rates, use these settings to run only every nth frame through YOLO detection
@@ -299,59 +299,59 @@ class DefCommon:
         self.do_only_every_present   =  1   # Run every nth image through YOLO after activity was detected and until presence_timer_interval times out
 
         # Default settings for on-screen type. Can be overridden in app
-        self.osd            =     True        #  True/False. True shows on-screen display, False doesn't
-        self.osd_fontFace   =     0           #  Font index. Here index to cv2.FONT_HERSHEY_SIMPLEX
-        self.osd_fontScale  =     1.2         #  Font size
-        self.osd_fontColor  =     (0,255, 0)  #  Font color, here green
-        self.osd_fontWeight =     3           #  Font weight. Will be adjusted for smaller/bigger screens
+        self.osd                     =     True        #  True/False. True shows on-screen display, False doesn't
+        self.osd_fontFace            =     0           #  Font index. Here index to cv2.FONT_HERSHEY_SIMPLEX
+        self.osd_fontScale           =     1.2         #  Font size
+        self.osd_fontColor           =     (0,255, 0)  #  Font color, here green
+        self.osd_fontWeight          =     3           #  Font weight. Will be adjusted for smaller/bigger screens
 
         # Global YOLO settings. To use different models on a per stream basis, specify these settings in the respective process block
-        self.run_on_gpu          =   0        # GPU to use. Set to -1 to let Keras pick the best GPU. "0,1" for both is required by spec, has little or no effect.
-        self.gpu_memory_fraction =   1        # How much GPU memory to claim for process. 1 eq 100%, 0.1 eq 10% . Performance will suffer when memory-starved, process will crash if GPU memory insufficient
-        self.allow_growth        =   1        #-1 let Keras decide, 0 disallow, 1 allow memory used on the GPU to dynamically grow.
-        self.model_path          =   data_path + "/Model_Weights/trained_weights_final.h5" # Full path to model
-        self.anchors_path        =   src_path + "/keras_yolo3/model_data/yolo_anchors.txt"  # Full path to anchors
-        self.classes_path        =   data_path + "/Model_Weights/data_classes.txt" # Full path to classes
-        self.iou                 =   0.9      # Intersection over union threshold
-        self.score               =   0.45     # Report detections with this confidence score, or higher
-        self.show_stats          =   False    # True/False. If True, cause YOLO object to print stats to console
+        self.run_on_gpu              =   0        # GPU to use. Set to -1 to let Keras pick the best GPU. "0,1" for both is required by spec, has little or no effect.
+        self.gpu_memory_fraction     =   1        # How much GPU memory to claim for process. 1 eq 100%, 0.1 eq 10% . Performance will suffer when memory-starved, process will crash if GPU memory insufficient
+        self.allow_growth            =   1        #-1 let Keras decide, 0 disallow, 1 allow memory used on the GPU to dynamically grow.
+        self.model_path              =   data_path + "/Model_Weights/trained_weights_final.h5" # Full path to model
+        self.anchors_path            =   src_path + "/keras_yolo3/model_data/yolo_anchors.txt"  # Full path to anchors
+        self.classes_path            =   data_path + "/Model_Weights/data_classes.txt" # Full path to classes
+        self.iou                     =   0.9      # Intersection over union threshold
+        self.score                   =   0.45     # Report detections with this confidence score, or higher
+        self.show_stats              =   False    # True/False. If True, cause YOLO object to print stats to console
 
         # Input settings
-        self.video_path   = resource_path + "/CatVideo.mp4" # Path to incoming video stream. Can be file, url of stream or integer fro webcam
-        self.buffer_depth = 20                              # Size of frame buffer in frames. Keep low to combat drift, high enough for smooth video. Note: Some webcams do not allow buffers > 10.
-        self.do_loop      = False                           # True/False. If True, a video file will loop to beginning when done
+        self.video_path              = resource_path + "/CatVideo.mp4" # Path to incoming video stream. Can be file, url of stream or integer fro webcam
+        self.buffer_depth            = 20                              # Size of frame buffer in frames. Keep low to combat drift, high enough for smooth video. Note: Some webcams do not allow buffers > 10.
+        self.do_loop                 = False                           # True/False. If True, a video file will loop to beginning when done
 
         # Output settings
-        self.output_path       = resource_path + "/videos/"  # Basepath for recorded video files.
-        self.record_autovideo  = False                       # True/False. If True, automatically record captured video, and store it in output_path
-        self.record_with_boxes = False                       # True/False. If True, record video with boxes (if any ), if False, record without.
+        self.output_path             = resource_path + "/videos/"  # Basepath for recorded video files.
+        self.record_autovideo        = False                       # True/False. If True, automatically record captured video, and store it in output_path
+        self.record_with_boxes       = False                       # True/False. If True, record video with boxes (if any ), if False, record without.
 
         # Output window settings
-        self.window_title = "Monitor" # Title for output monitor window.
-        self.window_wide  = 1024      # Width  of output window in pixels.
-        self.window_high  = 600       # Height of output window in pixels.
-        self.window_x     = 200       # X-position of on-screen window, top left corner, in pixel. Default 200
-        self.window_y     = 200       # Y-position of on-screen window, top left corner, in pixel.
+        self.window_title            = "Monitor" # Title for output monitor window.
+        self.window_wide             = 1024      # Width  of output window in pixels.
+        self.window_high             = 600       # Height of output window in pixels.
+        self.window_x                = 200       # X-position of on-screen window, top left corner, in pixel. Default 200
+        self.window_y                = 200       # Y-position of on-screen window, top left corner, in pixel.
 
         # Debug and monitor settings
-        self.testing               =  False          # True/False. If True, play video as specified in testvideo.
-        self.profile               =  False          # True/False. If True, profile video_process() for 3000 frames, then show results for each process
-        self.testvideo             =  resource_path + "/CatVideo.mp4"  # Dummy video file.
-        self.monitor_YOLO          =  False          # Experimental!!! Monitor YOLO execution using timers in lieu of proper error reporting. Shut down thread if timed out.
-        self.YOLO_init_AWOL_wait   =  20             # Time in seconds to wait for YOLO to successfully initialize. Shutdown if time exceeded
-        self.YOLO_detect_AWOL_wait =  20             # Time in seconds to wait for YOLO to come back from detect_image_extended. Shutdown if time exceeded
-        self.record_framecode      =  False          # Record framecode files corresponding to recorded video files
-        self.framecode_path        =  resource_path + "/framecode/"  # Basepath for framecode files.
-        self.maintain_result_log   =  False          # Whether to keep a running log with result timings etc.
-        self.result_log_basedir    =  resource_path + "/resultlogs/" # Where to keep the result logs.
-        self.rolling_average_n     =  32             # Length of rolling average used to determine average YOLO-fps
+        self.testing                 =  False          # True/False. If True, play video as specified in testvideo.
+        self.profile                 =  False          # True/False. If True, profile video_process() for 3000 frames, then show results for each process
+        self.testvideo               =  resource_path + "/CatVideo.mp4"  # Dummy video file.
+        self.monitor_YOLO            =  False          # Experimental!!! Monitor YOLO execution using timers in lieu of proper error reporting. Shut down thread if timed out.
+        self.YOLO_init_AWOL_wait     =  20             # Time in seconds to wait for YOLO to successfully initialize. Shutdown if time exceeded
+        self.YOLO_detect_AWOL_wait   =  20             # Time in seconds to wait for YOLO to come back from detect_image_extended. Shutdown if time exceeded
+        self.record_framecode        =  False          # Record framecode files corresponding to recorded video files
+        self.framecode_path          =  resource_path + "/framecode/"  # Basepath for framecode files.
+        self.maintain_result_log     =  False          # Whether to keep a running log with result timings etc.
+        self.result_log_basedir      =  resource_path + "/resultlogs/" # Where to keep the result logs.
+        self.rolling_average_n       =  32             # Length of rolling average used to determine average YOLO-fps
 
 
 
         # Placeholders
-        self.presence_counter = 0  # Placeholder for presence counter
-        self.avlcam           = [] # Placeholder for available camera list
-        self.workingcam       = [] # Placeholder for working camera list
+        self.presence_counter        = 0  # Placeholder for presence counter
+        self.avlcam                  = [] # Placeholder for available camera list
+        self.workingcam              = [] # Placeholder for working camera list
 
         # DEFAULT SETTINGS, DO NOT EDIT!  DEFINE YOUR SETTINGS IN  MultiDetect.conf
 
