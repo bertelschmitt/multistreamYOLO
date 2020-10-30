@@ -87,22 +87,54 @@ You can graft multistreamYOOLO upon an existing TrainYourOwnYOLO installation li
 
 Clone this complete repo, follow the steps below, read [MultiYOLO.md](/MultiYOLO.md) (docs for the modified YOLO object) and [MultiDetect.md](/MultiDetect.md), and you are an expert.
 
-
-#### Setting up Virtual Environment 
-
-Note: This repo so far has been developed and tested on Ubuntu (20.04, and 18.04) only. 
-
 Clone this repo with:
 ```
 git clone https://github.com/bertelschmitt/multistreamYOLO/
 cd multistreamYOLO/
 ```
-Create Virtual **(Linux)** Environment:
+
+#### Setting up Virtual Environment 
+
+Note: This repo so far has been developed and tested on Ubuntu (20.04, and 18.04) only.  It has not been tested on Windows or Mac at all.
+
+** Important: This requires Ubuntu 3.7 (or 3.8) ! To avoid collisions with old python versions that can lead to strange error messages, it is strongly recommended to create a virtual environment where python is of version 3.7 or 3.8. No other python versions should exist in this virtual environment**  
+
+Create Virtual **(Linux)** Environment (replace 3.7 with 3.8 as needed):
+
 ```
-python3 -m venv env
-source env/bin/activate
+pip3.7 install virtualenv
+
+python3.7 -m venv name-of-env
+
+#Activate the env:
+source name-of-env/bin/activate
 ```
-Make sure that, from now on, you **run all commands from within your virtual environment**.
+The name of your virtualenv should appear in  fron of your prompt on the console, like  
+
+```
+(name-of-env) your-user-name:~$ 
+```
+Now make sure that your viertualenv python is of version 3.7 (or 3.8):
+
+```
+python -V
+```
+If you don't see  "Python 3.7.x" (or Python 3.8.x as needed) don't proceed, go back and fix it
+
+For good measure, also type:
+
+```
+pip -V
+```
+You should see (python3.7) at the end of the result. If not, please check your work.
+
+Make sure that, from now on, you **run all commands from within your virtual environment**.  To automatically activate the virtual environment, put this at the end of your ~/.bashrc file. It is in your home directory.
+
+```
+source name-of-env/bin/activate
+```
+
+Start a new terminal window. You should see the  name of your virtualenv in front of your prompt. If not, please fix it.
 
 
 #### Install Required Packages
