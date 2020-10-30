@@ -221,6 +221,7 @@ Issues without a completed issue template will be closed after 7 days.
 
 [**YOLO on all cylinders**](/MultiYOLO.md) The YOLO object, tuned for multiple processes<br>
 [**CUDA crash course**](/CUDA101.md) Some CUDA installation pointers<br> 
+[**How much, how little memory](/Memory_settings.md). The best memory settings<br>
 [**Running inference**](/3_Inference/README.md) Putting it to use<br>
 
 - ⭐ **star** this repo to get notifications on future improvements and
