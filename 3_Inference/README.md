@@ -32,7 +32,7 @@ For that, you need to make MultiDetect.py executable. For Python flavors other t
 To start ./MultiDetect.py without reams of nagging status messages cluttering your terminal, set the **hush:** option to True in MultiDetect.conf, and start MultiDetect.py with this bash script (after having marked it as executable):
 
 ```
-./MD
+./md
 ```
 
 MultiDetect.py will start with one stream, TrainYourOwnYOLO's trademark black&white cat video. For more fun, set up multiple sources and multiple models by editing MultiDetect.conf
