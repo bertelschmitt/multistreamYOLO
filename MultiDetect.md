@@ -3,6 +3,15 @@
 MultiDetect.py started as a quick and dirty test-bench to validate multi-stream YOLO, and it (d)evolved into a >2,000 lines monster that can show multiple YOLO streams on multiple (or one) monitor, it can record video automatically when a desired object is detected, it can even audibly alert the bored operator. 
 MultiDetect.py has been written in pure python 3.7. It also works in 3.8. To run, it requires [the modified YOLO object in this repo](/2_Training/src/keras_yolo3/polo.py) and a working CUDA installation
 
+## To run MultiDetect.py 
+
+Go to the the .../3_Inference directory and type
+
+```
+python MultiDetect.py
+```
+If you get an error, then please be aware that **MultiDetect.py requires python 3.7 or python 3.8.** It will check the version, and fail if your python is lower. On many systems, python 2.7 is still installed, and it will not work. [**Read this**](/3_Inference/README.md) for how to resolve the issue.
+
 ## The Master process
 The main process parses the configuration file, and launches the video processes with their chunk of the configuration settings. That done, master acts as a common switchboard to facilitate communication with and between the video_processes. This is done via queues. The master process also maintains a rudimentary GUI status window. The demise of a video process will be announced on the master panel. If all video processes are dead, the master will exit also.
 
