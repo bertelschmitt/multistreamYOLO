@@ -114,7 +114,7 @@ The name of your virtualenv should appear in  fron of your prompt on the console
 ```
 (name-of-env) your-user-name:~$ 
 ```
-Now make sure that your viertualenv python is of version 3.7 (or 3.8):
+Now make sure that your virtualenv python is of version 3.7 (or 3.8):
 
 ```
 python -V
@@ -128,17 +128,23 @@ pip -V
 ```
 You should see (python3.7) at the end of the result. If not, please check your work.
 
-Make sure that, from now on, you **run all commands from within your virtual environment**.  To automatically activate the virtual environment, put this at the end of your ~/.bashrc file. It is in your home directory.
+Make sure that, from now on, you **run all commands from within your virtual environment**. To automatically activate the virtual environment, put this at the end of your ~/.bashrc file. It is in your home directory.
 
 ```
 source name-of-env/bin/activate
 ```
 
-Start a new terminal window. You should see the  name of your virtualenv in front of your prompt. If not, please fix it.
+Start a new terminal window. You should see the name of your virtualenv in front of your prompt. If not, please fix it.
 
 
-#### Install Required Packages
-Install required packages (from within your virtual environment) via:
+#### Install Required Python Packages
+To avoid any collisions, your virtualenv should be clean, without any installed packages. To make sure that it is, type:
+
+```
+pip freeze
+```
+
+You should see nothing as a result. Now go to the base of this repo .../multistreamYOLO/, and install all required packages (from within your virtual environment) via:
 
 ```
 pip install -r requirements.txt
