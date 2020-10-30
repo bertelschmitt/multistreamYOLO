@@ -204,6 +204,17 @@ MultiDetect.py loads in two stages. We need to do this because python 2.7 still 
 
 If your screen flickers during full screen playback, or if your carefully calculated layout of multiple windows on one screen goes haywire, don’t despair: The new version of CV2 appears to have a, well, feature that makes the window larger than specified. Let’s say you create a window, and size it to 1024x600 to fit a small 1024x600 monitor. You run the app, and the window flickers madly. Why? The created window is actually higher than 600 pixel, and your monitor doesn't like it. To solve the problem, we must size the window smaller, in that case 1024x570. Apparently, CV2 does not include the black bar on top of the window. Likewise, if we place 4 windows on a monitor with the dimensions of 1920 x 1080, one would think that each window should be 960 wide by 540 high, right? Wrong. What works is something like 960x490, or even a little shorter to account for the bar on top of the main monitor screen, and for the bars on top of each ouput window. On my screen, the top menu bar is 28 pixels high, while the bar over each output window is 37 pix high, no matter how high the rest of the window if. YMMV, experiment!
 
+## "Cannot start, another instance running"
+
+This message reminds us that only one installment of MultiDetect.py is allowed to run at a time. If you get this warning despite MultiDetect.py being down, it is most likely caused by zombie video processes that refused to die. Before MultiDetect.py shuts down, it is going to great lengths to make sure that all video processes are gone as well. However, and usually after an error, some video processes might still be wandering around. Try hitting ctl-C a few times. If all else fails, type
+
+```
+killall python
+```
+(or python3.7, or python3.8) on your console.
+
+
+
 
 ## Bugs!
 
