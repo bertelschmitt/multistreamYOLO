@@ -16,9 +16,9 @@ It allows you to test our detector on cat and dog images and videos located in [
 
 This video-centric Python script allows you to detect objects in many video streams at the same time. The video sources can be files, webams, or video-streams created by IP cameras and such.  **MultiDetect.py requires python 3.7 or python 3.8.** It will check the version, and fail if your python is lower. On many systems, python 2.7 is still installed, and it will not work. To find your python version, type
 
-'''
+```
 python -V
-'''
+```
 
 If that gives you a version of 3.7 or 3.8, you can start MultiDetect.py from the .../3_Inference directory with
 
