@@ -64,9 +64,12 @@ zipp==3.1.0
 
 
 #new
-pydub
+pydub==0.24.1
 opencv-python==4.4.0.42
 numpy<1.19.0
 #for debugging
-pympler
-psutil
+Pympler==0.9
+psutil==5.7.3
+
+
+
