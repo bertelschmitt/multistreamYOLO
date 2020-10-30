@@ -15,7 +15,7 @@ There is a **gpu_num** flag in init_yolo, but it won’t let us assign another G
 ## The solution.
 Following init_yolo() down the dark rabbit-hole of keras_yolo, and digging around its scant documentation, I developed an idea of what happens when you initialize the session. Left alone, the session indeed grabs all of the memory of the most powerful GPU in the machine, whether you need it, or not. However, there are other options YOLO currently does not use. 
 
-**config.gpu_options.per_process_gpu_memory_fraction** is the most important option of all. It allows to allocate just a fraction of the GPU memory. Set it to 0.5, and only half of the GPU memory will be used. (Close, but not quite, as we will see below.) The remainder of the memory will be available for subsequent sessions.
+**config.gpu_options.per_process_gpu_memory_fraction** is the most important option of all. It allows to allocate just a fraction of the GPU memory. Set it to 0.5, and only half of the GPU memory will be used. (Close, but not quite, as we will see below.) The remainder of the memory will be available for subsequent sessions. [**More on memory settings is here](/Memory_settings.md).
 
 **config.gpu_options.visible_device_list** allows to (hooray) select the GPU the session will use (assuming that you have more than one GPU.) Set to “0,” the first GPU will be used. Set to “1,” the second will be used, and so forth. “0,1” supposedly allows both GPUs to be used at the same time. When I tried that setting, I received an “Unexpected CUDA error: out of memory” when the second process was fired-up, and I left that alone. A more knowledgeable and courageous soul possible will find out more.
 
