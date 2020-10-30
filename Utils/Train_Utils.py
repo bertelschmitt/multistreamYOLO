@@ -1,6 +1,7 @@
 """
 MODIFIED FROM keras-yolo3 PACKAGE, https://github.com/qqwweee/keras-yolo3
 Retrain the YOLO model for your own dataset.
+Modified by BS on 10/31/20  to allow repo nam change
 """
 
 
@@ -212,7 +213,7 @@ def data_generator_wrapper(
     )
 
 
-def ChangeToOtherMachine(filelist, repo="TrainYourOwnYOLO", remote_machine=""):
+def ChangeToOtherMachine(filelist, repo="TrainYourOwnYOLO", remote_machine="", swaprepo =[]):
     """
     Takes a list of file_names located in a repo and changes it to the local machines file names. File must be executed from withing the repository
 
@@ -225,20 +226,30 @@ def ChangeToOtherMachine(filelist, repo="TrainYourOwnYOLO", remote_machine=""):
     'C:/Users/Anton/TrainYourOwnYOLO/Data/Street_View_Images/vulnerable/test.jpg'
 
     """
+    print(f"repo: {repo}  remote_machine: {remote_machine}")
+
     filelist = [x.replace("\\", "/") for x in filelist]
     if repo[-1] == "/":
         repo = repo[:-1]
     if remote_machine:
         prefix = remote_machine.replace("\\", "/")
     else:
+        print(f"cwd: {os.getcwd()}")
         prefix = ((os.getcwd().split(repo))[0]).replace("\\", "/")
+        print(f"prefix: {prefix}")
     new_list = []
 
+
     for file in filelist:
-        suffix = (file.split(repo))[1]
+        if swaprepo and swaprepo[0] in file: #If changing names, we need to split on the old name, and join with the new
+            splitter = swaprepo[0]
+            joiner = swaprepo[1]
+        else:
+            splitter = joiner = repo
+        suffix = (file.split(splitter))[1]
         if suffix[0] == "/":
             suffix = suffix[1:]
-        new_list.append(os.path.join(prefix, repo + "/", suffix).replace("\\", "/"))
+        new_list.append(os.path.join(prefix, joiner + "/", suffix).replace("\\", "/"))
     print(
         "8888888888888888888*********************************98888888888888888888888888888888888"
     )
