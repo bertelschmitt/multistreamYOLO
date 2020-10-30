@@ -90,6 +90,7 @@ As long as you see errors, do not proceed. It won't work. You need to resolve th
 
 [**README!**](/README.md) A MultiDetect intro<br>
 [**YOLO on all cylinders**](/MultiYOLO.md) The YOLO object, tuned for multiple processes<br>
+[**How much, how little memory](/Memory_settings.md). The best memory settings<br>
 [**Running inference**](/3_Inference/README.md) Putting it to use<br>
 
 - Please **star** ⭐ this repo to get notifications on future improvements and
