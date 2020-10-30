@@ -97,7 +97,7 @@ cd multistreamYOLO/
 
 Note: This repo so far has been developed and tested on Ubuntu (20.04, and 18.04) only.  It has not been tested on Windows or Mac at all.
 
-** Important: This requires Ubuntu 3.7 (or 3.8) ! To avoid collisions with old python versions that can lead to strange error messages, it is strongly recommended to create a virtual environment where python is of version 3.7 or 3.8. No other python versions should exist in this virtual environment**  
+**Important: This requires Ubuntu 3.7 (or 3.8) ! To avoid collisions with old python versions that can lead to strange error messages, it is strongly recommended to create a virtual environment where python is of version 3.7 or 3.8. No other python versions should exist in this virtual environment**  
 
 Create Virtual **(Linux)** Environment (replace 3.7 with 3.8 as needed):
 
