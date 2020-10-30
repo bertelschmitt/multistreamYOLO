@@ -1,4 +1,4 @@
-## How much. how little memory?
+## How much, how little memory?
 
 Here is a table of various memory settings used by 9 separate processes running on one 11Gbyte 1080ti.
 
