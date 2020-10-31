@@ -93,7 +93,7 @@ My programming skills are completely self-taught. I tried my hands on assembler 
 
 [**README!**](/README.md) A MultiDetect intro<br>
 [**CUDA crash course**](/CUDA101.md) Some CUDA installation pointers<br> 
-[**How much, how little memory](/Memory_settings.md). The best memory settings<br>
+[**How much, how little memory**](/Memory_settings.md). The best memory settings<br>
 [**Running inference**](/3_Inference/README.md) Putting it to use<br>
 
 - Please **star** ⭐ this repo to get notifications on future improvements and
