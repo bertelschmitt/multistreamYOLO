@@ -1,7 +1,7 @@
 ## A quickie CUDA primer
 
 **Before you delve into YOLO, you need a running CUDA installation. If you already have one, then you are a decorated CUDA veteran. Stop reading, you'll find nothing new.
-If you are new at CUDA, here are some pointers. **
+If you are new at CUDA, here are some pointers.**
 
 This is an Ubuntu-centric howto. I used to be a CENTOS afficionado, but early CUDA on Linux was pretty much all Ubuntu, and to this day, most of the CUDA ecosystem speak Ubuntu-ese. CUDA is the glue that allows computer applications make use of the powerhouse GPUs in our machines. CUDA once stood for "Compute Unified Device Architecture," but Nvidia, maker of GPUs and CUDA, dropped the long form, probaby because there is little "unified" to CUDA - things seem to break royally from version to version. 
 
