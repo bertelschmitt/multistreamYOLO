@@ -109,7 +109,7 @@ python3.7 -m venv name-of-env
 #Activate the env:
 source name-of-env/bin/activate
 ```
-The name of your virtualenv should appear in  fron of your prompt on the console, like  
+The name of your virtualenv should appear in front of your prompt on the console, like  
 
 ```
 (name-of-env) your-user-name:~$ 
