@@ -75,6 +75,10 @@ Each separate process creates its own YOLO object along with a completely separa
 ## Needless to say, but said anyway: 
 All the settings used in init_yolo are on a per-session basis. From session to session, settings can be completely different, or mostly all the same. 
 
+## About detect_video() and detect_webcam()
+
+I suggest staying away from detect_video() and detect_webcam().  Both functions were brought in unchanged from TrainYourOwnYOLO, and are here for compatibility. In my opinion, they should be application-level functions. At its core, detecting video is nothing else than detecting an image, 24 (or whatever) times a second, and you should use detect_image_extended() for that.  As is, detect_webcam() will break if the cam is not in  USB(0), and often, it is not. Its address might even have changed when re-plugged. As is, detect_video() will give alarming results if vid.get(cv2.CAP_PROP_FPS) produces nothing, or worse, produces FPS in the thousands, as it is the case with many Chinese IP cams. IMHO, the place for detect_webcam() and detect_video() are code snippets that show the best use of detect_image().  The convoluted video_process in [**MultiDetect.py**](/MultiDetect.py) is testament to what happens when you try to handle real-world situations.
+
 ## To Do
 
 -	Each YOLO instance is completely separate, resulting in a massive duplication of memory usage, even if the same model (or mostly the same) is used in the processes. At up to 3 gigabyte per process, it can add up. Investigate where shared memory can be used.
