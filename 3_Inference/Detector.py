@@ -1,4 +1,4 @@
-#Backported w/o change 10/31/20 from TrainYourOwnYOLO version as of 10/30/20 by BS 
+#Backported w/o change 10/31/20 from TrainYourOwnYOLO version as of 10/31/20 by BS    
 
 import os
 import sys
