@@ -79,15 +79,15 @@ Common:
     #run_on_gpu:                   # GPU to use. Set to -1 to let Keras pick the best GPU. "0,1" for both is required by spec, has little or no effect.  Default: 0        
     gpu_memory_fraction: 0.35      # How much GPU memory to claim for process. 1 eq 100%, 0.1 eq 10% . Performance will suffer when memory-starved, process will crash if GPU memory insufficient. Default: 1        
     allow_growth:  1               #-1 let Keras decide, 0 disallow, 1 allow memory used on the GPU to dynamically grow.  Default: 1        
-    #model_path:                   # Full path to model. Default: .../multistreamYOLO/2_Training/src/Model_Weights/trained_weights_final.h5
+    #model_path:                   # Full path to model. Default: .../multistreamYOLO/Data/Model_Weights/trained_weights_final.h5
     #anchors_path:                 # Full path to anchors. Default: .../multistreamYOLO/2_Training/src/keras_yolo3/model_data/yolo_anchors.txt
-    #classes_path:                 # Full path to classes. Default: .../multistreamYOLO/2_Training/src/Model_Weights/data_classes.txt
+    #classes_path:                 # Full path to classes. Default: .../multistreamYOLO/Data/Model_Weights/data_classes.txt
     #iou:                          # Intersection over union threshold. Default: 0.9      
     #score:                        # Report detections with this confidence score, or higher. Default: 0.45     
     #show_stats:                   # True/False. If True, cause YOLO object to print stats to console. Default: False    
 
     ### Input settings
-    #video_path:                   # Path to incoming video stream. Can be file, url of stream or integer fro webcam. Default: .../multistreamYOLO/3_Inference/MDResource/CatVideo.mp4
+    #video_path:                   # Path to incoming video stream. Can be file, url of stream or integer for webcam. Default: .../multistreamYOLO/3_Inference/MDResource/CatVideo.mp4
     #buffer_depth:                 # Size of frame buffer in frames. Keep low to combat drift, high enough for smooth video. Note: Some webcams do not allow buffers > 10.  Default: 20                              
     #do_loop:                      # True/False. If True, a video file will loop to beginning when done. Default: False                           
 
