@@ -1,0 +1,614 @@
+# ============================================================================
+# VyOS 1.5.x (Circinus) Zone-Based Router Configuration
+# High Performance 10GbE Router Setup
+# ============================================================================
+#
+# Hardware Configuration:
+# - eth0, eth1: Aquantia AQC113C NICs (10GbE capable)
+# - eth2-eth5: Intel I226-V NICs (2.5GbE capable)
+#
+# Network Layout:
+# - WAN: eth0 (DHCP) - 20:7c:14:f8:35:8e
+# - LAN: eth1 192.168.11.0/24 - 20:7c:14:f8:35:8f
+# - LAN2: eth2 192.168.110.0/24 - 20:7c:14:f8:33:78
+# - WIFI_TRUNK: eth3 - 20:7c:14:f8:33:79
+#   - VLAN 30: WiFi (192.168.30.0/24)
+#   - VLAN 40: WiFi Guest (192.168.40.0/24)
+# - LAN4: eth4 - 20:7c:14:f8:33:7a
+# - LAN5: eth5 - 20:7c:14:f8:33:7b
+#
+# Camera Group: 192.168.11.30 - 192.168.11.40
+#
+# Zones:
+# - wan: External network (no inbound access)
+# - lan: Primary LAN
+# - wifi: WiFi VLAN (isolated from LAN)
+# - wifi_guest: Guest WiFi VLAN (isolated from LAN)
+# ============================================================================
+
+# ----------------------------------------------------------------------------
+# ENTER CONFIGURATION MODE
+# ----------------------------------------------------------------------------
+configure
+
+# ----------------------------------------------------------------------------
+# SYSTEM CONFIGURATION
+# ----------------------------------------------------------------------------
+set system host-name 'router'
+set system domain-name 'local'
+set system time-zone 'UTC'
+
+# Enable hardware offload for performance
+set system option performance throughput
+
+# ----------------------------------------------------------------------------
+# INTERFACE CONFIGURATION
+# ----------------------------------------------------------------------------
+
+# === WAN Interface (eth0) - Aquantia AQC113C ===
+# Note: Using standard MTU 1500 for WAN to avoid ISP compatibility issues
+set interfaces ethernet eth0 description 'WAN'
+set interfaces ethernet eth0 address dhcp
+set interfaces ethernet eth0 hw-id '20:7c:14:f8:35:8e'
+set interfaces ethernet eth0 mtu 1500
+set interfaces ethernet eth0 offload gro
+set interfaces ethernet eth0 offload gso
+set interfaces ethernet eth0 offload sg
+set interfaces ethernet eth0 offload tso
+
+# === LAN Interface (eth1) - Aquantia AQC113C ===
+set interfaces ethernet eth1 description 'LAN'
+set interfaces ethernet eth1 address '192.168.11.1/24'
+set interfaces ethernet eth1 hw-id '20:7c:14:f8:35:8f'
+set interfaces ethernet eth1 mtu 9000
+set interfaces ethernet eth1 offload gro
+set interfaces ethernet eth1 offload gso
+set interfaces ethernet eth1 offload sg
+set interfaces ethernet eth1 offload tso
+
+# === LAN2 Interface (eth2) - Intel I226-V ===
+set interfaces ethernet eth2 description 'LAN2'
+set interfaces ethernet eth2 address '192.168.110.1/24'
+set interfaces ethernet eth2 hw-id '20:7c:14:f8:33:78'
+set interfaces ethernet eth2 mtu 9000
+set interfaces ethernet eth2 offload gro
+set interfaces ethernet eth2 offload gso
+set interfaces ethernet eth2 offload sg
+set interfaces ethernet eth2 offload tso
+
+# === WIFI_TRUNK Interface (eth3) - Intel I226-V ===
+set interfaces ethernet eth3 description 'WIFI_TRUNK'
+set interfaces ethernet eth3 hw-id '20:7c:14:f8:33:79'
+set interfaces ethernet eth3 mtu 9000
+set interfaces ethernet eth3 offload gro
+set interfaces ethernet eth3 offload gso
+set interfaces ethernet eth3 offload sg
+set interfaces ethernet eth3 offload tso
+
+# === WiFi VLAN (VLAN 30 on eth3) ===
+set interfaces ethernet eth3 vif 30 description 'WIFI'
+set interfaces ethernet eth3 vif 30 address '192.168.30.1/24'
+set interfaces ethernet eth3 vif 30 mtu 9000
+
+# === WiFi Guest VLAN (VLAN 40 on eth3) ===
+set interfaces ethernet eth3 vif 40 description 'WIFI_GUEST'
+set interfaces ethernet eth3 vif 40 address '192.168.40.1/24'
+set interfaces ethernet eth3 vif 40 mtu 9000
+
+# === LAN4 Interface (eth4) - Intel I226-V ===
+set interfaces ethernet eth4 description 'LAN4'
+set interfaces ethernet eth4 address '192.168.44.1/24'
+set interfaces ethernet eth4 hw-id '20:7c:14:f8:33:7a'
+set interfaces ethernet eth4 mtu 9000
+set interfaces ethernet eth4 offload gro
+set interfaces ethernet eth4 offload gso
+set interfaces ethernet eth4 offload sg
+set interfaces ethernet eth4 offload tso
+
+# === LAN5 Interface (eth5) - Intel I226-V ===
+set interfaces ethernet eth5 description 'LAN5'
+set interfaces ethernet eth5 address '192.168.55.1/24'
+set interfaces ethernet eth5 hw-id '20:7c:14:f8:33:7b'
+set interfaces ethernet eth5 mtu 9000
+set interfaces ethernet eth5 offload gro
+set interfaces ethernet eth5 offload gso
+set interfaces ethernet eth5 offload sg
+set interfaces ethernet eth5 offload tso
+
+# === Loopback Interface ===
+set interfaces loopback lo
+
+# ----------------------------------------------------------------------------
+# FIREWALL GROUPS
+# ----------------------------------------------------------------------------
+
+# Camera Group (192.168.11.30 - 192.168.11.40)
+set firewall group address-group CAMERAS description 'Camera IP Address Group'
+set firewall group address-group CAMERAS address '192.168.11.30'
+set firewall group address-group CAMERAS address '192.168.11.31'
+set firewall group address-group CAMERAS address '192.168.11.32'
+set firewall group address-group CAMERAS address '192.168.11.33'
+set firewall group address-group CAMERAS address '192.168.11.34'
+set firewall group address-group CAMERAS address '192.168.11.35'
+set firewall group address-group CAMERAS address '192.168.11.36'
+set firewall group address-group CAMERAS address '192.168.11.37'
+set firewall group address-group CAMERAS address '192.168.11.38'
+set firewall group address-group CAMERAS address '192.168.11.39'
+set firewall group address-group CAMERAS address '192.168.11.40'
+
+# LAN Network Group
+set firewall group network-group LAN-NETS description 'LAN Networks'
+set firewall group network-group LAN-NETS network '192.168.11.0/24'
+set firewall group network-group LAN-NETS network '192.168.110.0/24'
+set firewall group network-group LAN-NETS network '192.168.44.0/24'
+set firewall group network-group LAN-NETS network '192.168.55.0/24'
+
+# All Internal Networks
+set firewall group network-group ALL-INTERNAL description 'All Internal Networks'
+set firewall group network-group ALL-INTERNAL network '192.168.11.0/24'
+set firewall group network-group ALL-INTERNAL network '192.168.110.0/24'
+set firewall group network-group ALL-INTERNAL network '192.168.30.0/24'
+set firewall group network-group ALL-INTERNAL network '192.168.40.0/24'
+set firewall group network-group ALL-INTERNAL network '192.168.44.0/24'
+set firewall group network-group ALL-INTERNAL network '192.168.55.0/24'
+
+# ----------------------------------------------------------------------------
+# FIREWALL ZONE CONFIGURATION (VyOS 1.5.x Syntax)
+# ----------------------------------------------------------------------------
+
+# === Zone Definitions ===
+
+# WAN Zone
+set firewall zone wan description 'WAN Zone - External Network'
+set firewall zone wan default-action drop
+set firewall zone wan interface eth0
+
+# LAN Zone (includes eth1, eth2, eth4, eth5)
+set firewall zone lan description 'LAN Zone - Internal Trusted Network'
+set firewall zone lan default-action drop
+set firewall zone lan interface eth1
+set firewall zone lan interface eth2
+set firewall zone lan interface eth4
+set firewall zone lan interface eth5
+
+# WiFi Zone
+set firewall zone wifi description 'WiFi Zone - Wireless Network'
+set firewall zone wifi default-action drop
+set firewall zone wifi interface eth3.30
+
+# WiFi Guest Zone
+set firewall zone wifi-guest description 'WiFi Guest Zone - Guest Wireless Network'
+set firewall zone wifi-guest default-action drop
+set firewall zone wifi-guest interface eth3.40
+
+# Local Zone (router itself)
+set firewall zone local description 'Local Zone - Router Services'
+set firewall zone local default-action drop
+set firewall zone local local-zone
+
+# ----------------------------------------------------------------------------
+# FIREWALL RULES - IPv4
+# ----------------------------------------------------------------------------
+
+# === WAN to LAN (Blocked) ===
+set firewall ipv4 name WAN-TO-LAN default-action drop
+set firewall ipv4 name WAN-TO-LAN description 'WAN to LAN - Block All'
+set firewall ipv4 name WAN-TO-LAN rule 10 action accept
+set firewall ipv4 name WAN-TO-LAN rule 10 description 'Allow established/related'
+set firewall ipv4 name WAN-TO-LAN rule 10 state established
+set firewall ipv4 name WAN-TO-LAN rule 10 state related
+
+# === WAN to WiFi (Blocked) ===
+set firewall ipv4 name WAN-TO-WIFI default-action drop
+set firewall ipv4 name WAN-TO-WIFI description 'WAN to WiFi - Block All'
+set firewall ipv4 name WAN-TO-WIFI rule 10 action accept
+set firewall ipv4 name WAN-TO-WIFI rule 10 description 'Allow established/related'
+set firewall ipv4 name WAN-TO-WIFI rule 10 state established
+set firewall ipv4 name WAN-TO-WIFI rule 10 state related
+
+# === WAN to WiFi Guest (Blocked) ===
+set firewall ipv4 name WAN-TO-WIFI-GUEST default-action drop
+set firewall ipv4 name WAN-TO-WIFI-GUEST description 'WAN to WiFi Guest - Block All'
+set firewall ipv4 name WAN-TO-WIFI-GUEST rule 10 action accept
+set firewall ipv4 name WAN-TO-WIFI-GUEST rule 10 description 'Allow established/related'
+set firewall ipv4 name WAN-TO-WIFI-GUEST rule 10 state established
+set firewall ipv4 name WAN-TO-WIFI-GUEST rule 10 state related
+
+# === WAN to Local (Blocked - No SSH from WAN) ===
+set firewall ipv4 name WAN-TO-LOCAL default-action drop
+set firewall ipv4 name WAN-TO-LOCAL description 'WAN to Local - Block All'
+set firewall ipv4 name WAN-TO-LOCAL rule 10 action accept
+set firewall ipv4 name WAN-TO-LOCAL rule 10 description 'Allow established/related'
+set firewall ipv4 name WAN-TO-LOCAL rule 10 state established
+set firewall ipv4 name WAN-TO-LOCAL rule 10 state related
+
+# === LAN to WAN (Allow with Camera Blocking) ===
+set firewall ipv4 name LAN-TO-WAN default-action accept
+set firewall ipv4 name LAN-TO-WAN description 'LAN to WAN - Allow with Camera Block'
+set firewall ipv4 name LAN-TO-WAN rule 10 action drop
+set firewall ipv4 name LAN-TO-WAN rule 10 description 'Block cameras from WAN'
+set firewall ipv4 name LAN-TO-WAN rule 10 source group address-group CAMERAS
+
+# === LAN to Local (Allow SSH and DHCP) ===
+set firewall ipv4 name LAN-TO-LOCAL default-action drop
+set firewall ipv4 name LAN-TO-LOCAL description 'LAN to Local - Allow SSH and Services'
+set firewall ipv4 name LAN-TO-LOCAL rule 10 action accept
+set firewall ipv4 name LAN-TO-LOCAL rule 10 description 'Allow established/related'
+set firewall ipv4 name LAN-TO-LOCAL rule 10 state established
+set firewall ipv4 name LAN-TO-LOCAL rule 10 state related
+set firewall ipv4 name LAN-TO-LOCAL rule 20 action accept
+set firewall ipv4 name LAN-TO-LOCAL rule 20 description 'Allow SSH from LAN'
+set firewall ipv4 name LAN-TO-LOCAL rule 20 destination port 22
+set firewall ipv4 name LAN-TO-LOCAL rule 20 protocol tcp
+set firewall ipv4 name LAN-TO-LOCAL rule 30 action accept
+set firewall ipv4 name LAN-TO-LOCAL rule 30 description 'Allow DHCP requests'
+set firewall ipv4 name LAN-TO-LOCAL rule 30 destination port 67
+set firewall ipv4 name LAN-TO-LOCAL rule 30 protocol udp
+set firewall ipv4 name LAN-TO-LOCAL rule 40 action accept
+set firewall ipv4 name LAN-TO-LOCAL rule 40 description 'Allow DNS UDP'
+set firewall ipv4 name LAN-TO-LOCAL rule 40 destination port 53
+set firewall ipv4 name LAN-TO-LOCAL rule 40 protocol udp
+set firewall ipv4 name LAN-TO-LOCAL rule 45 action accept
+set firewall ipv4 name LAN-TO-LOCAL rule 45 description 'Allow DNS TCP'
+set firewall ipv4 name LAN-TO-LOCAL rule 45 destination port 53
+set firewall ipv4 name LAN-TO-LOCAL rule 45 protocol tcp
+set firewall ipv4 name LAN-TO-LOCAL rule 50 action accept
+set firewall ipv4 name LAN-TO-LOCAL rule 50 description 'Allow ICMP ping'
+set firewall ipv4 name LAN-TO-LOCAL rule 50 protocol icmp
+
+# === LAN to WiFi (Allow) ===
+set firewall ipv4 name LAN-TO-WIFI default-action accept
+set firewall ipv4 name LAN-TO-WIFI description 'LAN to WiFi - Allow'
+
+# === LAN to WiFi Guest (Allow) ===
+set firewall ipv4 name LAN-TO-WIFI-GUEST default-action accept
+set firewall ipv4 name LAN-TO-WIFI-GUEST description 'LAN to WiFi Guest - Allow'
+
+# === WiFi to LAN (Blocked) ===
+set firewall ipv4 name WIFI-TO-LAN default-action drop
+set firewall ipv4 name WIFI-TO-LAN description 'WiFi to LAN - Block All'
+set firewall ipv4 name WIFI-TO-LAN rule 10 action accept
+set firewall ipv4 name WIFI-TO-LAN rule 10 description 'Allow established/related'
+set firewall ipv4 name WIFI-TO-LAN rule 10 state established
+set firewall ipv4 name WIFI-TO-LAN rule 10 state related
+
+# === WiFi to WAN (Allow) ===
+set firewall ipv4 name WIFI-TO-WAN default-action accept
+set firewall ipv4 name WIFI-TO-WAN description 'WiFi to WAN - Allow'
+
+# === WiFi to Local (Allow DHCP/DNS) ===
+set firewall ipv4 name WIFI-TO-LOCAL default-action drop
+set firewall ipv4 name WIFI-TO-LOCAL description 'WiFi to Local - Allow Services'
+set firewall ipv4 name WIFI-TO-LOCAL rule 10 action accept
+set firewall ipv4 name WIFI-TO-LOCAL rule 10 description 'Allow established/related'
+set firewall ipv4 name WIFI-TO-LOCAL rule 10 state established
+set firewall ipv4 name WIFI-TO-LOCAL rule 10 state related
+set firewall ipv4 name WIFI-TO-LOCAL rule 20 action accept
+set firewall ipv4 name WIFI-TO-LOCAL rule 20 description 'Allow DHCP requests'
+set firewall ipv4 name WIFI-TO-LOCAL rule 20 destination port 67
+set firewall ipv4 name WIFI-TO-LOCAL rule 20 protocol udp
+set firewall ipv4 name WIFI-TO-LOCAL rule 30 action accept
+set firewall ipv4 name WIFI-TO-LOCAL rule 30 description 'Allow DNS UDP'
+set firewall ipv4 name WIFI-TO-LOCAL rule 30 destination port 53
+set firewall ipv4 name WIFI-TO-LOCAL rule 30 protocol udp
+set firewall ipv4 name WIFI-TO-LOCAL rule 35 action accept
+set firewall ipv4 name WIFI-TO-LOCAL rule 35 description 'Allow DNS TCP'
+set firewall ipv4 name WIFI-TO-LOCAL rule 35 destination port 53
+set firewall ipv4 name WIFI-TO-LOCAL rule 35 protocol tcp
+set firewall ipv4 name WIFI-TO-LOCAL rule 40 action accept
+set firewall ipv4 name WIFI-TO-LOCAL rule 40 description 'Allow ICMP ping'
+set firewall ipv4 name WIFI-TO-LOCAL rule 40 protocol icmp
+
+# === WiFi Guest to LAN (Blocked) ===
+set firewall ipv4 name WIFI-GUEST-TO-LAN default-action drop
+set firewall ipv4 name WIFI-GUEST-TO-LAN description 'WiFi Guest to LAN - Block All'
+set firewall ipv4 name WIFI-GUEST-TO-LAN rule 10 action accept
+set firewall ipv4 name WIFI-GUEST-TO-LAN rule 10 description 'Allow established/related'
+set firewall ipv4 name WIFI-GUEST-TO-LAN rule 10 state established
+set firewall ipv4 name WIFI-GUEST-TO-LAN rule 10 state related
+
+# === WiFi Guest to WAN (Allow) ===
+set firewall ipv4 name WIFI-GUEST-TO-WAN default-action accept
+set firewall ipv4 name WIFI-GUEST-TO-WAN description 'WiFi Guest to WAN - Allow'
+
+# === WiFi Guest to WiFi (Blocked) ===
+set firewall ipv4 name WIFI-GUEST-TO-WIFI default-action drop
+set firewall ipv4 name WIFI-GUEST-TO-WIFI description 'WiFi Guest to WiFi - Block All'
+set firewall ipv4 name WIFI-GUEST-TO-WIFI rule 10 action accept
+set firewall ipv4 name WIFI-GUEST-TO-WIFI rule 10 description 'Allow established/related'
+set firewall ipv4 name WIFI-GUEST-TO-WIFI rule 10 state established
+set firewall ipv4 name WIFI-GUEST-TO-WIFI rule 10 state related
+
+# === WiFi Guest to Local (Allow DHCP/DNS) ===
+set firewall ipv4 name WIFI-GUEST-TO-LOCAL default-action drop
+set firewall ipv4 name WIFI-GUEST-TO-LOCAL description 'WiFi Guest to Local - Allow Services'
+set firewall ipv4 name WIFI-GUEST-TO-LOCAL rule 10 action accept
+set firewall ipv4 name WIFI-GUEST-TO-LOCAL rule 10 description 'Allow established/related'
+set firewall ipv4 name WIFI-GUEST-TO-LOCAL rule 10 state established
+set firewall ipv4 name WIFI-GUEST-TO-LOCAL rule 10 state related
+set firewall ipv4 name WIFI-GUEST-TO-LOCAL rule 20 action accept
+set firewall ipv4 name WIFI-GUEST-TO-LOCAL rule 20 description 'Allow DHCP requests'
+set firewall ipv4 name WIFI-GUEST-TO-LOCAL rule 20 destination port 67
+set firewall ipv4 name WIFI-GUEST-TO-LOCAL rule 20 protocol udp
+set firewall ipv4 name WIFI-GUEST-TO-LOCAL rule 30 action accept
+set firewall ipv4 name WIFI-GUEST-TO-LOCAL rule 30 description 'Allow DNS UDP'
+set firewall ipv4 name WIFI-GUEST-TO-LOCAL rule 30 destination port 53
+set firewall ipv4 name WIFI-GUEST-TO-LOCAL rule 30 protocol udp
+set firewall ipv4 name WIFI-GUEST-TO-LOCAL rule 35 action accept
+set firewall ipv4 name WIFI-GUEST-TO-LOCAL rule 35 description 'Allow DNS TCP'
+set firewall ipv4 name WIFI-GUEST-TO-LOCAL rule 35 destination port 53
+set firewall ipv4 name WIFI-GUEST-TO-LOCAL rule 35 protocol tcp
+set firewall ipv4 name WIFI-GUEST-TO-LOCAL rule 40 action accept
+set firewall ipv4 name WIFI-GUEST-TO-LOCAL rule 40 description 'Allow ICMP ping'
+set firewall ipv4 name WIFI-GUEST-TO-LOCAL rule 40 protocol icmp
+
+# === WiFi to WiFi Guest (Blocked) ===
+set firewall ipv4 name WIFI-TO-WIFI-GUEST default-action drop
+set firewall ipv4 name WIFI-TO-WIFI-GUEST description 'WiFi to WiFi Guest - Block All'
+set firewall ipv4 name WIFI-TO-WIFI-GUEST rule 10 action accept
+set firewall ipv4 name WIFI-TO-WIFI-GUEST rule 10 description 'Allow established/related'
+set firewall ipv4 name WIFI-TO-WIFI-GUEST rule 10 state established
+set firewall ipv4 name WIFI-TO-WIFI-GUEST rule 10 state related
+
+# === Local to WAN (Allow) ===
+set firewall ipv4 name LOCAL-TO-WAN default-action accept
+set firewall ipv4 name LOCAL-TO-WAN description 'Local to WAN - Allow'
+
+# === Local to LAN (Allow) ===
+set firewall ipv4 name LOCAL-TO-LAN default-action accept
+set firewall ipv4 name LOCAL-TO-LAN description 'Local to LAN - Allow'
+
+# === Local to WiFi (Allow) ===
+set firewall ipv4 name LOCAL-TO-WIFI default-action accept
+set firewall ipv4 name LOCAL-TO-WIFI description 'Local to WiFi - Allow'
+
+# === Local to WiFi Guest (Allow) ===
+set firewall ipv4 name LOCAL-TO-WIFI-GUEST default-action accept
+set firewall ipv4 name LOCAL-TO-WIFI-GUEST description 'Local to WiFi Guest - Allow'
+
+# ----------------------------------------------------------------------------
+# APPLY ZONE FIREWALL RULES
+# ----------------------------------------------------------------------------
+
+# WAN Zone Inter-zone Rules
+set firewall zone wan from lan firewall name LAN-TO-WAN
+set firewall zone wan from wifi firewall name WIFI-TO-WAN
+set firewall zone wan from wifi-guest firewall name WIFI-GUEST-TO-WAN
+set firewall zone wan from local firewall name LOCAL-TO-WAN
+
+# LAN Zone Inter-zone Rules
+set firewall zone lan from wan firewall name WAN-TO-LAN
+set firewall zone lan from wifi firewall name WIFI-TO-LAN
+set firewall zone lan from wifi-guest firewall name WIFI-GUEST-TO-LAN
+set firewall zone lan from local firewall name LOCAL-TO-LAN
+
+# WiFi Zone Inter-zone Rules
+set firewall zone wifi from wan firewall name WAN-TO-WIFI
+set firewall zone wifi from lan firewall name LAN-TO-WIFI
+set firewall zone wifi from wifi-guest firewall name WIFI-GUEST-TO-WIFI
+set firewall zone wifi from local firewall name LOCAL-TO-WIFI
+
+# WiFi Guest Zone Inter-zone Rules
+set firewall zone wifi-guest from wan firewall name WAN-TO-WIFI-GUEST
+set firewall zone wifi-guest from lan firewall name LAN-TO-WIFI-GUEST
+set firewall zone wifi-guest from wifi firewall name WIFI-TO-WIFI-GUEST
+set firewall zone wifi-guest from local firewall name LOCAL-TO-WIFI-GUEST
+
+# Local Zone Inter-zone Rules
+set firewall zone local from wan firewall name WAN-TO-LOCAL
+set firewall zone local from lan firewall name LAN-TO-LOCAL
+set firewall zone local from wifi firewall name WIFI-TO-LOCAL
+set firewall zone local from wifi-guest firewall name WIFI-GUEST-TO-LOCAL
+
+# ----------------------------------------------------------------------------
+# NAT CONFIGURATION
+# ----------------------------------------------------------------------------
+
+# Source NAT (Masquerade for Internet Access)
+set nat source rule 100 description 'NAT for WAN'
+set nat source rule 100 outbound-interface name eth0
+set nat source rule 100 source address '192.168.11.0/24'
+set nat source rule 100 translation address masquerade
+
+set nat source rule 110 description 'NAT for LAN2'
+set nat source rule 110 outbound-interface name eth0
+set nat source rule 110 source address '192.168.110.0/24'
+set nat source rule 110 translation address masquerade
+
+set nat source rule 120 description 'NAT for WiFi'
+set nat source rule 120 outbound-interface name eth0
+set nat source rule 120 source address '192.168.30.0/24'
+set nat source rule 120 translation address masquerade
+
+set nat source rule 130 description 'NAT for WiFi Guest'
+set nat source rule 130 outbound-interface name eth0
+set nat source rule 130 source address '192.168.40.0/24'
+set nat source rule 130 translation address masquerade
+
+set nat source rule 140 description 'NAT for LAN4'
+set nat source rule 140 outbound-interface name eth0
+set nat source rule 140 source address '192.168.44.0/24'
+set nat source rule 140 translation address masquerade
+
+set nat source rule 150 description 'NAT for LAN5'
+set nat source rule 150 outbound-interface name eth0
+set nat source rule 150 source address '192.168.55.0/24'
+set nat source rule 150 translation address masquerade
+
+# Note: No port forwarding configured as per requirements
+
+# ----------------------------------------------------------------------------
+# DHCP SERVER CONFIGURATION
+# ----------------------------------------------------------------------------
+
+# === LAN DHCP Server (eth1 - 192.168.11.0/24) ===
+set service dhcp-server shared-network-name LAN description 'LAN DHCP Server'
+set service dhcp-server shared-network-name LAN subnet 192.168.11.0/24 subnet-id 1
+set service dhcp-server shared-network-name LAN subnet 192.168.11.0/24 option default-router '192.168.11.1'
+set service dhcp-server shared-network-name LAN subnet 192.168.11.0/24 option name-server '192.168.11.1'
+set service dhcp-server shared-network-name LAN subnet 192.168.11.0/24 option domain-name 'lan.local'
+set service dhcp-server shared-network-name LAN subnet 192.168.11.0/24 lease 86400
+set service dhcp-server shared-network-name LAN subnet 192.168.11.0/24 range 0 start '192.168.11.50'
+set service dhcp-server shared-network-name LAN subnet 192.168.11.0/24 range 0 stop '192.168.11.200'
+# Reserve camera IPs (192.168.11.30-40) as static reservations or exclude from range
+
+# === LAN2 DHCP Server (eth2 - 192.168.110.0/24) ===
+set service dhcp-server shared-network-name LAN2 description 'LAN2 DHCP Server'
+set service dhcp-server shared-network-name LAN2 subnet 192.168.110.0/24 subnet-id 2
+set service dhcp-server shared-network-name LAN2 subnet 192.168.110.0/24 option default-router '192.168.110.1'
+set service dhcp-server shared-network-name LAN2 subnet 192.168.110.0/24 option name-server '192.168.110.1'
+set service dhcp-server shared-network-name LAN2 subnet 192.168.110.0/24 option domain-name 'lan2.local'
+set service dhcp-server shared-network-name LAN2 subnet 192.168.110.0/24 lease 86400
+set service dhcp-server shared-network-name LAN2 subnet 192.168.110.0/24 range 0 start '192.168.110.50'
+set service dhcp-server shared-network-name LAN2 subnet 192.168.110.0/24 range 0 stop '192.168.110.200'
+
+# === WiFi DHCP Server (eth3.30 - 192.168.30.0/24) ===
+set service dhcp-server shared-network-name WIFI description 'WiFi DHCP Server'
+set service dhcp-server shared-network-name WIFI subnet 192.168.30.0/24 subnet-id 3
+set service dhcp-server shared-network-name WIFI subnet 192.168.30.0/24 option default-router '192.168.30.1'
+set service dhcp-server shared-network-name WIFI subnet 192.168.30.0/24 option name-server '192.168.30.1'
+set service dhcp-server shared-network-name WIFI subnet 192.168.30.0/24 option domain-name 'wifi.local'
+set service dhcp-server shared-network-name WIFI subnet 192.168.30.0/24 lease 86400
+set service dhcp-server shared-network-name WIFI subnet 192.168.30.0/24 range 0 start '192.168.30.50'
+set service dhcp-server shared-network-name WIFI subnet 192.168.30.0/24 range 0 stop '192.168.30.200'
+
+# === WiFi Guest DHCP Server (eth3.40 - 192.168.40.0/24) ===
+set service dhcp-server shared-network-name WIFI-GUEST description 'WiFi Guest DHCP Server'
+set service dhcp-server shared-network-name WIFI-GUEST subnet 192.168.40.0/24 subnet-id 4
+set service dhcp-server shared-network-name WIFI-GUEST subnet 192.168.40.0/24 option default-router '192.168.40.1'
+set service dhcp-server shared-network-name WIFI-GUEST subnet 192.168.40.0/24 option name-server '192.168.40.1'
+set service dhcp-server shared-network-name WIFI-GUEST subnet 192.168.40.0/24 option domain-name 'guest.local'
+set service dhcp-server shared-network-name WIFI-GUEST subnet 192.168.40.0/24 lease 3600
+set service dhcp-server shared-network-name WIFI-GUEST subnet 192.168.40.0/24 range 0 start '192.168.40.50'
+set service dhcp-server shared-network-name WIFI-GUEST subnet 192.168.40.0/24 range 0 stop '192.168.40.200'
+
+# === LAN4 DHCP Server (eth4 - 192.168.44.0/24) ===
+set service dhcp-server shared-network-name LAN4 description 'LAN4 DHCP Server'
+set service dhcp-server shared-network-name LAN4 subnet 192.168.44.0/24 subnet-id 5
+set service dhcp-server shared-network-name LAN4 subnet 192.168.44.0/24 option default-router '192.168.44.1'
+set service dhcp-server shared-network-name LAN4 subnet 192.168.44.0/24 option name-server '192.168.44.1'
+set service dhcp-server shared-network-name LAN4 subnet 192.168.44.0/24 option domain-name 'lan4.local'
+set service dhcp-server shared-network-name LAN4 subnet 192.168.44.0/24 lease 86400
+set service dhcp-server shared-network-name LAN4 subnet 192.168.44.0/24 range 0 start '192.168.44.50'
+set service dhcp-server shared-network-name LAN4 subnet 192.168.44.0/24 range 0 stop '192.168.44.200'
+
+# === LAN5 DHCP Server (eth5 - 192.168.55.0/24) ===
+set service dhcp-server shared-network-name LAN5 description 'LAN5 DHCP Server'
+set service dhcp-server shared-network-name LAN5 subnet 192.168.55.0/24 subnet-id 6
+set service dhcp-server shared-network-name LAN5 subnet 192.168.55.0/24 option default-router '192.168.55.1'
+set service dhcp-server shared-network-name LAN5 subnet 192.168.55.0/24 option name-server '192.168.55.1'
+set service dhcp-server shared-network-name LAN5 subnet 192.168.55.0/24 option domain-name 'lan5.local'
+set service dhcp-server shared-network-name LAN5 subnet 192.168.55.0/24 lease 86400
+set service dhcp-server shared-network-name LAN5 subnet 192.168.55.0/24 range 0 start '192.168.55.50'
+set service dhcp-server shared-network-name LAN5 subnet 192.168.55.0/24 range 0 stop '192.168.55.200'
+
+# ----------------------------------------------------------------------------
+# DNS FORWARDING (Optional - for local DNS resolution)
+# ----------------------------------------------------------------------------
+set service dns forwarding listen-address '192.168.11.1'
+set service dns forwarding listen-address '192.168.110.1'
+set service dns forwarding listen-address '192.168.30.1'
+set service dns forwarding listen-address '192.168.40.1'
+set service dns forwarding listen-address '192.168.44.1'
+set service dns forwarding listen-address '192.168.55.1'
+set service dns forwarding allow-from '192.168.11.0/24'
+set service dns forwarding allow-from '192.168.110.0/24'
+set service dns forwarding allow-from '192.168.30.0/24'
+set service dns forwarding allow-from '192.168.40.0/24'
+set service dns forwarding allow-from '192.168.44.0/24'
+set service dns forwarding allow-from '192.168.55.0/24'
+set service dns forwarding cache-size 10000
+
+# ----------------------------------------------------------------------------
+# SSH SERVICE CONFIGURATION
+# ----------------------------------------------------------------------------
+set service ssh listen-address '192.168.11.1'
+set service ssh port 22
+set service ssh disable-host-validation
+
+# ----------------------------------------------------------------------------
+# SYSCTL TUNING FOR 10GbE PERFORMANCE
+# ----------------------------------------------------------------------------
+
+# Note: These settings are applied via VyOS system options
+# For additional kernel tuning, use /config/scripts/vyos-postconfig-bootup.script
+
+# ----------------------------------------------------------------------------
+# COMMIT AND SAVE CONFIGURATION
+# ----------------------------------------------------------------------------
+commit
+save
+
+# ----------------------------------------------------------------------------
+# EXIT CONFIGURATION MODE
+# ----------------------------------------------------------------------------
+exit
+
+# ============================================================================
+# POST-INSTALLATION PERFORMANCE TUNING SCRIPT
+# ============================================================================
+# Save the following to /config/scripts/vyos-postconfig-bootup.script
+# to apply additional performance tuning at boot:
+#
+# #!/bin/bash
+# # 10GbE Performance Tuning for Aquantia AQC113C
+#
+# # Increase socket buffer sizes
+# sysctl -w net.core.rmem_max=16777216
+# sysctl -w net.core.wmem_max=16777216
+# sysctl -w net.core.rmem_default=16777216
+# sysctl -w net.core.wmem_default=16777216
+# sysctl -w net.ipv4.tcp_rmem="4096 87380 16777216"
+# sysctl -w net.ipv4.tcp_wmem="4096 87380 16777216"
+#
+# # Increase network device backlog
+# sysctl -w net.core.netdev_max_backlog=250000
+# sysctl -w net.core.netdev_budget=600
+#
+# # Enable TCP optimizations
+# sysctl -w net.ipv4.tcp_timestamps=1
+# sysctl -w net.ipv4.tcp_sack=1
+# sysctl -w net.ipv4.tcp_window_scaling=1
+# sysctl -w net.ipv4.tcp_no_metrics_save=1
+# sysctl -w net.ipv4.tcp_moderate_rcvbuf=1
+#
+# # Connection tracking for NAT
+# sysctl -w net.netfilter.nf_conntrack_max=262144
+# sysctl -w net.netfilter.nf_conntrack_tcp_timeout_established=86400
+#
+# # IRQ affinity for NICs (adjust based on your CPU)
+# # ethtool -L eth0 combined 4
+# # ethtool -L eth1 combined 4
+#
+# ============================================================================
+# STATIC CAMERA IP RESERVATIONS (Optional)
+# ============================================================================
+# Add static reservations for cameras in the LAN DHCP server:
+#
+# set service dhcp-server shared-network-name LAN subnet 192.168.11.0/24 static-mapping camera1 ip-address '192.168.11.30'
+# set service dhcp-server shared-network-name LAN subnet 192.168.11.0/24 static-mapping camera1 mac '00:00:00:00:00:01'
+# (Repeat for each camera with appropriate MAC addresses)
+#
+# ============================================================================
+# UBIQUITI ACCESS POINT VLAN CONFIGURATION
+# ============================================================================
+# Configure your Ubiquiti Access Points to:
+# 1. Set the management VLAN or native VLAN appropriately
+# 2. Create WiFi network tagged to VLAN 30 for regular WiFi
+# 3. Create WiFi Guest network tagged to VLAN 40 for guest access
+# 4. Enable VLAN tagging on the AP uplink port
+#
+# ============================================================================
+# VERIFICATION COMMANDS
+# ============================================================================
+# After applying configuration, verify with:
+#
+# show interfaces
+# show firewall
+# show firewall zone
+# show nat source rules
+# show dhcp server leases
+# show dns forwarding statistics
+# show service ssh
+# ping 8.8.8.8 (from router)
+# ============================================================================
