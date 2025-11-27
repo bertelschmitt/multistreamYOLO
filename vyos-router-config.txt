@@ -46,10 +46,11 @@ set system option performance throughput
 # ----------------------------------------------------------------------------
 
 # === WAN Interface (eth0) - Aquantia AQC113C ===
+# Note: Using standard MTU 1500 for WAN to avoid ISP compatibility issues
 set interfaces ethernet eth0 description 'WAN'
 set interfaces ethernet eth0 address dhcp
 set interfaces ethernet eth0 hw-id '20:7c:14:f8:35:8e'
-set interfaces ethernet eth0 mtu 9000
+set interfaces ethernet eth0 mtu 1500
 set interfaces ethernet eth0 offload gro
 set interfaces ethernet eth0 offload gso
 set interfaces ethernet eth0 offload sg
@@ -244,9 +245,13 @@ set firewall ipv4 name LAN-TO-LOCAL rule 30 description 'Allow DHCP requests'
 set firewall ipv4 name LAN-TO-LOCAL rule 30 destination port 67
 set firewall ipv4 name LAN-TO-LOCAL rule 30 protocol udp
 set firewall ipv4 name LAN-TO-LOCAL rule 40 action accept
-set firewall ipv4 name LAN-TO-LOCAL rule 40 description 'Allow DNS'
+set firewall ipv4 name LAN-TO-LOCAL rule 40 description 'Allow DNS UDP'
 set firewall ipv4 name LAN-TO-LOCAL rule 40 destination port 53
 set firewall ipv4 name LAN-TO-LOCAL rule 40 protocol udp
+set firewall ipv4 name LAN-TO-LOCAL rule 45 action accept
+set firewall ipv4 name LAN-TO-LOCAL rule 45 description 'Allow DNS TCP'
+set firewall ipv4 name LAN-TO-LOCAL rule 45 destination port 53
+set firewall ipv4 name LAN-TO-LOCAL rule 45 protocol tcp
 set firewall ipv4 name LAN-TO-LOCAL rule 50 action accept
 set firewall ipv4 name LAN-TO-LOCAL rule 50 description 'Allow ICMP ping'
 set firewall ipv4 name LAN-TO-LOCAL rule 50 protocol icmp
@@ -283,9 +288,13 @@ set firewall ipv4 name WIFI-TO-LOCAL rule 20 description 'Allow DHCP requests'
 set firewall ipv4 name WIFI-TO-LOCAL rule 20 destination port 67
 set firewall ipv4 name WIFI-TO-LOCAL rule 20 protocol udp
 set firewall ipv4 name WIFI-TO-LOCAL rule 30 action accept
-set firewall ipv4 name WIFI-TO-LOCAL rule 30 description 'Allow DNS'
+set firewall ipv4 name WIFI-TO-LOCAL rule 30 description 'Allow DNS UDP'
 set firewall ipv4 name WIFI-TO-LOCAL rule 30 destination port 53
 set firewall ipv4 name WIFI-TO-LOCAL rule 30 protocol udp
+set firewall ipv4 name WIFI-TO-LOCAL rule 35 action accept
+set firewall ipv4 name WIFI-TO-LOCAL rule 35 description 'Allow DNS TCP'
+set firewall ipv4 name WIFI-TO-LOCAL rule 35 destination port 53
+set firewall ipv4 name WIFI-TO-LOCAL rule 35 protocol tcp
 set firewall ipv4 name WIFI-TO-LOCAL rule 40 action accept
 set firewall ipv4 name WIFI-TO-LOCAL rule 40 description 'Allow ICMP ping'
 set firewall ipv4 name WIFI-TO-LOCAL rule 40 protocol icmp
@@ -322,9 +331,13 @@ set firewall ipv4 name WIFI-GUEST-TO-LOCAL rule 20 description 'Allow DHCP reque
 set firewall ipv4 name WIFI-GUEST-TO-LOCAL rule 20 destination port 67
 set firewall ipv4 name WIFI-GUEST-TO-LOCAL rule 20 protocol udp
 set firewall ipv4 name WIFI-GUEST-TO-LOCAL rule 30 action accept
-set firewall ipv4 name WIFI-GUEST-TO-LOCAL rule 30 description 'Allow DNS'
+set firewall ipv4 name WIFI-GUEST-TO-LOCAL rule 30 description 'Allow DNS UDP'
 set firewall ipv4 name WIFI-GUEST-TO-LOCAL rule 30 destination port 53
 set firewall ipv4 name WIFI-GUEST-TO-LOCAL rule 30 protocol udp
+set firewall ipv4 name WIFI-GUEST-TO-LOCAL rule 35 action accept
+set firewall ipv4 name WIFI-GUEST-TO-LOCAL rule 35 description 'Allow DNS TCP'
+set firewall ipv4 name WIFI-GUEST-TO-LOCAL rule 35 destination port 53
+set firewall ipv4 name WIFI-GUEST-TO-LOCAL rule 35 protocol tcp
 set firewall ipv4 name WIFI-GUEST-TO-LOCAL rule 40 action accept
 set firewall ipv4 name WIFI-GUEST-TO-LOCAL rule 40 description 'Allow ICMP ping'
 set firewall ipv4 name WIFI-GUEST-TO-LOCAL rule 40 protocol icmp
@@ -592,7 +605,7 @@ exit
 #
 # show interfaces
 # show firewall
-# show firewall zone-policy
+# show firewall zone
 # show nat source rules
 # show dhcp server leases
 # show dns forwarding statistics
