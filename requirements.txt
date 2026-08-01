@@ -35,7 +35,7 @@ pathspec==0.8.0
 pillow==10.2.0
 progressbar2==3.52.1
 protobuf==3.13.0
-pyasn1==0.4.8
+pyasn1==0.6.4
 pyasn1-modules==0.2.8
 pylint==2.6.0
 pyparsing==2.4.7
